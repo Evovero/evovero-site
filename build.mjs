@@ -135,7 +135,7 @@ function footer() {
       </div>
       ${col('Services', site.services.map(s => [s.name.replace(' (Facebook & Instagram)',''), `/services/${s.slug}/`]))}
       ${col('Industries', [...site.industries.map(s => [s.name, `/industries/${s.slug}/`]), ['All industries','/industries/']])}
-      ${col('Company', [['About','/about/'],['Results','/results/'],['Blog','/blog/'],['Book a Call', site.booking]])}
+      ${col('Company', [['About','/about/'],['Results','/results/'],['Blog','/blog/'],['Contact','/contact/'],['Book a Call', site.booking]])}
     </div>
     <div class="footer__bottom">
       <span>&copy; ${new Date().getFullYear()} EvoVero. ${site.city}.</span>
@@ -148,6 +148,7 @@ function footer() {
     </div>
   </div></footer>
 <script src="/site.js" defer></script>
+<script>window.salesmateSettings = {	workspace_id: "325e0426-e1c1-4732-b879-778675ff956c", 	app_key:"67dbffa0-98e1-11f0-8d37-af0225045642", 	tenant_id:"nomavis.salesmate.io", 	channel_id:"6c3ba817-fb16-4fb9-aac5-142faa563901", 	widget_style:"floating"  }</script><script>!function(e,t,a,i,d,n,o){e.Widget=i,e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement(a),o=t.getElementsByTagName(a)[0],n.id=i,n.src=d,window._salesmate_widget_script_url=d,n.async=1,o.parentNode.insertBefore(n,o)}(window,document,"script","loadwidget", "https://nomavis.salesmate.io/messenger-platform/messenger-platform-main.js"),loadwidget("init",{}),loadwidget("load_widget","Widget Loading...!");</script>
 </body></html>`;
 }
 
@@ -179,6 +180,12 @@ function home() {
       areaServed: "United States",
       description: "Digital marketing for local service businesses: SEO, Google Ads, Meta Ads, websites, and AI lead capture you own." },
     { "@context": "https://schema.org", "@type": "WebSite", name: "EvoVero", url: site.domain },
+    { "@context": "https://schema.org", "@type": "ProfessionalService", "@id": site.domain + "/#localbusiness",
+      name: "EvoVero", url: site.domain, image: site.domain + site.logo, telephone: site.phone, email: site.email,
+      priceRange: "$$", areaServed: { "@type": "Country", name: "United States" },
+      address: { "@type": "PostalAddress", addressLocality: "Omaha", addressRegion: "NE", addressCountry: "US" },
+      hasMap: "https://www.google.com/maps?cid=" + site.gbpCid,
+      founder: { "@type": "Person", name: site.founder } },
   ];
 
   const hero = `<header class="hero">
@@ -327,7 +334,7 @@ function home() {
 
   return page({
     title: "EvoVero | Marketing That Brings Jobs In, And You Own It",
-    desc: "EvoVero builds local service businesses a complete marketing platform, website, SEO, Google & Meta ads, and AI lead capture, then scales what works. You own every account and asset.",
+    desc: "Marketing for local service businesses: a website, SEO, Google & Meta ads, and AI lead capture you own. I build it, run it, and grow it month to month.",
     path: "/", schema, nav: "nav--hero",
     body: hero + `<div class="after-hero">` + problem + method + services + stats + industries + pricing + founder + faq + ctaBand() + `</div>`,
   });
