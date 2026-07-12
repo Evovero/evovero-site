@@ -775,6 +775,34 @@ function sitemap(paths) {
 ${urls}
 </urlset>`;
 }
+function llmsTxt(posts) {
+  const svc = site.services.map(s => `- [${s.name}](${site.domain}/services/${s.slug}/): ${s.blurb}`).join('\n');
+  const ind = site.industries.map(s => `- [${s.name}](${site.domain}/industries/${s.slug}/): ${s.blurb}`).join('\n');
+  const blog = posts.length
+    ? posts.map(p => `- [${p.title}](${site.domain}/blog/${p.slug}/): ${p.description}`).join('\n')
+    : '- No posts published yet.';
+  return `# ${site.name}
+
+> ${site.tagline} Marketing platform for local service businesses: website, SEO, Google & Meta Ads, and AI lead capture, built and run by ${site.founder}, owned by the client.
+
+${site.name} is a founder-led marketing partner for local service businesses (concrete, tree service, towing, masonry, insulation, home cleaning, and other trades that run on local calls and booked jobs). Clients own their website, Google Business Profile, ad accounts, and lead data. Based in ${site.city}.
+
+## Services
+${svc}
+
+## Industries
+${ind}
+
+## Company
+- [About](${site.domain}/about/): Founder ${site.founder} and how ${site.name} works.
+- [Results](${site.domain}/results/): Client outcomes and case studies.
+- [Blog](${site.domain}/blog/): Practical guidance on getting found, capturing leads, and growing a local service business.
+- [Contact](${site.domain}/contact/): Get in touch or book a call.
+
+## Blog Posts
+${blog}
+`;
+}
 
 /* ----------------------------------------------------------------
    Build
@@ -805,5 +833,6 @@ for (const [path, html] of pages) writePage(path, html);
 // Sitemap: exclude the thank-you page (utility, noindex-style)
 writeFileSync(join(OUT, 'sitemap.xml'), sitemap(pages.map(p => p[0]).filter(p => p !== '/thank-you')));
 writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /thank-you/\nSitemap: ${site.domain}/sitemap.xml\n`);
+writeFileSync(join(OUT, 'llms.txt'), llmsTxt(posts));
 
 console.log(`Built ${pages.length} pages (${posts.length} blog post(s)) to dist/`);
