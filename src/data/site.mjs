@@ -1,7 +1,8 @@
 // EvoVero — business facts & site config (edit here, never in templates)
 export const site = {
   name: "EvoVero",
-  domain: "https://www.evovero.com",
+  domain: "https://evovero.com",
+  gbpCid: "11743606176396272057",
   tagline: "Lead Generation, Evolved.",
   email: "spencer@evovero.com",
   phone: "402-698-4902",
@@ -54,4 +55,5 @@ export const nav = [
   { label: "Results", href: "/results/" },
   { label: "About", href: "/about/" },
   { label: "Blog", href: "/blog/" },
+  { label: "Contact", href: "/contact/" },
 ];
