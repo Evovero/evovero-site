@@ -148,6 +148,15 @@ function footer() {
     </div>
   </div></footer>
 <script src="/site.js" defer></script>
+<script>
+(function(){
+  var done=false;
+  function tz(){try{return (Intl&&Intl.DateTimeFormat&&Intl.DateTimeFormat().resolvedOptions&&Intl.DateTimeFormat().resolvedOptions().timeZone)||new Date().getTimezoneOffset().toString();}catch(e){return new Date().getTimezoneOffset().toString();}}
+  function push(){if(done)return true;if(window.SALESMATE&&typeof window.SALESMATE.updateContext==="function"){var c={timezone:tz()};window.SALESMATE.updateContext(c);console.log("Salesmate Context:",c);done=true;return true;}return false;}
+  window.addEventListener("__SM_ANALYTICS_READY__",push);
+  var n=0,t=setInterval(function(){if(push()||++n>60)clearInterval(t);},250);
+})();
+</script>
 <script>window.salesmateSettings = {	workspace_id: "325e0426-e1c1-4732-b879-778675ff956c", 	app_key:"67dbffa0-98e1-11f0-8d37-af0225045642", 	tenant_id:"nomavis.salesmate.io", 	channel_id:"6c3ba817-fb16-4fb9-aac5-142faa563901", 	widget_style:"floating"  }</script><script>!function(e,t,a,i,d,n,o){e.Widget=i,e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement(a),o=t.getElementsByTagName(a)[0],n.id=i,n.src=d,window._salesmate_widget_script_url=d,n.async=1,o.parentNode.insertBefore(n,o)}(window,document,"script","loadwidget", "https://nomavis.salesmate.io/messenger-platform/messenger-platform-main.js"),loadwidget("init",{}),loadwidget("load_widget","Widget Loading...!");</script>
 </body></html>`;
 }
