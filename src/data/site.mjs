@@ -1,6 +1,13 @@
 // EvoVero — business facts & site config (edit here, never in templates)
 export const site = {
   name: "EvoVero",
+  // Registered legal entity. Must match the 10DLC brand registration, the Meta lead form
+  // consent disclaimer, and both legal pages exactly. Mismatches are a carrier vetting
+  // rejection reason. Used on /privacy-policy and /terms only, brand copy still says "EvoVero".
+  legalName: "EvoVero LLC",
+  // Registered agent address, the LLC's address of record for legal notice. NOT an office.
+  // Operations are in Omaha. Keep these two facts distinct on the legal pages.
+  mailing: "30 N Gould St Ste N, Sheridan, WY 82801",
   domain: "https://evovero.com",
   gbpCid: "11743606176396272057",
   tagline: "Lead Generation, Evolved.",

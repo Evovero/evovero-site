@@ -201,9 +201,9 @@ function home() {
     ${ribbon('hero')}<div class="hero__grain"></div>
     <div class="wrap hero__inner">
       <div>
-        <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Lead Generation, Evolved</span>
-        <h1 style="margin-top:20px">Marketing that brings the jobs in. <span class="grad">And that you own.</span></h1>
-        <p class="hero__sub">I build local service businesses a complete marketing platform, website, search, ads, and an AI agent that captures every lead, then put real budget behind what's working. You keep all of it.</p>
+        <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Start with what's actually broken</span>
+        <h1 style="margin-top:20px">It might not be a lead problem. <span class="grad">It's usually a leak.</span></h1>
+        <p class="hero__sub">The work is often already coming at you, and it slips out somewhere between the phone ringing and the money landing. I find where yours is going, then I go fix it. Everything I build stays in your name.</p>
         <div class="hero__cta">${btnPrimary()}${btnCall(true)}</div>
         <div class="hero__trust">
           <span><b>You own</b> every account &amp; asset</span>
@@ -235,8 +235,8 @@ function home() {
   const problem = `<section class="panel over-hero"><div class="section"><div class="wrap">
     <div class="section-head center reveal">
       <span class="eyebrow"><span class="dot"></span> The real problem</span>
-      <h2 style="margin-top:18px">Word of mouth doesn't scale. Rented leads aren't yours.</h2>
-      <p class="lead">Most local businesses are stuck between chasing referrals and renting leads from Angi, where you own nothing and the moment you stop paying, it all stops. There's a better way to build.</p>
+      <h2 style="margin-top:18px">Everybody says they need more work. Usually that isn't it.</h2>
+      <p class="lead">The jobs are often already reaching you and falling out along the way. Here is where it happens most, and it is almost never the place people expect.</p>
     </div>
     <div class="grid grid-3">
       ${[['phone','Leads slip through','The phone rings while you\'re on a job. A form sits for hours. By the time you call back, they\'ve booked someone else.'],
@@ -265,8 +265,8 @@ function home() {
   const services = `<section class="panel panel--rise"><div class="section"><div class="wrap">
     <div class="section-head center reveal">
       <span class="eyebrow"><span class="dot"></span> What I do</span>
-      <h2 style="margin-top:18px">Everything your growth needs, under one roof.</h2>
-      <p class="lead">Pick the pieces you need now and add the rest as you grow. It all connects, and it all stays yours.</p>
+      <h2 style="margin-top:18px">What the fix usually looks like.</h2>
+      <p class="lead">Almost nobody needs all six. Once I find where yours is leaking, we do the part that actually matters and skip the rest. Some of it is marketing, some of it is just plumbing.</p>
     </div>
     <div class="grid grid-3">
       ${site.services.map((s,i) => `<a class="card card--feature reveal" data-d="${(i%3)+1}" href="/services/${s.slug}/">
@@ -295,7 +295,7 @@ function home() {
         <span class="ic">${icon(s.icon)}</span><h3>${s.name}</h3><p>${s.blurb}</p>
         <span class="link-arrow card__link">See the playbook ${icon('arrow')}</span></a>`).join('')}
     </div>
-    <p class="center reveal" style="margin-top:30px;color:var(--ink-soft)">Coming into focus: ${site.industriesSoon.join(' &middot; ')}</p>
+    <p class="center reveal" style="margin-top:30px;color:var(--ink-soft)">Also working with: ${site.industriesSoon.join(' &middot; ')}</p>
   </div></div></section>`;
 
   // stage-based pricing
@@ -342,8 +342,8 @@ function home() {
     mainEntity: faqs.map(f => ({ "@type": "Question", name: f[0], acceptedAnswer: { "@type": "Answer", text: f[1] } })) });
 
   return page({
-    title: "EvoVero | Marketing That Brings Jobs In, And You Own It",
-    desc: "Marketing for local service businesses: a website, SEO, Google & Meta ads, and AI lead capture you own. I build it, run it, and grow it month to month.",
+    title: "Find the Leak Costing You Jobs, Then Fix It | EvoVero Omaha",
+    desc: "Most local businesses do not have a lead problem, they have a leak. I find where the work slips out and I fix it. You own all of it. Omaha, call 402-698-4902.",
     path: "/", schema, nav: "nav--hero",
     body: hero + `<div class="after-hero">` + problem + method + services + stats + industries + pricing + founder + faq + ctaBand() + `</div>`,
   });
@@ -455,7 +455,7 @@ function industriesHub() {
     sub: "If your business runs on local calls and booked jobs, the platform fits. Here's where I'm already getting results, with room to grow into any local service trade.",
   }) + `<div class="page-body"><section class="section"><div class="wrap">
       <div class="grid grid-3">${site.industries.map((s,i) => industryCard(s,(i%3)+1)).join('')}</div>
-      <p class="center reveal" style="margin-top:30px;color:var(--ink-soft)">Coming into focus: ${site.industriesSoon.join(' &middot; ')}</p>
+      <p class="center reveal" style="margin-top:30px;color:var(--ink-soft)">Also working with: ${site.industriesSoon.join(' &middot; ')}</p>
     </div></section>${ctaBand()}</div>`;
   return page({
     title: "Industries I Serve | EvoVero", path: "/industries",
@@ -647,7 +647,7 @@ function privacy() {
   return legalPage("privacy-policy", "Privacy Policy",
     "How EvoVero collects, uses, and protects the information you share. The short version: I only collect what I need to help you, I never sell it, and I never share your mobile number for anyone else's marketing.",
     [
-      ["Who I am", "<p>EvoVero is a marketing agency operated by Spencer Hagen in Omaha, Nebraska. Throughout this policy, \"I\" and \"my\" mean EvoVero. You can reach me at <a href=\"mailto:" + site.email + "\">" + site.email + "</a> or " + site.phone + ".</p>"],
+      ["Who I am", "<p>" + site.legalName + " is a marketing agency operated by " + site.founder + ". Operations are based in Omaha, Nebraska. Throughout this policy, \"I\" and \"my\" mean " + site.legalName + ", doing business as EvoVero.</p><p>You can reach me at <a href=\"mailto:" + site.email + "\">" + site.email + "</a> or " + site.phone + ". Written notice can be sent to " + site.legalName + ", " + site.mailing + ", which is the company's registered agent and address of record.</p>"],
 
       ["Information I collect", "<p><strong>Information you give me.</strong> When you contact me, book a call, submit a form on this site, or fill out a lead form in one of my ads, I collect what you provide. That typically includes your name, mobile phone number, email address, business name, city, and state, along with your answers to any questions on the form.</p><p><strong>Where those forms live.</strong> Some of my forms are hosted on this website. Others are Instant Forms inside Facebook and Instagram, which are operated by Meta. When you submit a Meta Instant Form, Meta may pre-fill it with information already on your Meta profile, and Meta passes your submission to me. Meta's own handling of that data is governed by Meta's privacy policy, not this one.</p><p><strong>Information collected automatically.</strong> Standard web analytics may collect anonymous usage data such as pages viewed, referring site, browser type, and general geographic region. If you use the chat widget on this site, the conversation is recorded in my CRM.</p><p><strong>Information from working together.</strong> If you become a client, I hold the business information needed to deliver the service, which can include access to advertising accounts, website credentials, and campaign performance data.</p>"],
 
@@ -676,9 +676,11 @@ function terms() {
     "The basic terms for using this website and working with EvoVero.",
     [
       ["Using this site", "<p>This website is provided for information about EvoVero's services. Content may change at any time. By using the site you agree to use it lawfully and not to misuse it.</p>"],
-      ["Services & engagements", "<p>Specific services, deliverables, pricing, and terms are agreed in writing before any work begins. Engagements are month to month with no long-term contract unless agreed otherwise. You own the accounts and assets I build for you.</p>"],
+      ["Who you are contracting with", "<p>This website and the services described on it are provided by <strong>" + site.legalName + "</strong>, doing business as EvoVero, operated by " + site.founder + " from Omaha, Nebraska. Written notice can be sent to " + site.legalName + ", " + site.mailing + ", the company's registered agent and address of record.</p>"],
+
+      ["Services & engagements", "<p>Specific services, deliverables, pricing, and terms are agreed in writing before any work begins. Engagements are month to month with no long-term contract unless agreed otherwise. You own the accounts and assets I build for you.</p><p>Either of us may end the engagement at any time. Cancellation takes effect at the end of the billing month you have already paid for, and no further payments are charged after that. There is no cancellation fee and no notice period beyond telling me.</p>"],
       ["Ad spend", "<p>Where advertising is part of your plan, ad spend is paid by you directly to the ad platform on your own account. My fee covers building and managing campaigns, not the ad budget itself.</p>"],
-      ["Guarantee", "<p>Any performance guarantee or refund terms are defined in your individual agreement. Nothing on this website constitutes a binding guarantee on its own.</p>"],
+      ["30-day money-back guarantee", "<p>If you are not satisfied within the first 30 days of working with me, I will refund what you paid me. No questions asked, no explanation required, no hoops.</p><p><strong>What is covered.</strong> All service fees you paid to " + site.legalName + " during the guarantee period. That is my retainer, management fees, setup or build fees, and any other amount invoiced by and paid to EvoVero.</p><p><strong>What is not covered.</strong> <strong>Advertising spend is not refundable.</strong> Money you spend on Google Ads, Meta Ads, or any other advertising platform is paid by you, from your own account, directly to that platform. It never passes through EvoVero and it is not mine to return. The same applies to any other amount you pay a third party directly, such as domain registration, hosting, or software subscriptions held in your own name.</p><p><strong>The guarantee period.</strong> 30 calendar days, starting on the date of your first payment to " + site.legalName + " for the engagement. This is a one-time guarantee covering the start of our relationship. It is not a recurring monthly refund right, and it does not reset if the engagement is paused and restarted.</p><p><strong>How to use it.</strong> Email <a href=\"mailto:" + site.email + "\">" + site.email + "</a> or call " + site.phone + " within the 30 days and say you want your money back. You do not need to give a reason. I will confirm in writing and issue the refund to your original payment method, normally within 10 business days.</p><p><strong>What happens after.</strong> The engagement ends on the refund date and no further invoices are issued. Ownership of the accounts and assets built for you is not affected by a refund, per the section above. Any advertising you have running remains yours to pause or continue on your own accounts.</p><p><strong>If you have a separate written agreement</strong> that sets different guarantee or refund terms, that agreement controls for the services it covers. Absent that, this section is the guarantee.</p>"],
       ["Liability", "<p>This site and its content are provided as is. EvoVero is not liable for indirect or incidental damages arising from use of the site.</p>"],
 
       ["Text messaging program", "<p><strong>Program.</strong> EvoVero sends marketing, appointment, and follow-up text messages to people who have asked to hear from me. The sender is EvoVero, operated by Spencer Hagen, Omaha, Nebraska, texting from " + site.phone + ".</p><p><strong>How you opt in.</strong> By checking the text message consent box on an EvoVero form, including the Instant Forms attached to my Facebook and Instagram ads, by asking me to text you, or by texting me first. <strong>Consent to receive texts is not a condition of purchasing anything.</strong></p><p><strong>What you get.</strong> Replies to your inquiry, a link to book a call, appointment confirmations and reminders, short qualifying questions before a scheduled call, and occasional follow-up about the services you asked about. <strong>Some messages are sent automatically and some are written by an AI assistant.</strong> If you would rather talk to a person, say so in the thread or call " + site.phone + " and you will get me.</p><p><strong>Frequency.</strong> Varies, typically two to eight messages per month.</p><p><strong>Cost.</strong> Message and data rates may apply, depending on your plan. EvoVero does not charge you for text messages.</p><p><strong>Carriers.</strong> Mobile carriers are not liable for delayed or undelivered messages. Delivery is not guaranteed.</p><p><strong>Opting out.</strong> Reply <strong>STOP</strong> to any message. <strong>QUIT</strong>, <strong>END</strong>, <strong>CANCEL</strong>, <strong>UNSUBSCRIBE</strong>, <strong>REVOKE</strong>, and <strong>OPT OUT</strong> also work, and so does plain language such as \"stop texting me\" or \"take me off your list.\" You may receive one final message confirming the opt-out, with no marketing in it. You can also opt out by email to <a href=\"mailto:" + site.email + "\">" + site.email + "</a> or by calling " + site.phone + ". Opt-outs are honored within ten business days at the outside.</p><p><strong>Help.</strong> Reply <strong>HELP</strong> to any message, email <a href=\"mailto:" + site.email + "\">" + site.email + "</a>, or call " + site.phone + ".</p><p>How I handle the number itself, including the rule that mobile information is never shared with third parties for marketing, is covered in the <a href=\"/privacy-policy/\">Privacy Policy</a>.</p>"],

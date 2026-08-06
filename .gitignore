@@ -3,3 +3,5 @@ node_modules/
 .DS_Store
 _verify/
 *.log
+_last-known-good/
+_to_delete/
