@@ -18,7 +18,7 @@ hero: "/assets/og-default.png"
 
 <p>Before I touch a single ad, I want to know what happens to a call at 2am, during a storm when three come in at once, and when the operator is under a truck with his hands full. Usually the honest answer is that some of them ring out. That is the first thing to fix, and it is worth more than any ranking improvement, because it multiplies everything downstream.</p>
 
-<p>A 24 hour answering service works. So does a well built <a href="https://www.evovero.com/services/ai-automation/">AI receptionist</a> that picks up on the first ring, captures the location and vehicle, and texts the operator. What does not work is hoping. If you fix nothing else this year, fix the missed call.</p>
+<p>A 24 hour answering service works. So does a well built <a href="/services/ai-automation/">AI receptionist</a> that picks up on the first ring, captures the location and vehicle, and texts the operator. What does not work is hoping. If you fix nothing else this year, fix the missed call.</p>
 
 <h2>Your Google Business Profile is the storefront, not your website</h2>
 
@@ -52,13 +52,13 @@ hero: "/assets/og-default.png"
 
 <p>For emergency work that structure fits the job better than a traditional click auction does, because a click from someone comparison shopping at their desk is worth very little to a tow operator and a phone call from someone on a shoulder is worth a great deal.</p>
 
-<p>Standard <a href="https://www.evovero.com/services/google-ads/">Google Ads</a> still has a place, particularly for the searches Local Services Ads does not cover well and for scheduled work like transport, dealer moves and equipment hauling. The mistake I see most often is running one campaign for both emergency and scheduled work. They have different urgency, different keywords, different ad copy and different hours. Splitting them is usually the single biggest improvement available in a towing account.</p>
+<p>Standard <a href="/services/google-ads/">Google Ads</a> still has a place, particularly for the searches Local Services Ads does not cover well and for scheduled work like transport, dealer moves and equipment hauling. The mistake I see most often is running one campaign for both emergency and scheduled work. They have different urgency, different keywords, different ad copy and different hours. Splitting them is usually the single biggest improvement available in a towing account.</p>
 
 <h2>The website's job is narrower than you think</h2>
 
 <p>A towing site is not there to impress anyone. It is there to do three things: make the phone number impossible to miss, prove you are real, and rank for the searches that are not emergencies.</p>
 
-<p>That last one is where the money quietly is. Emergency searches are competitive and expensive. Searches like flatbed transport for a lowered car, junk vehicle removal, equipment hauling, dealer transfers and accident storage questions are lower volume, much cheaper to win, and often better jobs. Service pages and honest local content built around those terms compound over time in a way paid traffic never does. That is what <a href="https://www.evovero.com/services/seo/">local SEO work</a> is actually buying you.</p>
+<p>That last one is where the money quietly is. Emergency searches are competitive and expensive. Searches like flatbed transport for a lowered car, junk vehicle removal, equipment hauling, dealer transfers and accident storage questions are lower volume, much cheaper to win, and often better jobs. Service pages and honest local content built around those terms compound over time in a way paid traffic never does. That is what <a href="/services/seo/">local SEO work</a> is actually buying you.</p>
 
 <p>Two practical things on the site itself. Put the phone number in the header as a tap to call link on every page, because a person on a phone should never have to hunt. And build a page for each service area town, with real detail about the roads and conditions there, not a template with the town name swapped in. Google is good at recognizing the second one.</p>
 
@@ -93,4 +93,4 @@ hero: "/assets/og-default.png"
 <h3>Is a website even worth it for a towing company?</h3>
 <p>Yes, but for a different reason than most owners assume. Emergency calls mostly come from the map pack. The website earns its keep by ranking for the non emergency work, transport, junk removal, equipment hauling and dealer moves, which is less competitive and often more profitable.</p>
 
-<p>If you run a towing company and you want an honest read on where your calls are actually coming from and where they are leaking, I am happy to look at it with you. <a href="https://www.evovero.com/industries/towing/">See how I work with towing companies</a>, or <a href="https://www.evovero.com/contact/">get in touch</a> and I will walk you through what I find.</p>
+<p>If you run a towing company and you want an honest read on where your calls are actually coming from and where they are leaking, I am happy to look at it with you. <a href="/industries/towing/">See how I work with towing companies</a>, or <a href="/contact/">get in touch</a> and I will walk you through what I find.</p>
