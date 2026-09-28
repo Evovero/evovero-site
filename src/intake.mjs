@@ -13,6 +13,7 @@
 export const TRADES = {
   concrete: { label: "Concrete", services: [
     "Driveways", "Patios", "Sidewalks and walkways", "Stamped and decorative concrete", "Foundations and footings",
+    "Poured foundation walls", "Basement walls", "Crawl space foundations",
     "Garage floors and slabs", "Steps and stoops", "Retaining walls", "Concrete repair and resurfacing", "Concrete removal and replacement",
     "Commercial flatwork", "Pool decks",
   ]},
@@ -150,13 +151,20 @@ export function intakeForm() {
     </div>
     ${field('trade', 'What kind of work do you do?', `<select id="trade" name="trade" required><option value="">Pick one</option>${tradeOptions()}</select>`, '', true)}
     <div class="field hide" data-f="tradeo" id="trade-other-wrap"><label for="tradeo">What trade?</label>${text('tradeo', 'trade_other', 'Roofing, fencing, landscaping...')}</div>
+    <div class="field"><label>Who are your customers? <span class="opt">(optional)</span></label>
+      <div class="radios">
+        <label><input type="radio" name="customer_type" value="Homeowners"> Homeowners</label>
+        <label><input type="radio" name="customer_type" value="Builders and contractors"> Builders and contractors</label>
+        <label><input type="radio" name="customer_type" value="Both"> Both</label>
+      </div>
+    </div>
     <div class="field-row">
       ${field('years', 'Years in business', text('years', 'years_in_business', '12', 'inputmode="numeric"'))}
       ${field('contact', 'Best person to reach during the build', text('contact', 'build_contact', 'Name and number if not you'))}
     </div>
-    <div class="field"><label>Do you want your address on the site? <span class="req">*</span></label>
+    <div class="field"><label>Do you want your address on the site? <span class="opt">(optional)</span></label>
       <div class="radios">
-        <label><input type="radio" name="show_address" value="Yes, show the address" required> Yes, show it</label>
+        <label><input type="radio" name="show_address" value="Yes, show the address"> Yes, show it</label>
         <label><input type="radio" name="show_address" value="No, service area only"> No, service area only</label>
       </div>
     </div>
@@ -203,9 +211,9 @@ export function intakeForm() {
   steps.push(`
     <h2>Your brand</h2>
     <p class="intro">Logo, colors and the words you already use. No logo is fine, I can work with a clean text version of your name.</p>
-    <div class="field"><label>Do you have a logo? <span class="req">*</span></label>
+    <div class="field"><label>Do you have a logo? <span class="opt">(optional)</span></label>
       <div class="radios">
-        <label><input type="radio" name="has_logo" value="Yes" required> Yes</label>
+        <label><input type="radio" name="has_logo" value="Yes"> Yes</label>
         <label><input type="radio" name="has_logo" value="No, make a text version"> No, make a text version</label>
         <label><input type="radio" name="has_logo" value="Not sure"> Not sure</label>
       </div>
