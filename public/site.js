@@ -61,3 +61,38 @@
     nums.forEach(function (el) { el.textContent = el.getAttribute('data-count') + (el.getAttribute('data-suffix') || ''); });
   }
 })();
+
+/* ----------------------------------------------------------------
+   Conversion signals. These are the events that make the site
+   measurable. They no-op silently until an analytics ID exists, so
+   they are safe to ship now and start working the moment it does.
+
+   Added 2026-09-27 as part of the GA4 tracking retrofit (see MN Valley
+   Concrete's public/site.js for the pattern this was copied from).
+---------------------------------------------------------------- */
+(function () {
+  function track(name, params) {
+    if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
+    else if (window.dataLayer) window.dataLayer.push(Object.assign({ event: name }, params || {}));
+  }
+
+  // Phone taps, anywhere on the site.
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="tel:"]');
+    if (a) track('contact_phone', { method: 'phone', link_url: a.getAttribute('href'), page_path: location.pathname });
+  }, true);
+
+  // Form submissions, captured at submit so it fires even if the
+  // redirect to the thank-you page is slow or blocked.
+  document.addEventListener('submit', function (e) {
+    var f = e.target;
+    if (f && f.getAttribute && f.getAttribute('name') === 'contact') {
+      track('generate_lead', { form_name: f.getAttribute('name'), page_path: location.pathname });
+    }
+  }, true);
+
+  // The thank-you page is the confirmed conversion.
+  if (location.pathname.indexOf('/thank-you') === 0) {
+    track('generate_lead_confirmed', { page_path: location.pathname });
+  }
+})();
