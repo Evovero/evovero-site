@@ -4,6 +4,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { site, nav } from './src/data/site.mjs';
 import { serviceDetail, industryDetail } from './src/data/content.mjs';
+import { intakeForm, intakeStyles, intakeScript } from './src/intake.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const OUT = join(__dir, 'dist');
@@ -86,7 +87,7 @@ function head(p) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title>
 <meta name="description" content="${desc}">
-<link rel="canonical" href="${url}">
+${p.noindex ? '<meta name="robots" content="noindex, nofollow">\n' : ''}<link rel="canonical" href="${url}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${desc}">
@@ -636,6 +637,40 @@ function thankYou() {
 }
 
 /* ----------------------------------------------------------------
+   Website build intake (/start) — noindex, sent to clients by link.
+   Markup, styles and script live in src/intake.mjs.
+---------------------------------------------------------------- */
+function startPage() {
+  const body = pageHero({
+    eyebrow:"Website build", crumb: crumbNav(["Home","/"],["Start"]),
+    h1: `Tell me about <span class="grad">your business.</span>`,
+    sub: "This is everything I need to build your website the way you want it. Takes about 15 minutes on your phone. Your answers save as you go, so you can stop and come back.",
+    cta: false,
+  }) + `<style>${intakeStyles}</style><div class="page-body"><section class="section"><div class="wrap">${intakeForm()}</div></section></div>${intakeScript()}`;
+  return page({
+    title: "Website Build Intake Form for Local Contractors | EvoVero", path: "/start", noindex: true,
+    desc: "Fill this out and Spencer builds your website from it: services, cities, brand, proof and look. About 15 minutes on your phone. Questions? Call 402-698-4902.",
+    schema: [], body,
+  });
+}
+function startThanks() {
+  const body = pageHero({
+    eyebrow:"Got it", crumb: crumbNav(["Home","/"],["Start","/start/"],["Done"]),
+    h1: `That's everything <span class="grad">I need.</span>`,
+    sub: "Your answers are in my inbox. Here is what happens next.",
+    cta: false,
+  }) + `<div class="page-body"><section class="section"><div class="wrap" style="max-width:720px">
+      <div class="card reveal" style="margin-bottom:16px"><h3>1. Photos</h3><p>I will text you a separate upload link. Open it on your phone and pick your best job photos straight from your camera roll. Your logo can go there too.</p></div>
+      <div class="card reveal" data-d="1" style="margin-bottom:16px"><h3>2. First draft</h3><p>I build the site from what you gave me and send you a link to look at it. Nothing goes live until you have seen it.</p></div>
+      <div class="card reveal" data-d="2" style="margin-bottom:28px"><h3>3. Changes and launch</h3><p>You tell me what to fix, I fix it, and we put it live. Questions in the meantime? Call or text <a href="${site.phoneHref}">${site.phone}</a>.</p></div>
+      <p class="center"><a class="link-arrow" href="/">Back to home ${icon('arrow')}</a></p>
+    </div></section></div>`;
+  return page({ title: "Website Intake Received, Here Is What Happens Next | EvoVero", path: "/start/thanks", noindex: true,
+    desc: "Your website intake form reached Spencer at EvoVero. Next up: a photo upload link by text, then a first draft of your site to review before anything goes live.",
+    schema: [], body });
+}
+
+/* ----------------------------------------------------------------
    Legal
 ---------------------------------------------------------------- */
 // `updated` is a HARDCODED date string, deliberately. It used to be new Date() at build
@@ -871,6 +906,8 @@ const pages = [
   ['/results', results()],
   ['/contact', contact()],
   ['/thank-you', thankYou()],
+  ['/start', startPage()],
+  ['/start/thanks', startThanks()],
   ['/blog', blogIndex(posts)],
   ...posts.map(p => ['/blog/' + p.slug, blogPost(p)]),
   ['/privacy-policy', privacy()],
@@ -880,7 +917,7 @@ const pages = [
 for (const [path, html] of pages) writePage(path, html);
 
 // Sitemap: exclude the thank-you page (utility, noindex-style)
-writeFileSync(join(OUT, 'sitemap.xml'), sitemap(pages.map(p => p[0]).filter(p => p !== '/thank-you')));
+writeFileSync(join(OUT, 'sitemap.xml'), sitemap(pages.map(p => p[0]).filter(p => p !== '/thank-you' && !p.startsWith('/start'))));
 writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /thank-you/\nSitemap: ${site.domain}/sitemap.xml\n`);
 writeFileSync(join(OUT, 'llms.txt'), llmsTxt(posts));
 
