@@ -49,7 +49,7 @@ export const TRADES = {
 };
 
 const FEATURES = [
-  "Photo gallery", "Quote request form", "Online booking", "Financing mention", "Reviews section",
+  "Photo gallery", "Quote request form", "Online booking (extra setup, ask me)", "Financing mention", "Reviews section",
   "Service area map", "Blog", "Spanish version", "Emergency or 24/7 banner", "Before and after photos",
 ];
 
@@ -178,17 +178,17 @@ export function intakeForm() {
         <label><input type="radio" name="licensed_insured" value="Not yet"> Not yet</label>
       </div>
     </div>
-    ${field('lic', 'License number', text('lic', 'license_number', 'If you want it shown'), 'Only goes on the site if you put it here.')}
+    ${field('lic', 'License type and number', text('lic', 'license_number', 'If you want it shown'), 'What licenses do you hold to work in your state? Skip if your state does not license your trade. Only goes on the site if you put it here.')}
   `);
 
   // 2. Services
   steps.push(`
     <h2>Your services</h2>
-    <p class="intro">Every service you check gets its own page on the site. Check what you actually want more of, then tell me a little about each one.</p>
+    <p class="intro">Check everything you do, even work you'd rather not chase. Then mark your best money makers.</p>
     <div id="svc-checks" class="chks"></div>
     <div class="addrow"><input id="svc-add" placeholder="Add a service that isn't listed"><button type="button" class="btn btn--ghost sm" id="svc-add-btn">Add</button></div>
     <p class="hint" id="svc-hint" style="margin-bottom:14px">Pick at least one.</p>
-    ${micHint("For each service, talk it out: what's included, what a typical job looks like, what you won't do. Two or three sentences is plenty.")}
+    ${micHint("Optional. Add details only if something sets yours apart.")}
     <div id="svc-list" class="svc-list"></div>
     ${field('more', 'What jobs do you want MORE of?', area('more', 'jobs_more', 'The work that pays best or that you enjoy most'))}
     ${field('less', 'What jobs do you want LESS of?', area('less', 'jobs_less', 'Anything you would rather not get calls about'))}
@@ -203,8 +203,8 @@ export function intakeForm() {
       <div class="addrow"><input id="city-add" placeholder="Omaha, NE"><button type="button" class="btn btn--ghost sm" id="city-add-btn">Add</button></div>
       <div id="city-tags" class="tags"></div>
     </div>
-    ${field('radius', 'How far will you travel for a job?', text('radius', 'travel_radius', '45 minutes, 30 miles, whole metro...'))}
-    ${field('citymore', 'Which of those cities do you want MORE work from?', area('citymore', 'cities_want_more', 'Name them and say why, if there is a reason'))}
+    ${field('radius', 'How far will you travel for a job?', text('radius', 'travel_radius', '30 miles, whole metro, or counties'))}
+    ${field('citymore', 'Which areas do you want MORE work from?', area('citymore', 'cities_want_more', 'Name them and say why, if there is a reason'))}
   `);
 
   // 4. Brand
@@ -219,7 +219,7 @@ export function intakeForm() {
       </div>
       <p class="hint">If you have one, you can send it with your photos. I'll text you an upload link after this form comes in.</p>
     </div>
-    ${field('logolink', 'Is the logo online somewhere?', text('logolink', 'logo_link', 'Facebook page, old website, Google listing...'), 'A link is enough. I can pull it from there.')}
+    ${field('logolink', 'Where is your logo right now?', text('logolink', 'logo_link', 'Computer, paper, truck, Facebook...'), 'A file or a clear photo of it works. Send it with your job photos.')}
     ${field('colors', 'Colors', text('colors', 'brand_colors', 'Navy and orange, or whatever is on your trucks'), 'Truck wraps, shirts, business cards. Whatever you already use.')}
     ${field('tagline', 'Tagline or slogan', text('tagline', 'tagline', 'If you have one'))}
   `);
@@ -234,7 +234,7 @@ export function intakeForm() {
       <button type="button" class="btn btn--ghost sm" id="like-add">Add another</button>
     </div>
     ${field('dislike', 'Anything you do NOT want?', area('dislike', 'style_dislikes', 'Sites that feel cheap, too busy, too corporate, colors you hate...'))}
-    ${field('cursite', 'Your current website', text('cursite', 'current_site_url', 'yoursite.com, or leave blank if there is none'))}
+    ${field('cursite', 'Do you have a website now, or had one before?', text('cursite', 'current_site_url', 'www.yourbusiness.com'))}
     ${field('curbad', 'What bugs you about the current site?', area('curbad', 'current_site_dislikes', 'What is wrong, missing, or outdated'))}
     <div class="field"><label>Features you want <span class="opt">(check any)</span></label>
       <div class="chks">${checks('features', FEATURES)}</div>
@@ -246,7 +246,7 @@ export function intakeForm() {
     <h2>Why people should trust you</h2>
     <p class="intro">This is what turns a visitor into a call. Only list what is real; I never make anything up on your site.</p>
     ${field('gbp', 'Link to your Google reviews', text('gbp', 'google_reviews_link', 'Your Google Business Profile or Maps link'))}
-    ${field('warranty', 'Warranties or guarantees', text('warranty', 'warranties', 'Just say that you offer one. I keep the fine print off the site.'))}
+    ${field('warranty', 'Do you offer a warranty or guarantee on your work?', text('warranty', 'warranties', 'Example: 1 year on workmanship'), 'I keep the fine print off the site.')}
     ${field('certs', 'Certifications, associations, awards', area('certs', 'certifications', 'Manufacturer certs, BBB, trade associations, veteran owned, family owned...'))}
     ${field('financing', 'Do you offer financing?', text('financing', 'financing', 'Yes, no, or through whom'))}
     ${micHint("What do customers always ask you before they hire you? Just list the questions. Those become the FAQ on your site.")}
@@ -268,10 +268,10 @@ export function intakeForm() {
     <h2>Leads and access</h2>
     <p class="intro">Last one. How new customers should reach you, and who controls your domain.</p>
     <div class="field"><label>How do you want new leads to reach you? <span class="opt">(check any)</span></label>
-      <div class="chks">${checks('lead_channels', ["Phone call", "Text message", "Website form to my email", "Online booking"])}</div>
+      <div class="chks">${checks('lead_channels', ["Phone call", "Text message", "Website form to my email", "Online booking (extra setup, ask me)"])}</div>
     </div>
     ${field('answers', 'Who answers the phone?', text('answers', 'who_answers', 'You, office, spouse, answering service'))}
-    ${field('domain', 'Your website address, if you own one', text('domain', 'domain_name', 'yourcompany.com'))}
+    ${field('domain', 'Your website address, if you own one (like www.yourbusiness.com)', text('domain', 'domain_name', 'www.yourbusiness.com'))}
     ${field('registrar', 'Where is the domain registered?', text('registrar', 'domain_registrar', 'GoDaddy, Google, Namecheap, no idea...'), 'Never put a password in this form. I will get access another way.')}
     ${field('control', 'Who controls the domain and the old website?', text('control', 'domain_control', 'You, a previous web guy, a nephew...'))}
     ${field('anything', 'Anything else I should know?', area('anything', 'anything_else', ''))}
@@ -293,6 +293,7 @@ export function intakeForm() {
     <input type="hidden" name="primary_city">
     <input type="hidden" name="trade_label">
     <input type="hidden" name="source_link">
+    <input type="hidden" name="form_version" value="v3">
     <p class="err" id="err">A couple of required fields are still empty. They are marked above.</p>
     <div class="nav-row">
       <button type="button" class="btn btn--ghost" id="back">Back</button>
@@ -341,14 +342,14 @@ export function intakeScript() {
     var keys = Object.keys(state.services);
     svcList.innerHTML = keys.map(function(s){ var d = state.services[s];
       return '<div class="svc" data-s="'+esc(s)+'"><div class="svc-head"><strong>'+esc(s)+'</strong><button type="button" data-rm>Remove</button></div>'+
-        '<textarea placeholder="What is included, a typical job, anything you will not do">'+esc(d.desc||'')+'</textarea>'+
+        '<textarea placeholder="Stamped, stained, how tall, commercial size, anything special">'+esc(d.desc||'')+'</textarea>'+
         '<label class="top"><input type="checkbox"'+(d.top?' checked':'')+'> One of my best money makers</label></div>'; }).join('');
   }
   svcChecks.addEventListener('change', function(e){ var v=e.target.value; if(e.target.checked){ state.services[v] = state.services[v]||{desc:'',top:false}; } else { delete state.services[v]; } renderSvcList(); store(); });
   svcList.addEventListener('input', function(e){ var box=e.target.closest('.svc'); if(!box) return; var s=box.getAttribute('data-s'); if(e.target.tagName==='TEXTAREA') state.services[s].desc=e.target.value; store(); });
   svcList.addEventListener('change', function(e){ var box=e.target.closest('.svc'); if(!box) return; var s=box.getAttribute('data-s'); if(e.target.type==='checkbox') state.services[s].top=e.target.checked; store(); });
   svcList.addEventListener('click', function(e){ if(!e.target.hasAttribute('data-rm')) return; var s=e.target.closest('.svc').getAttribute('data-s'); delete state.services[s]; renderChecks(); store(); });
-  function addSvc(){ var i=document.getElementById('svc-add'); var v=i.value.trim(); if(!v) return; if(state.custom.indexOf(v)<0 && !(TRADES[form.trade.value]||{services:[]}).services.some(function(x){return x.toLowerCase()===v.toLowerCase();})) state.custom.push(v); state.services[v]=state.services[v]||{desc:'',top:false}; i.value=''; renderChecks(); store(); }
+  function addSvc(){ var i=document.getElementById('svc-add'); var parts=i.value.split(',').map(function(x){return x.trim();}).filter(Boolean); if(!parts.length) return; var base=(TRADES[form.trade.value]||{services:[]}).services; parts.forEach(function(v){ var hit=base.concat(state.custom).filter(function(x){return x.toLowerCase()===v.toLowerCase();})[0]; if(hit){ v=hit; } else { state.custom.push(v); } state.services[v]=state.services[v]||{desc:'',top:false}; }); i.value=''; renderChecks(); store(); }
   document.getElementById('svc-add-btn').addEventListener('click', addSvc);
   document.getElementById('svc-add').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); addSvc(); } });
   form.trade.addEventListener('change', function(){ renderChecks(); store(); });
