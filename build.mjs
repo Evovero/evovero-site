@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import { site, nav } from './src/data/site.mjs';
 import { serviceDetail, industryDetail } from './src/data/content.mjs';
 import { intakeForm, intakeStyles, intakeScript } from './src/intake.mjs';
+import { makeOfferPages } from './src/offer/pages.mjs';
+import { demos, buildDemos } from './src/demos/index.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const OUT = join(__dir, 'dist');
@@ -914,6 +916,12 @@ const pages = [
   ['/terms', terms()],
 ];
 
+// $100/mo website offer: /get-started, /websites and the demo sites. All noindex, out of the
+// sitemap and linked from no nav or footer. Kept apart so they never touch the main site pages.
+const offerPages = makeOfferPages({ head, icon, site, demos });
+for (const [path, html] of offerPages) writePage(path, html);
+const demoCount = buildDemos(OUT);
+
 for (const [path, html] of pages) writePage(path, html);
 
 // Sitemap: exclude the thank-you page (utility, noindex-style)
@@ -921,4 +929,4 @@ writeFileSync(join(OUT, 'sitemap.xml'), sitemap(pages.map(p => p[0]).filter(p =>
 writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /thank-you/\nSitemap: ${site.domain}/sitemap.xml\n`);
 writeFileSync(join(OUT, 'llms.txt'), llmsTxt(posts));
 
-console.log(`Built ${pages.length} pages (${posts.length} blog post(s)) to dist/`);
+console.log(`Built ${pages.length} pages (${posts.length} blog post(s)) to dist/, plus ${offerPages.length} offer pages and ${demoCount} demo pages`);
