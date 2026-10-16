@@ -92,7 +92,7 @@
   }, true);
 
   // The thank-you page is the confirmed conversion.
-  if (location.pathname.indexOf('/thank-you') === 0) {
+  if (location.pathname.indexOf('/thank-you') === 0 || location.pathname.indexOf('/get-started/thanks') === 0) {
     track('generate_lead_confirmed', { page_path: location.pathname });
   }
 })();

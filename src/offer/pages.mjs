@@ -7,7 +7,7 @@ import { types, typeById } from './types.mjs';
 
 const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
 
-const FORM_VERSION = '2026-10-15 v1';
+const FORM_VERSION = '2026-10-16 v2';
 
 const css = `
 .of-top{position:sticky;top:0;z-index:100;background:rgba(246,248,253,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
@@ -59,6 +59,9 @@ const css = `
 .of-form select,.of-form input:not([type=checkbox]),.of-form textarea{width:100%}
 .of-form .checkrow input{width:auto}
 .of-hidden{display:none}
+.of-opt{font-weight:400;color:var(--ink-soft);font-size:.9em}
+.of-form .hint{margin-top:6px;font-size:.88rem;color:var(--ink-soft)}
+.of-form input[type=file]{padding:10px;background:var(--surface);border:1px dashed var(--line);border-radius:var(--r-sm)}
 .of-tip{margin-top:20px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:var(--r);padding:22px 24px;box-shadow:var(--sh-sm);max-width:900px}
 .of-tip h3{font-size:1.08rem;margin-bottom:6px}.of-tip p{color:var(--ink-soft);font-size:.98rem}
 .of-foot{background:var(--navy-abyss);color:var(--on-dark-soft);padding-block:32px;font-size:.92rem}
@@ -127,44 +130,41 @@ export function makeOfferPages({ head, icon, site, demos }) {
     const stateOptions = US_STATES.map(s => `<option>${s}</option>`).join('');
     const check = (name, items) => `<div class="checkrow">${items.map(v => `<label><input type="checkbox" name="${name}" value="${v}"> ${v}</label>`).join('')}</div>`;
 
-    const form = `<form id="build-form" class="form-card of-form" name="website-offer" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/get-started/thanks/">
+    const form = `<form id="build-form" class="form-card of-form" name="website-offer" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field" action="/get-started/thanks/">
       <input type="hidden" name="form-name" value="website-offer">
       <input type="hidden" name="form_version" value="${FORM_VERSION}">
       <p hidden><label>Skip this<input name="bot-field"></label></p>
       <div class="field-row">
         <div class="field"><label for="w-name">Your name</label><input id="w-name" name="name" autocomplete="name" required></div>
-        <div class="field"><label for="w-biz">Business name</label><input id="w-biz" name="business_name" autocomplete="organization" required></div>
+        <div class="field"><label for="w-biz">Business name</label><input id="w-biz" name="business_name" autocomplete="organization"></div>
       </div>
       <div class="field-row">
         <div class="field"><label for="w-ph">Phone</label><input id="w-ph" name="phone" type="tel" autocomplete="tel" required></div>
         <div class="field"><label for="w-em">Email</label><input id="w-em" name="email" type="email" autocomplete="email" required></div>
       </div>
+      <div class="field"><fieldset><legend>Best way to reach you</legend>${check('contact_pref', ['Text', 'Call', 'Email'])}</fieldset></div>
+      <div class="field"><label for="w-city">City and state</label><input id="w-city" name="city_state" autocomplete="address-level2" placeholder="Omaha, NE"></div>
       <div class="field"><label for="w-type">What kind of business is it?</label>
-        <select id="w-type" name="business_type" required><option value="">Choose one</option>${typeOptions}</select></div>
+        <select id="w-type" name="business_type"><option value="">Choose one</option>${typeOptions}</select></div>
       <div class="field of-hidden" id="w-other-wrap"><label for="w-other">What kind of business?</label><input id="w-other" name="business_type_other"></div>
-      <div class="field"><label for="w-what">What do you do, in a sentence or two?</label><textarea id="w-what" name="what_you_do" required></textarea></div>
+      <div class="field"><label for="w-what">What does your company do, and what sets you apart from your competition?</label><textarea id="w-what" name="what_you_do"></textarea></div>
       <div class="field"><label for="w-struct">Which structure fits?</label>
         <select id="w-struct" name="structure"><option value="">Choose one</option>${structOptions}</select></div>
-      <div class="field"><label for="w-where">Where are you located, and where do your customers come from?</label><input id="w-where" name="location_and_area"></div>
       <div class="field"><label for="w-site">Current website, if you have one</label><input id="w-site" name="current_website" inputmode="url" placeholder="yourbusiness.com"></div>
-      <div class="field"><label for="w-domain">Do you own a domain?</label>
-        <select id="w-domain" name="owns_domain"><option value="">Choose one</option><option>Yes</option><option>No</option><option>Not sure</option></select></div>
-      <div class="field of-hidden" id="w-domain-wrap"><label for="w-domain-name">Which domain?</label><input id="w-domain-name" name="domain_name"></div>
-      <div class="field"><label for="w-social">Social pages (Facebook, Instagram, anything else)</label><input id="w-social" name="social_pages"></div>
+      <div class="field"><label for="w-social">Social pages, like Facebook or Instagram</label><input id="w-social" name="social_pages" placeholder="Paste links, or type None"></div>
       <div class="field"><label for="w-gbp">Do you have a Google Business Profile?</label>
         <select id="w-gbp" name="google_business_profile"><option value="">Choose one</option><option>Yes</option><option>No</option><option>Not sure</option></select></div>
       <div class="field"><label for="w-like">Two or three websites you like, and what you like about them</label><textarea id="w-like" name="websites_you_like"></textarea></div>
-      <div class="field"><fieldset><legend>Best way to reach you</legend>${check('contact_pref', ['Text', 'Call', 'Email'])}</fieldset></div>
-      <div class="field"><label for="w-state">What state are you in?</label>
-        <select id="w-state" name="state" required><option value="">Choose one</option>${stateOptions}</select></div>
-      <div class="field"><label for="w-more">Anything else?</label><textarea id="w-more" name="anything_else"></textarea></div>
+      <div class="field"><label for="w-logo">Your logo</label><input id="w-logo" name="logo" type="file" accept="image/*,.pdf,.svg,.ai,.eps">
+        <p class="hint">No logo yet? Describe the colors you want below instead.</p></div>
+      <div class="field"><label for="w-colors">Colors you want on the site</label><input id="w-colors" name="colors" placeholder="Navy and orange, match my truck, not sure yet"></div>
+      <div class="field"><label for="w-more">Anything else?</label><textarea id="w-more" name="anything_else" placeholder="Specific information you want on the site, special features like booking, a menu or online ordering, or questions for me."></textarea></div>
       <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Send it over ${icon('arrow')}</button>
       <p class="form-note">I never sell your info. You hear from me, nobody else.</p>
     </form>
     <script>(function(){
       function toggle(sel, wrap, show){var s=document.getElementById(sel),w=document.getElementById(wrap);if(!s||!w)return;function f(){w.classList.toggle('of-hidden',!show(s.value));}s.addEventListener('change',f);f();}
       toggle('w-type','w-other-wrap',function(v){return v==='Other';});
-      toggle('w-domain','w-domain-wrap',function(v){return v==='Yes';});
     })();</script>`;
 
     const body = `<main>
@@ -192,7 +192,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
     <section class="of-sec"><div class="wrap wrap--wide">
       <h2 class="reveal">What I need from you</h2>
       <div class="of-grid3">
-        <div class="of-card reveal"><h3>Business basics</h3><p>The form below covers it. Send your logo too, if you have one.</p></div>
+        <div class="of-card reveal"><h3>Business basics</h3><p>The form below covers it, including a spot for your logo if you have one.</p></div>
         <div class="of-card reveal" data-d="1"><h3>Photos</h3><p>Your own photos work best, and phone photos are fine. After the form you get a separate link to upload them.</p></div>
         <div class="of-card reveal" data-d="2"><h3>Your domain</h3><p>Already have one? I connect it. Need one? I register it for you.</p></div>
       </div>
@@ -218,9 +218,9 @@ export function makeOfferPages({ head, icon, site, demos }) {
 
     <section class="of-sec of-sec--alt" id="form"><div class="wrap wrap--wide">
       <div class="center reveal"><h2>Tell me about your business</h2>
-      <p class="sub" style="margin-inline:auto">Fill this out and I reach out to talk it through. Questions first? Text <a href="${site.phoneHref}">${site.phone}</a>.</p></div>
+      <p class="sub" style="margin-inline:auto">Fill this out and I reach out to talk it through. Questions first? Text <a href="${site.phoneHref}">${site.phone}</a>.</p>
+      <p style="margin-top:18px">${examplesBtn('btn--ghost', 'See example sites first')}</p></div>
       ${form}
-      <p class="center" style="margin-top:28px">${examplesBtn()}</p>
     </div></section>
     </main>`;
 

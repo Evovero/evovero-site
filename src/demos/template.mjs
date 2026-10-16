@@ -28,6 +28,8 @@ const ICONS = {
   cal: '<rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9h18M8 3v3M16 3v3"/>',
   home: '<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/>',
   drop: '<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/>',
+  scissors: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/>',
+  camera: '<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.5"/>',
   sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/>',
 };
 const ic = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k] || ICONS.spark}</svg>`;
@@ -208,7 +210,7 @@ const S = {
     ${s.kicker ? `<span class="kick rv">${s.kicker}</span>` : ''}<h1 class="rv" data-d="1">${s.h1}</h1>${s.sub ? `<p class="rv" data-d="2">${s.sub}</p>` : ''}</div></section>`,
 
   cards: (d, s) => wrapSec(s, `<div class="cards">${s.items.map((it, i) => `<${it.href ? 'a' : 'div'} class="card rv" data-d="${i % 3}"${it.href ? ` href="${link(d, it.href)}"` : ''}>
-      ${it.image ? `<div class="card__img"><img src="${photo(it.image, 800)}" alt="${esc(it.alt || it.title)}" loading="lazy"></div>` : ''}
+      ${it.image ? `<div class="card__img"><img src="${photo(it.image, 800)}" alt="${esc(it.alt || it.title)}" loading="lazy"${it.pos ? ` style="object-position:${it.pos}"` : ''}></div>` : ''}
       <div class="card__b">${it.price ? `<div class="price">${it.price}</div>` : ''}<h3>${it.title}</h3><p>${it.text}</p>${it.href ? `<span class="more">${it.more || 'Learn more'} ${ic('arrow')}</span>` : ''}</div></${it.href ? 'a' : 'div'}>`).join('')}</div>`),
 
   split: (d, s) => wrapSec(s, `<div class="split ${s.flip ? 'split--r' : ''}">
@@ -219,7 +221,7 @@ const S = {
 
   steps: (d, s) => wrapSec(s, `<div class="steps">${s.items.map((it, i) => `<div class="step rv" data-d="${i % 4}"><h3>${it.title}</h3><p>${it.text}</p></div>`).join('')}</div>`),
 
-  gallery: (d, s) => wrapSec(s, `<div class="gal">${s.items.map((it, i) => `<figure class="rv" data-d="${i % 3}"><img src="${photo(it.image, 900)}" alt="${esc(it.alt)}" loading="lazy"><figcaption>${it.alt}</figcaption></figure>`).join('')}</div>`),
+  gallery: (d, s) => wrapSec(s, `<div class="gal">${s.items.map((it, i) => `<figure class="rv" data-d="${i % 3}"><img src="${photo(it.image, 900)}" alt="${esc(it.alt)}" loading="lazy"${it.pos ? ` style="object-position:${it.pos}"` : ''}><figcaption>${it.alt}</figcaption></figure>`).join('')}</div>`),
 
   menu: (d, s) => wrapSec(s, `<div class="menu">${s.groups.map((g, i) => `<div class="rv" data-d="${i % 3}"><h3>${g.name}</h3>${g.items.map(it => `<div class="mi"><div><b>${it.name}</b>${it.note ? `<small>${it.note}</small>` : ''}</div><span>${it.price}</span></div>`).join('')}</div>`).join('')}</div>`),
 

@@ -86,6 +86,14 @@ function head(p) {
   gtag('js', new Date());
   gtag('config', 'G-B3F09ZML27');
 </script>
+<!-- Microsoft Clarity (heatmaps and session recordings), project yyotgrjf9i, added 2026-10-16 -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "yyotgrjf9i");
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title>
 <meta name="description" content="${desc}">
