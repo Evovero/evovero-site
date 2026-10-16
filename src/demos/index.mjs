@@ -3,8 +3,9 @@
 // buildDemos() renders every demo with the shared template into dist/websites/demo/<slug>/.
 import { renderDemo } from './template.mjs';
 import lawn from './sites/lawn.mjs';
+import coffee from './sites/coffee.mjs';
 
-export const demos = [lawn];
+export const demos = [lawn, coffee];
 
 export function buildDemos(OUT) {
   let n = 0;

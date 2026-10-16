@@ -143,8 +143,6 @@ export function makeOfferPages({ head, icon, site, demos }) {
         <select id="w-type" name="business_type" required><option value="">Choose one</option>${typeOptions}</select></div>
       <div class="field of-hidden" id="w-other-wrap"><label for="w-other">What kind of business?</label><input id="w-other" name="business_type_other"></div>
       <div class="field"><label for="w-what">What do you do, in a sentence or two?</label><textarea id="w-what" name="what_you_do" required></textarea></div>
-      <div class="field"><fieldset><legend>What should the website do for you?</legend>
-        ${check('site_goals', ['Get calls', 'Take orders or bookings', 'Show the menu or services', 'Look legit', 'Something else'])}</fieldset></div>
       <div class="field"><label for="w-struct">Which structure fits?</label>
         <select id="w-struct" name="structure"><option value="">Choose one</option>${structOptions}</select></div>
       <div class="field"><label for="w-where">Where are you located, and where do your customers come from?</label><input id="w-where" name="location_and_area"></div>
