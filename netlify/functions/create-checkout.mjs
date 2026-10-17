@@ -4,12 +4,13 @@
 //   STRIPE_SECRET_KEY       secret or restricted key (Checkout Sessions: write)
 //   STRIPE_PUBLISHABLE_KEY  pk_test_... or pk_live_..., must be the same mode as the secret key
 //   STRIPE_PRICE_ID         recurring price for Monthly Service ($100/mo)
-//   STRIPE_SETUP_PRICE_ID   optional one time build fee price. Leave unset during a sale window.
+//   STRIPE_SETUP_PRICE_ID   optional one time build fee price ($400). Regular pricing = $500 first day.
+//   STRIPE_PROMO_CODE_ID    optional promo_... id (WEBSITE100) auto applied during a sale. Delete + redeploy to end the sale.
 export default async (req) => {
   const json = (obj, status = 200) => new Response(JSON.stringify(obj), { status, headers: { 'content-type': 'application/json' } });
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
 
-  const { STRIPE_SECRET_KEY: sk, STRIPE_PUBLISHABLE_KEY: pk, STRIPE_PRICE_ID: price, STRIPE_SETUP_PRICE_ID: setup } = process.env;
+  const { STRIPE_SECRET_KEY: sk, STRIPE_PUBLISHABLE_KEY: pk, STRIPE_PRICE_ID: price, STRIPE_SETUP_PRICE_ID: setup, STRIPE_PROMO_CODE_ID: promo } = process.env;
   if (!sk || !pk || !price) return json({ error: 'Checkout is not configured yet' }, 503);
 
   let input = {};
@@ -25,6 +26,7 @@ export default async (req) => {
   p.set('line_items[0][price]', price);
   p.set('line_items[0][quantity]', '1');
   if (setup) { p.set('line_items[1][price]', setup); p.set('line_items[1][quantity]', '1'); }
+  if (promo) p.set('discounts[0][promotion_code]', promo);
   p.set('return_url', origin + '/get-started/welcome/?session_id={CHECKOUT_SESSION_ID}');
   p.set('phone_number_collection[enabled]', 'true');
   p.set('custom_fields[0][key]', 'businessname');

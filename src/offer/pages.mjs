@@ -282,13 +282,65 @@ export function makeOfferPages({ head, icon, site, demos }) {
   }
 
   /* ---------------- /get-started/welcome (Stripe return page) ---------------- */
+  // Asks /.netlify/functions/get-session whether the Stripe checkout actually completed.
+  // complete -> "You're in"; open -> "payment didn't go through"; no id or error -> neutral thanks.
   function getStartedWelcome() {
-    const body = `<main><section class="of-hero"><div class="wrap wrap--wide reveal">
-      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Payment received</span>
-      <h1 style="margin-top:16px">You're in. <span class="grad">Your site is live within 48 hours.</span></h1>
-      <p class="lead">I start building from your answers now. Next, I reach out the way you asked to go over photos and the general look. Questions in the meantime? Text <a style="color:#fff" href="${site.phoneHref}">${site.phone}</a>.</p>
-      <div class="hero__cta">${examplesBtn('btn--on-dark btn--lg')}</div>
-    </div></section></main>`;
+    const next = [
+      ['I start building', 'I build your site from your form answers. It goes live within 48 hours.'],
+      ['Questions go your way', 'If I need anything, I reach out the way you picked on the form: text, call or email.'],
+      ['Photos', 'Your site launches with stock photos where we need them. Send real photos of your work, your trucks and your team anytime and I swap them in.'],
+      ['You review it', 'When it is live, I send you the link. Go through it and tell me everything you want changed. One long email is fine. I keep revising until it looks the way you want.'],
+      ['Billing', 'After today it is $100 a month and you can cancel anytime. Don\'t love it in your first month? You get your $100 back.'],
+    ];
+    const steps = next.map(([h, p], i) => `<li class="wl-step" style="--i:${i}"><span class="wl-num">${i + 1}</span><div><h3>${h}</h3><p>${p}</p></div></li>`).join('');
+    const wcss = `
+.wl-hero{background:var(--grad-hero);color:var(--on-dark);padding-block:clamp(60px,9vw,120px) clamp(56px,8vw,96px);position:relative;overflow:hidden}
+.wl-hero:before{content:"";position:absolute;inset:-40% -10% auto auto;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle,rgba(110,160,255,.28),transparent 65%);animation:wl-float 9s ease-in-out infinite}
+@keyframes wl-float{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,30px)}}
+.wl-check{width:84px;height:84px;border-radius:50%;background:var(--grad-blue);display:grid;place-items:center;box-shadow:0 0 0 0 rgba(110,160,255,.6);animation:wl-pop .7s cubic-bezier(.2,1.4,.4,1) both,wl-ring 2.4s 1s ease-out infinite}
+.wl-check svg{width:42px;height:42px;stroke:#fff;stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:wl-draw .6s .5s ease forwards}
+.wl-check.is-warn{background:linear-gradient(135deg,#f5a524,#e2761b)}
+.wl-check.is-warn svg{stroke-dashoffset:0;animation:none}
+@keyframes wl-pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes wl-draw{to{stroke-dashoffset:0}}
+@keyframes wl-ring{0%{box-shadow:0 0 0 0 rgba(110,160,255,.55)}80%,100%{box-shadow:0 0 0 22px rgba(110,160,255,0)}}
+.wl-hero h1{color:#fff;margin-top:26px;max-width:820px;animation:wl-up .7s .3s both}
+.wl-hero h1 .grad{background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wl-hero .lead{margin-top:18px;font-size:clamp(1.05rem,1.6vw,1.25rem);color:var(--on-dark-soft);max-width:640px;line-height:1.55;animation:wl-up .7s .45s both}
+.wl-hero .hero__cta{animation:wl-up .7s .6s both}
+@keyframes wl-up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.wl-sec{padding-block:clamp(48px,7vw,88px)}
+.wl-sec h2{font-size:clamp(1.6rem,3.2vw,2.3rem)}
+.wl-list{list-style:none;padding:0;margin:30px 0 0;display:grid;gap:14px;max-width:820px;position:relative}
+.wl-list:before{content:"";position:absolute;left:27px;top:28px;bottom:28px;width:2px;background:linear-gradient(var(--blue-light),transparent)}
+.wl-step{display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;box-shadow:var(--sh-sm);opacity:0;transform:translateY(16px);animation:wl-up .6s calc(.9s + var(--i) * .15s) both;transition:transform .2s,box-shadow .2s}
+.wl-step:hover{transform:translateY(-2px);box-shadow:var(--sh-lg)}
+.wl-num{width:40px;height:40px;border-radius:50%;background:var(--grad-blue);color:#fff;display:grid;place-items:center;font-family:var(--font-head);font-weight:700;position:relative;z-index:1}
+.wl-step h3{font-size:1.1rem;margin-bottom:4px}.wl-step p{color:var(--ink-soft);font-size:.98rem}
+.wl-help{margin-top:26px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){.wl-hero *,.wl-step,.wl-hero:before{animation:none!important;opacity:1!important;transform:none!important}}`;
+    const body = `<style>${wcss}</style><main>
+    <section class="wl-hero"><div class="wrap wrap--wide">
+      <div class="wl-check" id="wl-check"><svg viewBox="0 0 24 24"><path id="wl-icon" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+      <h1 id="wl-title">Thanks. <span class="grad">Here's what happens next.</span></h1>
+      <p class="lead" id="wl-lead">Questions anytime? Text <a style="color:#fff" href="${site.phoneHref}">${site.phone}</a>.</p>
+      <div class="hero__cta" id="wl-cta" style="margin-top:26px">${examplesBtn('btn--on-dark btn--lg')}</div>
+    </div></section>
+    <section class="wl-sec"><div class="wrap wrap--wide">
+      <h2>What happens next</h2>
+      <ol class="wl-list">${steps}</ol>
+      <p class="wl-help">Questions in the meantime? Text <a href="${site.phoneHref}">${site.phone}</a> or email <a href="mailto:${site.email}">${site.email}</a>.</p>
+    </div></section>
+    </main>
+    <script>(function(){
+      var id=new URLSearchParams(location.search).get('session_id');if(!id)return;
+      var t=document.getElementById('wl-title'),l=document.getElementById('wl-lead'),c=document.getElementById('wl-check'),cta=document.getElementById('wl-cta');
+      fetch('/.netlify/functions/get-session?session_id='+encodeURIComponent(id)).then(function(r){return r.ok?r.json():null;}).then(function(d){
+        if(!d)return;
+        if(d.status==='complete'){t.innerHTML='You\\'re in. <span class="grad">Your site is live within 48 hours.</span>';l.innerHTML='Your payment went through. Questions anytime? Text <a style="color:#fff" href="${site.phoneHref}">${site.phone}</a>.';}
+        else if(d.status==='open'){c.classList.add('is-warn');document.getElementById('wl-icon').setAttribute('d','M12 7v6M12 17h.01');t.innerHTML='Your payment didn\\'t go through. <span class="grad">Your answers are saved.</span>';l.textContent='Nothing was charged. You can try again, or text me and I\\'ll send you a link.';cta.innerHTML='<a class="btn btn--primary btn--lg" href="/get-started/#build-form">Try again</a>';var s=document.querySelector('.wl-sec');if(s)s.style.display='none';}
+      }).catch(function(){});
+    })();</script>`;
     return shell({
       title: 'You Are In, Your Website Is Live Within 48 Hours | EvoVero',
       desc: 'Your first payment is in and Spencer is building your site. It goes live within 48 hours, then he reaches out about photos and the look. Questions? Text him.',
