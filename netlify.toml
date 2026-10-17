@@ -16,3 +16,10 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Short, branded link for the W100 first touch text (added 2026-10-17). Carriers filter public shorteners like bit.ly.
+[[redirects]]
+  from = "/mysite"
+  to = "/get-started/?src=text"
+  status = 301
+  force = true
