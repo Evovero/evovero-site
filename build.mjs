@@ -70,6 +70,7 @@ function ribbon(id = 'r') {
 /* ----------------------------------------------------------------
    Head / Header / Footer
 ---------------------------------------------------------------- */
+const INLINE_CSS = readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'public', 'styles.css'), 'utf8');
 function head(p) {
   const title = p.title;
   const desc = p.desc;
@@ -80,13 +81,19 @@ function head(p) {
 <head>
 <meta charset="utf-8">
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-B3F09ZML27"></script>
-<script>
+${p.fast ? '' : '<script async src="https://www.googletagmanager.com/gtag/js?id=G-B3F09ZML27"></script>\n'}<script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-B3F09ZML27');
 </script>
+${p.fast ? `<script>
+  // Landing pages: load analytics after the page has painted (keeps them off the critical path).
+  window.addEventListener('load', function(){ setTimeout(function(){
+    var g=document.createElement('script');g.async=1;g.src='https://www.googletagmanager.com/gtag/js?id=G-B3F09ZML27';document.head.appendChild(g);
+    (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","yyotgrjf9i");
+  }, 1200); });
+</script>` : `
 <!-- Microsoft Clarity (heatmaps and session recordings), project yyotgrjf9i, added 2026-10-16 -->
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -94,7 +101,7 @@ function head(p) {
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "yyotgrjf9i");
-</script>
+</script>`}
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title>
 <meta name="description" content="${desc}">
@@ -109,8 +116,9 @@ ${p.noindex ? '<meta name="robots" content="noindex, nofollow">\n' : ''}<link re
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="/styles.css">
+${p.fast ? `<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"></noscript>
+<style>${INLINE_CSS}</style>` : `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/styles.css">`}
 <noscript><style>.nav--hero{transform:none!important;opacity:1!important;pointer-events:auto!important;background:rgba(246,248,253,.9);backdrop-filter:blur(14px);border-bottom-color:var(--line)}.reveal{opacity:1!important;transform:none!important}</style></noscript>
 ${ld}
 </head>

@@ -138,13 +138,13 @@ export function makeOfferPages({ head, icon, site, demos }) {
 
   // Minimal shell: logo plus one or two buttons. No site navigation, by design.
   const top = (buttons, linkLogo = true) => `<header class="of-top"><div class="wrap wrap--wide">
-    ${linkLogo ? `<a class="brand" href="/get-started/">` : `<span class="brand">`}<img src="${site.logo}" alt="EvoVero" width="34" height="34"><span>EvoVero</span>${linkLogo ? '</a>' : '</span>'}
+    ${linkLogo ? `<a class="brand" href="/get-started/">` : `<span class="brand">`}<img src="/assets/evovero-logo-80.webp" alt="EvoVero" width="34" height="34"><span>EvoVero</span>${linkLogo ? '</a>' : '</span>'}
     <div class="of-top__cta">${buttons}</div></div></header>`;
   const foot = (reviewsLink = false) => `<footer class="of-foot"><div class="wrap wrap--wide">
     <span>&copy; ${new Date().getFullYear()} EvoVero</span>
     <span style="display:flex;gap:18px;flex-wrap:wrap"><a href="${site.phoneHref}">${site.phone}</a><a href="mailto:${site.email}">${site.email}</a>${reviewsLink ? '<a href="/reviews/" target="_blank" rel="noopener">Reviews</a>' : ''}<a href="/privacy-policy/">Privacy</a><a href="/terms/">Terms</a></span>
   </div></footer><script src="/site.js" defer></script></body></html>`;
-  const shell = (p, buttons, body) => head({ ...p, noindex: true, schema: [] }) + `<style>${css}</style>` + top(buttons, !p.path.startsWith('/get-started')) + body + foot(p.path.startsWith('/get-started'));
+  const shell = (p, buttons, body) => head({ ...p, noindex: true, schema: [], fast: true }) + `<style>${css}</style>` + top(buttons, !p.path.startsWith('/get-started')) + body + foot(p.path.startsWith('/get-started'));
 
   const examplesBtn = (cls = 'btn--ghost', label = 'See example sites') =>
     `<a class="btn ${cls}" href="/websites/" target="_blank" rel="noopener">${label} ${icon('arrow')}</a>`;
@@ -253,7 +253,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <p class="lead">Your first month is $100 instead of the regular $500, through October 31. Your site is live within 48 hours, with unlimited edits after that.</p>
       <div class="pills"><span>First month $100, regular $500</span><span>Ends October 31</span><span>Cancel anytime</span></div>
       <div class="hero__cta"><a class="btn btn--primary btn--lg" href="#form">Start my site ${icon('arrow')}</a>${examplesBtn('btn--on-dark btn--lg')}</div>
-    </div><div class="of-hero__art" aria-hidden="true"><div class="pl" style="--s:150px"><img src="${site.logo}" alt="" width="150" height="150"></div></div></div></section>
+    </div><div class="of-hero__art" aria-hidden="true"><div class="pl" style="--s:150px"><img src="/assets/evovero-logo-300.webp" alt="" width="150" height="150"></div></div></div></section>
 
     <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Chris'), '', '')}</div></section>
 
@@ -288,7 +288,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
     <a class="of-sticky" id="of-sticky" href="#form">Start my site, $100 ${icon('arrow')}</a>
     <script>(function(){var b=document.getElementById('of-sticky'),f=document.getElementById('form'),h=document.querySelector('.of-hero');if(!b||!f)return;var t=0;
       function u(){t=0;var show=h.getBoundingClientRect().bottom<0&&f.getBoundingClientRect().top>window.innerHeight*0.6;b.classList.toggle('on',show);}
-      window.addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(u);},{passive:true});u();})();</script>`;
+      window.addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(u);},{passive:true});})();</script>`;
 
     return shell({
       title: 'Small Business Website, $100 a Month, No Build Fee | EvoVero',
@@ -403,7 +403,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
 @media (prefers-reduced-motion:reduce){.wl-hero *,.wl-step,.wl-hero:before{animation:none!important;opacity:1!important;transform:none!important}}`;
     const body = `<style>${wcss}</style><main>
     <section class="wl-hero"><div class="wrap wrap--wide">
-      <div class="pl wl-logo" id="wl-check"><img src="${site.logo}" alt="EvoVero" width="104" height="104"></div>
+      <div class="pl wl-logo" id="wl-check"><img src="/assets/evovero-logo-300.webp" alt="EvoVero" width="104" height="104"></div>
       <h1 id="wl-title">Thanks. <span class="grad">Here's what happens next.</span></h1>
       <p class="lead" id="wl-lead">Questions anytime? Text <span style="white-space:nowrap"><a style="color:#fff" href="${site.phoneHref}">${site.phone}</a></span>.</p>
       <div class="hero__cta" id="wl-cta" style="margin-top:26px"><a class="btn btn--primary btn--lg" href="#details">Last step: the details ${icon('arrow')}</a></div>
