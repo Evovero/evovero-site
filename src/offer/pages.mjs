@@ -116,9 +116,9 @@ export function makeOfferPages({ head, icon, site, demos }) {
   function getStarted() {
     const steps = [
       ['Tell me about your business', 'Fill out the form at the bottom of this page with the information you want on your site.'],
-      ['We go over the details', 'I reach out the way you ask me to and we settle the basics: what goes on the site, your photos and the general look.'],
-      ['You pay the first $100', 'One payment to start. No build fee and no contract.'],
-      ['Your site is live within 48 hours', 'Then the edits start. Send me everything you want changed, even one long email, and I keep revising until it is what you want.'],
+      ['Start with your first $100', 'Pay right under the form. No build fee and no contract. Don\'t love it in your first month? You get your $100 back.'],
+      ['Your site is live within 48 hours', 'I build it from your answers, then reach out the way you asked to go over photos and the general look.'],
+      ['Then the edits start', 'Send me everything you want changed, even one long email, and I keep revising until it is what you want.'],
     ];
     const typeCards = [
       { name: 'One page', pages: 'Everything on a single scrolling page', blurb: 'Good when you want something simple, fast and clean.' },
@@ -159,12 +159,46 @@ export function makeOfferPages({ head, icon, site, demos }) {
         <p class="hint">No logo yet? Describe the colors you want below instead.</p></div>
       <div class="field"><label for="w-colors">Colors you want on the site</label><input id="w-colors" name="colors" placeholder="Navy and orange, match my truck, not sure yet"></div>
       <div class="field"><label for="w-more">Anything else?</label><textarea id="w-more" name="anything_else" placeholder="Specific information you want on the site, special features like booking, a menu or online ordering, or questions for me."></textarea></div>
-      <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Send it over ${icon('arrow')}</button>
+      <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Next: start my site ${icon('arrow')}</button>
       <p class="form-note">I never sell your info. You hear from me, nobody else.</p>
     </form>
+    <div id="pay" class="form-card of-form of-pay of-hidden" aria-live="polite">
+      <h3 style="margin:0 0 8px">Your answers are in. Now start your site.</h3>
+      <p style="margin:0 0 6px">$100 today covers your first month, and that includes building and launching your site. It is live within 48 hours. After that it's $100 a month, cancel anytime.</p>
+      <p style="margin:0 0 18px"><strong>Don't love it in your first month? You get your $100 back.</strong></p>
+      <div id="checkout"><p class="hint" id="checkout-loading">Loading secure checkout...</p></div>
+      <p class="form-note" id="pay-later">Not ready to pay yet? Your answers are saved and I'll reach out the way you asked.</p>
+    </div>
     <script>(function(){
       function toggle(sel, wrap, show){var s=document.getElementById(sel),w=document.getElementById(wrap);if(!s||!w)return;function f(){w.classList.toggle('of-hidden',!show(s.value));}s.addEventListener('change',f);f();}
       toggle('w-type','w-other-wrap',function(v){return v==='Other';});
+
+      var SALE_LINK='https://buy.stripe.com/8x2cN5dl68QR9PP5zNdfG09';
+      var form=document.getElementById('build-form'),pay=document.getElementById('pay'),box=document.getElementById('checkout');
+      function fail(email){box.innerHTML='<p>The card form did not load. <a href="'+SALE_LINK+(email?'?prefilled_email='+encodeURIComponent(email):'')+'" target="_blank" rel="noopener">Pay the first $100 on Stripe</a>, or text me and I will send you a link.</p>';}
+      function loadStripe(){return new Promise(function(ok,no){if(window.Stripe)return ok();var s=document.createElement('script');s.src='https://js.stripe.com/v3/';s.onload=ok;s.onerror=no;document.head.appendChild(s);});}
+      function startCheckout(fd){
+        var info={email:fd.get('email'),business:fd.get('business_name'),name:fd.get('name')};
+        fetch('/.netlify/functions/create-checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(info)})
+          .then(function(r){if(!r.ok)throw 0;return r.json();})
+          .then(function(d){return loadStripe().then(function(){return Stripe(d.publishableKey).initEmbeddedCheckout({fetchClientSecret:function(){return Promise.resolve(d.clientSecret);}});});})
+          .then(function(c){box.innerHTML='';c.mount('#checkout');})
+          .catch(function(){fail(info.email);});
+      }
+      if(form&&pay&&window.fetch&&window.FormData){
+        form.addEventListener('submit',function(e){
+          if(e.defaultPrevented)return;
+          e.preventDefault();
+          var btn=form.querySelector('button[type=submit]');btn.disabled=true;
+          var fd=new FormData(form);
+          fetch('/',{method:'POST',body:fd})
+            .then(function(r){if(!r.ok)throw 0;
+              form.classList.add('of-hidden');pay.classList.remove('of-hidden');
+              pay.scrollIntoView({behavior:'smooth',block:'start'});
+              startCheckout(fd);})
+            .catch(function(){btn.disabled=false;form.submit();});
+        });
+      }
     })();</script>`;
 
     const body = `<main>
@@ -172,7 +206,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Websites for small businesses</span>
       <h1 style="margin-top:16px">A real website for your business. <span class="grad">$100 a month.</span></h1>
       <p class="lead">Here is how it works and the few decisions you make. Read top to bottom, fill out the form at the end, and I reach out.</p>
-      <div class="pills"><span>$0 to start</span><span>Unlimited edits</span><span>Month to month</span></div>
+      <div class="pills"><span>No build fee</span><span>Unlimited edits</span><span>Month to month</span></div>
       <div class="hero__cta"><a class="btn btn--primary btn--lg" href="#build-form">Start the form ${icon('arrow')}</a>${examplesBtn('btn--on-dark btn--lg')}</div>
     </div></section>
 
@@ -209,7 +243,8 @@ export function makeOfferPages({ head, icon, site, demos }) {
         <div><div class="big">$100<small> a month</small></div><p>Your first payment starts the build, and your site is live within 48 hours of it.</p></div>
         <ul>
           <li>${icon('check')} No build fee</li>
-          <li>${icon('check')} No contract. Cancel anytime with 30 days notice</li>
+          <li>${icon('check')} No contract. Cancel anytime</li>
+          <li>${icon('check')} Don't love it? Your first $100 back</li>
           <li>${icon('check')} Hosting, security and backups included</li>
           <li>${icon('check')} Unlimited edits by text or email</li>
         </ul>
@@ -218,14 +253,14 @@ export function makeOfferPages({ head, icon, site, demos }) {
 
     <section class="of-sec of-sec--alt" id="form"><div class="wrap wrap--wide">
       <div class="center reveal"><h2>Tell me about your business</h2>
-      <p class="sub" style="margin-inline:auto">Fill this out and I reach out to talk it through. Questions first? Text <a href="${site.phoneHref}">${site.phone}</a>.</p>
+      <p class="sub" style="margin-inline:auto">Fill this out, then start your site with your first $100 right below it. Questions first? Text <a href="${site.phoneHref}">${site.phone}</a>.</p>
       <p style="margin-top:18px">${examplesBtn('btn--ghost', 'See example sites first')}</p></div>
       ${form}
     </div></section>
     </main>`;
 
     return shell({
-      title: 'A Small Business Website for $100 a Month, $0 Down | EvoVero',
+      title: 'Small Business Website, $100 a Month, No Build Fee | EvoVero',
       desc: 'Get a real website for your small business for $100 a month. No build fee, unlimited edits, month to month. See how it works, then fill out the short form.',
       path: '/get-started',
     }, examplesBtn(), body);
@@ -243,6 +278,21 @@ export function makeOfferPages({ head, icon, site, demos }) {
       title: 'Website Form Received, Here Is What Happens Next | EvoVero',
       desc: 'Your website form reached Spencer at EvoVero. Next he reaches out the way you asked to talk through your site. Questions in the meantime? Text 402-698-4902.',
       path: '/get-started/thanks',
+    }, examplesBtn(), body);
+  }
+
+  /* ---------------- /get-started/welcome (Stripe return page) ---------------- */
+  function getStartedWelcome() {
+    const body = `<main><section class="of-hero"><div class="wrap wrap--wide reveal">
+      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Payment received</span>
+      <h1 style="margin-top:16px">You're in. <span class="grad">Your site is live within 48 hours.</span></h1>
+      <p class="lead">I start building from your answers now. Next, I reach out the way you asked to go over photos and the general look. Questions in the meantime? Text <a style="color:#fff" href="${site.phoneHref}">${site.phone}</a>.</p>
+      <div class="hero__cta">${examplesBtn('btn--on-dark btn--lg')}</div>
+    </div></section></main>`;
+    return shell({
+      title: 'You Are In, Your Website Is Live Within 48 Hours | EvoVero',
+      desc: 'Your first payment is in and Spencer is building your site. It goes live within 48 hours, then he reaches out about photos and the look. Questions? Text him.',
+      path: '/get-started/welcome',
     }, examplesBtn(), body);
   }
 
@@ -310,6 +360,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
   return [
     ['/get-started', getStarted()],
     ['/get-started/thanks', getStartedThanks()],
+    ['/get-started/welcome', getStartedWelcome()],
     ['/websites', websites()],
   ];
 }
