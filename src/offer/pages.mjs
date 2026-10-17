@@ -34,6 +34,15 @@ const css = `
 .of-hero .pills{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px}
 .of-hero .pills span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:8px 14px;font-family:var(--font-head);font-weight:600;font-size:.92rem;color:#fff}
 .of-sec{padding-block:clamp(48px,7vw,88px)}
+.of-cta-row{margin-top:28px;text-align:center}
+.of-faq{margin-top:26px;display:grid;gap:10px;max-width:860px}
+.of-faq details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 20px;box-shadow:var(--sh-sm)}
+.of-faq summary{cursor:pointer;font-family:var(--font-head);font-weight:600;color:var(--ink);list-style:none;display:flex;justify-content:space-between;gap:16px}
+.of-faq summary::-webkit-details-marker{display:none}.of-faq summary:after{content:"+";color:var(--blue);font-size:1.3rem;line-height:1}.of-faq details[open] summary:after{content:"−"}
+.of-faq p{margin-top:10px;color:var(--ink-soft);font-size:.98rem}
+.of-rise.reveal{transform:translateY(34px) scale(.97);transition-duration:1.1s}.of-rise.reveal.in{transform:none}
+.of-sticky{display:none}
+@media (max-width:760px){.of-sticky{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:90;justify-content:center;align-items:center;gap:8px;padding:15px 18px;border-radius:999px;background:var(--grad-blue);color:#fff;font-family:var(--font-head);font-weight:700;box-shadow:0 12px 30px rgba(30,60,160,.4);transform:translateY(140%);transition:transform .3s}.of-sticky svg{width:18px;height:18px}.of-sticky.on{transform:none}}
 .of-band{padding-block:clamp(26px,4vw,40px);border-block:1px solid var(--line);background:var(--surface)}
 .of-sec--alt{background:var(--surface-2)}
 .of-sec h2{font-size:clamp(1.6rem,3.2vw,2.3rem)}
@@ -216,7 +225,13 @@ export function makeOfferPages({ head, icon, site, demos }) {
     })();</script>`;
 
     const rv = n => reviews.find(r => r.name.startsWith(n));
-    const quote = (r, cls = '') => r ? `<figure class="of-quote ${cls} reveal"><q>${r.text}</q><figcaption class="who">${r.name}<span aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></figcaption></figure>` : '';
+    const faq = [
+      ['What do you need from me?', 'The short form below, then a few details after you start, like your logo, colors and hours. Your own photos work best, and phone photos are fine. Send them anytime. Until then your site launches with stock photos.'],
+      ['I already have a website. Can you still help?', 'Yes. Add the link in the details after you start and I use what works from it.'],
+      ['How do edits work?', 'Text or email what you want changed and I change it. Unlimited, for as long as you have the site. You never log into anything.'],
+      ['What if I don\'t love it?', 'Tell me in your first month and you get your first $100 back.'],
+    ];
+    const quote = (r, cls = '', anim = 'reveal of-rise') => r ? `<figure class="of-quote ${cls} ${anim}"><q>${r.text}</q><figcaption class="who">${r.name}<span aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></figcaption></figure>` : '';
     const demoModal = live.length ? `<div class="dm" id="demo-modal" hidden role="dialog" aria-modal="true" aria-label="Example websites"><div class="dm__box">
       <div class="dm__bar"><div class="pf-tabs" role="tablist">${live.map((d, i) => `<button type="button" role="tab" aria-selected="${i === 0}" data-src="${demoUrl(d)}">${d.tabLabel}</button>`).join('')}</div><button type="button" class="dm__x" aria-label="Close">&times;</button></div>
       <iframe class="dm__frame" title="Example website"></iframe></div></div>
@@ -240,23 +255,20 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <div class="hero__cta"><a class="btn btn--primary btn--lg" href="#form">Start my site ${icon('arrow')}</a>${examplesBtn('btn--on-dark btn--lg')}</div>
     </div><div class="of-hero__art" aria-hidden="true"><div class="pl" style="--s:150px"><img src="${site.logo}" alt="" width="150" height="150"></div></div></div></section>
 
-    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Chris'))}</div></section>
+    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Chris'), '', '')}</div></section>
 
     <section class="of-sec"><div class="wrap wrap--wide">
       <h2 class="reveal">How this works</h2>
       <div class="of-steps">${steps.map((s, i) => `<div class="of-step reveal" data-d="${i}"><b>${i + 1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>
-      <div class="of-tip reveal"><h3>Skip the long planning</h3><p>From experience, the fastest way to a site you love is to give me the basics and a general idea of the look, then react to the real thing. It is a lot easier to say what you don't like on a finished site than to describe what you want before it exists. So we don't spend weeks planning. I build it, you critique it, I fix it.</p></div>
+      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Start my site ${icon('arrow')}</a></div>
     </div></section>
 
     <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Yadira'))}</div></section>
 
     <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
-      <h2 class="reveal">What I need from you</h2>
-      <div class="of-grid3">
-        <div class="of-card reveal"><h3>A few quick answers</h3><p>The short form below. The details, like your logo and colors, come after you start.</p></div>
-        <div class="of-card reveal" data-d="1"><h3>Photos</h3><p>Your own photos work best, and phone photos are fine. Send them anytime. Until then your site launches with stock photos.</p></div>
-        <div class="of-card reveal" data-d="2"><h3>Your domain</h3><p>Already have one? I connect it. Need one? I register it for you.</p></div>
-      </div>
+      <h2 class="reveal">Questions people ask</h2>
+      <div class="of-faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
+      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Start my site ${icon('arrow')}</a></div>
     </div></section>
 
     <section class="of-sec" id="form"><div class="wrap wrap--wide">
@@ -272,7 +284,11 @@ export function makeOfferPages({ head, icon, site, demos }) {
       </div>
       ${form}
     </div></section>
-    </main>${demoModal}`;
+    </main>${demoModal}
+    <a class="of-sticky" id="of-sticky" href="#form">Start my site, $100 ${icon('arrow')}</a>
+    <script>(function(){var b=document.getElementById('of-sticky'),f=document.getElementById('form'),h=document.querySelector('.of-hero');if(!b||!f)return;var t=0;
+      function u(){t=0;var show=h.getBoundingClientRect().bottom<0&&f.getBoundingClientRect().top>window.innerHeight*0.6;b.classList.toggle('on',show);}
+      window.addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(u);},{passive:true});u();})();</script>`;
 
     return shell({
       title: 'Small Business Website, $100 a Month, No Build Fee | EvoVero',
