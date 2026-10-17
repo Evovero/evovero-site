@@ -5,6 +5,7 @@
 
 import { types, typeById } from './types.mjs';
 import { reviews } from '../data/reviews.mjs';
+import { dropboxCss, uploader, dropboxForm, dropboxScript, dropboxModal } from './dropbox.mjs';
 
 const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
 
@@ -96,6 +97,7 @@ const css = `
 .of-form select,.of-form input:not([type=checkbox]),.of-form textarea{width:100%}
 .of-form .checkrow input{width:auto}
 .of-hidden{display:none}
+.of-label{display:block;font-family:var(--font-head);font-weight:600;color:var(--ink);margin-bottom:8px}
 .of-opt{font-weight:400;color:var(--ink-soft);font-size:.9em}
 .of-form .hint{margin-top:6px;font-size:.88rem;color:var(--ink-soft)}
 .of-form input[type=file]{padding:10px;background:var(--surface);border:1px dashed var(--line);border-radius:var(--r-sm)}
@@ -144,7 +146,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
     <span>&copy; ${new Date().getFullYear()} EvoVero</span>
     <span style="display:flex;gap:18px;flex-wrap:wrap"><a href="${site.phoneHref}">${site.phone}</a><a href="mailto:${site.email}">${site.email}</a>${reviewsLink ? '<a href="/reviews/" target="_blank" rel="noopener">Reviews</a>' : ''}<a href="/privacy-policy/">Privacy</a><a href="/terms/">Terms</a></span>
   </div></footer><script src="/site.js" defer></script></body></html>`;
-  const shell = (p, buttons, body) => head({ ...p, noindex: true, schema: [], fast: true }) + `<style>${css}</style>` + top(buttons, !p.path.startsWith('/get-started')) + body + foot(p.path.startsWith('/get-started'));
+  const shell = (p, buttons, body) => head({ ...p, noindex: true, schema: [], fast: true }) + `<style>${css}${dropboxCss}</style>` + top(buttons, !p.path.startsWith('/get-started')) + body + foot(p.path.startsWith('/get-started'));
 
   const examplesBtn = (cls = 'btn--ghost', label = 'See example sites') =>
     `<a class="btn ${cls}" href="/websites/" target="_blank" rel="noopener">${label} ${icon('arrow')}</a>`;
@@ -268,6 +270,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
     <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
       <h2 class="reveal">Questions people ask</h2>
       <div class="of-faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
+      <div class="pd-box reveal" style="margin-top:16px"><p><b>Already have a logo or photos?</b> Send them anytime.</p><a class="btn btn--ghost" href="/photos/" data-dropbox-open>Send photos ${icon('arrow')}</a></div>
       <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Start my site ${icon('arrow')}</a></div>
     </div></section>
 
@@ -284,7 +287,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
       </div>
       ${form}
     </div></section>
-    </main>${demoModal}
+    </main>${demoModal}${dropboxModal('get-started', { site })}${dropboxForm}${dropboxScript}
     <a class="of-sticky" id="of-sticky" href="#form">Start my site, $100 ${icon('arrow')}</a>
     <script>(function(){var b=document.getElementById('of-sticky'),f=document.getElementById('form'),h=document.querySelector('.of-hero');if(!b||!f)return;var t=0;
       function u(){t=0;var show=h.getBoundingClientRect().bottom<0&&f.getBoundingClientRect().top>window.innerHeight*0.6;b.classList.toggle('on',show);}
@@ -353,12 +356,13 @@ export function makeOfferPages({ head, icon, site, demos }) {
           <div class="field"><label for="d-gbp">Do you have a Google Business Profile?</label><select id="d-gbp" name="google_business_profile"><option value="">Choose one</option><option>Yes</option><option>No</option><option>Not sure</option></select></div>
         </div>
         <div class="field"><label for="d-social">Social pages, like Facebook or Instagram</label><input id="d-social" name="social_pages" placeholder="Paste links, or type None"></div>
-        <div class="field"><label for="d-logo">Your logo</label><input id="d-logo" name="logo" type="file" accept="image/*,.pdf,.svg,.ai,.eps"><p class="hint">No logo yet? Describe the colors you want below instead.</p></div>
+        <div class="field"><span class="of-label">Your logo and photos</span><div class="pd-box"><p id="d-up-note">Send your logo and any photos of your work, full quality.</p><a class="btn btn--ghost" href="/photos/" data-dropbox-open>Upload ${icon('arrow')}</a></div><input type="hidden" name="uploads" id="d-uploads"><p class="hint">No logo yet? Describe the colors you want below instead.</p></div>
         <div class="field"><label for="d-colors">Colors you want on the site</label><input id="d-colors" name="colors" placeholder="Navy and orange, match my truck, not sure yet"></div>
         <div class="field"><fieldset><legend>Best way for me to reach you</legend>${chk('contact_pref', ['Text', 'Call', 'Email'])}</fieldset></div>
         <div class="field"><label for="d-more">Anything else?</label><textarea id="d-more" name="anything_else" placeholder="Specific information you want on the site, or special features like booking, a menu or online ordering."></textarea></div>
         <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Send my details ${icon('arrow')}</button>
       </form>
+      ${dropboxModal('welcome', { site })}${dropboxForm}
       <div id="details-done" class="form-card of-hidden"><h3 style="margin:0 0 6px">Got it. I'm on it.</h3><p style="margin:0">Your site is live within 48 hours. If I need anything, I reach out the way you picked.</p></div>
     </div></section>`;
     const wcss = `
@@ -414,7 +418,11 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <ol class="wl-list">${steps}</ol>
       <p class="wl-help">Questions in the meantime? Text <a href="${site.phoneHref}">${site.phone}</a> or email <a href="mailto:${site.email}">${site.email}</a>.</p>
     </div></section>
-    </main>
+    </main>${dropboxScript}
+    <script>(function(){
+      var up=document.getElementById('d-uploads'),un=document.getElementById('d-up-note'),all=[];
+      document.addEventListener('pd:uploaded',function(e){all=all.concat(e.detail.files);if(up)up.value=all.join('\\n');if(un)un.textContent=all.length+(all.length===1?' file':' files')+' sent. Add more anytime.';});
+    })();</script>
     <script>(function(){
       var df=document.getElementById('details-form'),dd=document.getElementById('details-done');
       if(df&&window.fetch&&window.FormData){df.addEventListener('submit',function(e){e.preventDefault();var b=df.querySelector('button[type=submit]');b.disabled=true;
@@ -435,6 +443,21 @@ export function makeOfferPages({ head, icon, site, demos }) {
       desc: 'Your first payment is in and Spencer is building your site. It goes live within 48 hours, then he reaches out about photos and the look. Questions? Text him.',
       path: '/get-started/welcome',
     }, examplesBtn(), body);
+  }
+
+  /* ---------------- /photos (Photo Dropbox, one link for everyone) ---------------- */
+  function photoDropbox() {
+    const p = {
+      title: 'Send Your Photos and Logo for Your New Website | EvoVero',
+      desc: 'Send your photos and logo straight to Spencer at EvoVero in full quality. Add your name, pick photos from your phone, and they arrive ready for your website.',
+      path: '/photos',
+    };
+    const body = `<main><section class="of-sec of-sec--alt" style="min-height:calc(100vh - 140px)"><div class="wrap" style="max-width:600px">
+      <h1 style="font-size:clamp(1.7rem,4vw,2.4rem)">Send your photos</h1>
+      <p class="sub" style="margin:10px 0 24px">Add your name, then pick photos straight from your phone. Your logo, your work, your trucks, your team. They arrive at full quality.</p>
+      <div class="form-card">${uploader('pd-page', 'dropbox', { site })}</div>
+    </div></section></main>${dropboxForm}${dropboxScript}`;
+    return head({ ...p, noindex: true, schema: [], fast: true }) + `<style>${css}${dropboxCss}</style>` + top('', false) + body + foot(false);
   }
 
   /* ---------------- /websites ---------------- */
@@ -503,5 +526,6 @@ export function makeOfferPages({ head, icon, site, demos }) {
     ['/get-started/thanks', getStartedThanks()],
     ['/get-started/welcome', getStartedWelcome()],
     ['/websites', websites()],
+    ['/photos', photoDropbox()],
   ];
 }
