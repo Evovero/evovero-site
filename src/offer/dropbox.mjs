@@ -49,12 +49,12 @@ export function uploader(id, source, { site, nameLabel = 'Your name or business 
   }
   return `<div class="pd" id="${id}" data-key="${UC_KEY}" data-source="${source}">
     <div class="pd__name"><label for="${id}-name">${nameLabel}</label><input id="${id}-name" data-name autocomplete="organization" placeholder="JJ Lawn Care"><div class="pd__err" data-err>Add your name first so I know whose photos these are.</div></div>
+    <div class="pd__done" data-done role="status" aria-live="polite"></div>
+    <ul class="pd__q" data-q></ul>
     <div class="pd__zone" data-zone role="button" tabindex="0">${cloud}<h3>Tap to choose photos</h3><p>Photos, your logo, anything you want on the site. Pick as many as you want.</p></div>
     <input type="file" data-file accept="image/*,.heic,.pdf,.svg,.ai,.eps" multiple hidden>
     <button type="button" class="btn btn--primary btn--lg pd__btn" data-pick>Choose photos</button>
     <p class="pd__hint">Full quality, straight to Spencer. No login.</p>
-    <div class="pd__done" data-done>Got them. Thanks! Add more anytime.</div>
-    <ul class="pd__q" data-q></ul>
   </div>`;
 }
 
@@ -70,16 +70,18 @@ export const dropboxScript = `<script>(function(){
     var nm=root.querySelector('[data-name]'),err=root.querySelector('[data-err]'),fi=root.querySelector('[data-file]'),
         zone=root.querySelector('[data-zone]'),q=root.querySelector('[data-q]'),done=root.querySelector('[data-done]');
     if(pre&&!nm.value)nm.value=pre.replace(/[-_]+/g,' ').replace(/\\b\\w/g,function(c){return c.toUpperCase();});
-    var batch=[],pending=0;
+    var batch=[],pending=0,total=0,ok=0,pb=root.querySelector('[data-pick]');
+    function see(el){try{el.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){el.scrollIntoView();}}
+    function label(){pb.textContent=pending?('Uploading '+(total-pending+1>total?total:total-pending+1)+' of '+total+'...'):(ok?'Add more photos':'Choose photos');}
     function pick(){if(!nm.value.trim()){err.classList.add('on');nm.focus();return;}err.classList.remove('on');fi.click();}
-    root.querySelector('[data-pick]').addEventListener('click',pick);
+    pb.addEventListener('click',pick);
     zone.addEventListener('click',pick);zone.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();pick();}});
     nm.addEventListener('input',function(){if(nm.value.trim())err.classList.remove('on');});
     zone.addEventListener('dragover',function(e){e.preventDefault();zone.classList.add('drag');});
     zone.addEventListener('dragleave',function(){zone.classList.remove('drag');});
     zone.addEventListener('drop',function(e){e.preventDefault();zone.classList.remove('drag');if(!nm.value.trim()){pick();return;}add(e.dataTransfer.files);});
     fi.addEventListener('change',function(){add(fi.files);fi.value='';});
-    function add(files){done.classList.remove('on');[].forEach.call(files,send);}
+    function add(files){if(!files||!files.length)return;done.classList.remove('on');if(!pending){total=0;}total+=files.length;[].forEach.call(files,send);label();var first=q.lastElementChild;if(first)setTimeout(function(){see(q);},80);}
     function row(f){
       var li=document.createElement('li');li.className='pd__i';
       var th;if(/^image\\/(jpe?g|png|gif|webp)$/.test(f.type)){th=document.createElement('img');th.src=URL.createObjectURL(f);th.alt='';}
@@ -100,15 +102,15 @@ export const dropboxScript = `<script>(function(){
       var x=new XMLHttpRequest();x.open('POST','https://upload.uploadcare.com/base/');
       x.upload.onprogress=function(e){if(e.lengthComputable)r.i.style.width=Math.round(e.loaded/e.total*100)+'%';};
       x.onload=function(){var id=null;try{id=JSON.parse(x.responseText).file;}catch(e){}
-        if(x.status>=200&&x.status<300&&id){batch.push(f.name+' : '+id);r.s.className='pd__st ok';r.s.textContent='Uploaded';r.b.style.display='none';}
+        if(x.status>=200&&x.status<300&&id){ok++;batch.push(f.name+' : '+id);r.s.className='pd__st ok';r.s.textContent='Uploaded';r.b.style.display='none';}
         else fail();fin();};
       x.onerror=function(){fail();fin();};
       function fail(){r.s.className='pd__st bad';r.s.textContent='Did not upload. Tap to try again.';r.li.style.cursor='pointer';r.li.onclick=function(){r.li.remove();send(f);};}
-      function fin(){pending--;if(!pending)notify(who);}
+      function fin(){pending--;label();if(!pending){notify(who);if(batch.length===0)setTimeout(function(){see(done.classList.contains('on')?done:q);},60);}}
       x.send(fd);
     }
     function notify(who){
-      if(!batch.length)return;var files=batch.splice(0);done.classList.add('on');
+      if(!batch.length)return;var files=batch.splice(0);done.textContent=(files.length===1?'1 photo':files.length+' photos')+' sent. Thanks! Add more anytime.';done.classList.add('on');
       var body=new URLSearchParams({'form-name':'photo-dropbox','subject':'Photos: '+who,'name':who,'source':src,'count':String(files.length),'files':files.join('\\n')});
       fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()}).catch(function(){});
       if(window.gtag)gtag('event','photos_uploaded',{source:src,count:files.length});
