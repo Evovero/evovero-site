@@ -6,6 +6,7 @@ import { site, nav } from './src/data/site.mjs';
 import { serviceDetail, industryDetail } from './src/data/content.mjs';
 import { intakeForm, intakeStyles, intakeScript } from './src/intake.mjs';
 import { makeOfferPages } from './src/offer/pages.mjs';
+import { reviews as clientReviews, reviewLink } from './src/data/reviews.mjs';
 import { demos, buildDemos } from './src/demos/index.mjs';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
@@ -154,7 +155,7 @@ function footer() {
       </div>
       ${col('Services', site.services.map(s => [s.name.replace(' (Facebook & Instagram)',''), `/services/${s.slug}/`]))}
       ${col('Industries', [...site.industries.map(s => [s.name, `/industries/${s.slug}/`]), ['All industries','/industries/']])}
-      ${col('Company', [['About','/about/'],['Results','/results/'],['Blog','/blog/'],['Contact','/contact/'],['Book a Call', site.booking]])}
+      ${col('Company', [['About','/about/'],['Results','/results/'],['Blog','/blog/'],['Reviews','/reviews/'],['Contact','/contact/'],['Book a Call', site.booking]])}
     </div>
     <div class="footer__bottom">
       <span>&copy; ${new Date().getFullYear()} EvoVero. ${site.city}.</span>
@@ -548,6 +549,31 @@ function about() {
 }
 
 /* ----------------------------------------------------------------
+   Reviews (link to send clients when asking for a review)
+---------------------------------------------------------------- */
+function reviewsPage() {
+  const leave = `<a class="btn btn--primary btn--lg" href="${reviewLink}" target="_blank" rel="noopener">Leave a review ${icon('arrow')}</a>`;
+  const body = pageHero({
+    eyebrow: "Reviews", crumb: crumbNav(["Home","/"],["Reviews","/reviews/"]), cta: false,
+    h1: `What clients say about <span class="grad">EvoVero.</span>`,
+    sub: "Reviews from the local businesses I work with. Worked with me? Leaving a review takes about a minute and helps more than you know.",
+  }) + `<div class="page-body">
+    <section class="section"><div class="wrap" style="max-width:980px">
+      <div class="center reveal" style="margin-bottom:34px">${leave}</div>
+
+      <div class="grid grid-2">${clientReviews.map((r,i) => `<figure class="card reveal" data-d="${i+1}" style="margin:0${r.wide ? ';grid-column:1 / -1' : ''}"><div style="color:#f5b301;letter-spacing:2px" aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote style="margin:10px 0 0;line-height:1.6">${r.text}</blockquote><figcaption style="margin-top:12px;font-weight:600">${r.name}</figcaption></figure>`).join('')}</div>
+      <div class="center reveal" style="margin-top:38px">${leave}</div>
+    </div></section>
+  </div>`;
+  return page({
+    title: "EvoVero Reviews | What Clients Say About Spencer Hagen", path: "/reviews",
+    desc: "Read reviews of EvoVero from local business owners Spencer Hagen works with, or leave your own review. It takes about a minute.",
+    schema: [breadcrumbSchema([["Home","/"],["Reviews","/reviews/"]])],
+    body,
+  });
+}
+
+/* ----------------------------------------------------------------
    Results
 ---------------------------------------------------------------- */
 function results() {
@@ -914,6 +940,7 @@ const pages = [
   ...site.industries.map(s => ['/industries/' + s.slug, industryPage(s.slug)]),
   ['/about', about()],
   ['/results', results()],
+  ['/reviews', reviewsPage()],
   ['/contact', contact()],
   ['/thank-you', thankYou()],
   ['/start', startPage()],

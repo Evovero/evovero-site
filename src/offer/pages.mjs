@@ -4,10 +4,13 @@
 // Helpers (head, icon, site) are passed in from build.mjs so this file never duplicates them.
 
 import { types, typeById } from './types.mjs';
+import { reviews } from '../data/reviews.mjs';
 
 const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
 
-const FORM_VERSION = '2026-10-16 v2';
+const FORM_VERSION = '2026-10-17 v3';
+const DETAILS_VERSION = '2026-10-17 v1';
+
 
 const css = `
 .of-top{position:sticky;top:0;z-index:100;background:rgba(246,248,253,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
@@ -16,11 +19,22 @@ const css = `
 .of-top .btn{padding:11px 18px;font-size:.95rem}
 .of-hero{background:var(--grad-hero);color:var(--on-dark);padding-block:clamp(56px,8vw,104px) clamp(48px,7vw,88px);position:relative;overflow:hidden}
 .of-hero h1{color:#fff;max-width:820px}
+.pl{position:relative;width:var(--s,104px);height:var(--s,104px);flex:none}
+.pl img{width:100%;height:100%;border-radius:24%;position:relative;z-index:1;display:block;box-shadow:0 0 0 1px rgba(255,255,255,.18),0 14px 50px rgba(70,120,255,.55)}
+.pl:before,.pl:after{content:"";position:absolute;inset:0;border-radius:24%;border:2px solid rgba(120,165,255,.75);animation:pl-ring 2.6s ease-out infinite}
+.pl:after{animation-delay:1.3s}
+.pl.is-warn:before,.pl.is-warn:after{border-color:rgba(245,165,36,.85)}
+@keyframes pl-ring{0%{transform:scale(1);opacity:.85}100%{transform:scale(2);opacity:0}}
+.of-hero__grid{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
+.of-hero__art{padding:60px 90px 60px 40px}
+@media (max-width:900px){.of-hero__grid{grid-template-columns:1fr}.of-hero__art{display:none}}
+@media (prefers-reduced-motion:reduce){.pl:before,.pl:after{animation:none;opacity:0}}
 .of-hero h1 .grad{background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent}
 .of-hero p.lead{margin-top:20px;font-size:clamp(1.05rem,1.6vw,1.25rem);color:var(--on-dark-soft);max-width:640px;line-height:1.55}
 .of-hero .pills{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px}
 .of-hero .pills span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:8px 14px;font-family:var(--font-head);font-weight:600;font-size:.92rem;color:#fff}
 .of-sec{padding-block:clamp(48px,7vw,88px)}
+.of-band{padding-block:clamp(26px,4vw,40px);border-block:1px solid var(--line);background:var(--surface)}
 .of-sec--alt{background:var(--surface-2)}
 .of-sec h2{font-size:clamp(1.6rem,3.2vw,2.3rem)}
 .of-sec .sub{margin-top:12px;color:var(--ink-soft);max-width:680px}
@@ -53,6 +67,20 @@ const css = `
 .of-price li{display:flex;gap:10px;align-items:flex-start;color:#fff}
 .of-price li svg{width:20px;height:20px;flex:none;color:var(--blue-light);margin-top:2px}
 .of-price p{color:var(--on-dark-soft);margin-top:12px}
+.of-price .was{color:var(--on-dark-soft);font-family:var(--font-head);font-weight:600;margin-bottom:10px}.of-price .was s{text-decoration-thickness:2px}
+.of-price .ticks{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px 18px}.of-price .ticks span{display:flex;gap:6px;align-items:center;color:#fff;font-size:.95rem}.of-price .ticks svg{width:18px;height:18px;flex:none;color:var(--blue-light)}
+.of-next{list-style:none;margin:0;padding:0;display:grid;gap:10px}.of-next li{display:flex;gap:14px;align-items:center;color:#fff;font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:13px 16px}.of-next b{flex:none;width:32px;height:32px;border-radius:50%;background:var(--grad-blue);display:grid;place-items:center;font-size:.95rem}
+.of-revs{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:16px}@media (max-width:760px){.of-revs{grid-template-columns:1fr}}.of-rev{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;box-shadow:var(--sh-sm)}.of-rev .stars{color:#f5b301;letter-spacing:2px;font-size:1.1rem}.of-rev q{display:block;margin-top:10px;color:var(--ink);font-size:1.02rem;line-height:1.6;quotes:none}.of-rev--wide{grid-column:1 / -1}
+.of-quote{max-width:640px;margin:0 auto;text-align:center}.of-quote q{display:block;quotes:none;font-size:1.08rem;line-height:1.55;color:var(--ink)}.of-quote .who{margin-top:8px;font-family:var(--font-head);font-weight:600;font-size:.95rem;color:var(--ink-soft)}.of-quote .who span{color:#f5b301;letter-spacing:1px;margin-left:8px}
+.of-quote--dark q{color:#fff}.of-quote--dark .who{color:var(--on-dark-soft)}
+.of-quote--card{max-width:900px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px 30px;box-shadow:var(--sh-sm);text-align:left}
+.dm{position:fixed;inset:0;z-index:1000;background:rgba(6,10,25,.75);backdrop-filter:blur(4px);display:grid;place-items:center;padding:clamp(8px,3vw,32px)}.dm[hidden]{display:none}
+.dm__box{width:min(1200px,100%);height:min(90vh,920px);background:#fff;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.dm__bar{display:flex;gap:10px;align-items:center;padding:8px 10px 8px 14px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.dm .dm__bar .pf-tabs{display:flex!important;flex:1;min-width:0;padding-block:4px}
+@media (max-width:640px){.dm{padding:0}.dm__box{height:100%;border-radius:0}.dm .pf-tabs button{padding:8px 14px;font-size:.88rem}}
+.dm__x{flex:none;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:24px;line-height:1;cursor:pointer;color:var(--ink)}
+.dm__frame{flex:1;width:100%;border:0;background:#fff}.of-rev .who{margin-top:14px;font-family:var(--font-head);font-weight:600;font-size:.95rem;color:var(--ink-soft)}
 .of-form{max-width:760px;margin:32px auto 0}
 .of-form fieldset{border:0;padding:0;margin:0}
 .of-form legend{font-family:var(--font-head);font-weight:600;color:var(--ink);margin-bottom:8px}
@@ -100,14 +128,14 @@ export function makeOfferPages({ head, icon, site, demos }) {
   const demoUrl = d => `/websites/demo/${d.slug}/`;
 
   // Minimal shell: logo plus one or two buttons. No site navigation, by design.
-  const top = (buttons) => `<header class="of-top"><div class="wrap wrap--wide">
-    <a class="brand" href="/get-started/"><img src="${site.logo}" alt="EvoVero" width="34" height="34"><span>EvoVero</span></a>
+  const top = (buttons, linkLogo = true) => `<header class="of-top"><div class="wrap wrap--wide">
+    ${linkLogo ? `<a class="brand" href="/get-started/">` : `<span class="brand">`}<img src="${site.logo}" alt="EvoVero" width="34" height="34"><span>EvoVero</span>${linkLogo ? '</a>' : '</span>'}
     <div class="of-top__cta">${buttons}</div></div></header>`;
-  const foot = () => `<footer class="of-foot"><div class="wrap wrap--wide">
+  const foot = (reviewsLink = false) => `<footer class="of-foot"><div class="wrap wrap--wide">
     <span>&copy; ${new Date().getFullYear()} EvoVero</span>
-    <span style="display:flex;gap:18px;flex-wrap:wrap"><a href="${site.phoneHref}">${site.phone}</a><a href="mailto:${site.email}">${site.email}</a><a href="/privacy-policy/">Privacy</a><a href="/terms/">Terms</a></span>
+    <span style="display:flex;gap:18px;flex-wrap:wrap"><a href="${site.phoneHref}">${site.phone}</a><a href="mailto:${site.email}">${site.email}</a>${reviewsLink ? '<a href="/reviews/" target="_blank" rel="noopener">Reviews</a>' : ''}<a href="/privacy-policy/">Privacy</a><a href="/terms/">Terms</a></span>
   </div></footer><script src="/site.js" defer></script></body></html>`;
-  const shell = (p, buttons, body) => head({ ...p, noindex: true, schema: [] }) + `<style>${css}</style>` + top(buttons) + body + foot();
+  const shell = (p, buttons, body) => head({ ...p, noindex: true, schema: [] }) + `<style>${css}</style>` + top(buttons, !p.path.startsWith('/get-started')) + body + foot(p.path.startsWith('/get-started'));
 
   const examplesBtn = (cls = 'btn--ghost', label = 'See example sites') =>
     `<a class="btn ${cls}" href="/websites/" target="_blank" rel="noopener">${label} ${icon('arrow')}</a>`;
@@ -115,9 +143,9 @@ export function makeOfferPages({ head, icon, site, demos }) {
   /* ---------------- /get-started ---------------- */
   function getStarted() {
     const steps = [
-      ['Tell me about your business', 'Fill out the form at the bottom of this page with the information you want on your site.'],
-      ['Start with your first $100', 'Pay right under the form. No build fee and no contract. Don\'t love it in your first month? You get your $100 back.'],
-      ['Your site is live within 48 hours', 'I build it from your answers, then reach out the way you asked to go over photos and the general look.'],
+      ['Answer a few quick questions', 'Your contact info and three short questions about your business. About two minutes.'],
+      ['Start with your first $100', 'Pay right under the form. The first month is normally $500. Through October 31 it is $100. Don\'t love it? You get your $100 back.'],
+      ['Your site is live within 48 hours', 'I build it from your answers, then reach out about photos and the general look.'],
       ['Then the edits start', 'Send me everything you want changed, even one long email, and I keep revising until it is what you want.'],
     ];
     const typeCards = [
@@ -142,23 +170,10 @@ export function makeOfferPages({ head, icon, site, demos }) {
         <div class="field"><label for="w-ph">Phone</label><input id="w-ph" name="phone" type="tel" autocomplete="tel" required></div>
         <div class="field"><label for="w-em">Email</label><input id="w-em" name="email" type="email" autocomplete="email" required></div>
       </div>
-      <div class="field"><fieldset><legend>Best way to reach you</legend>${check('contact_pref', ['Text', 'Call', 'Email'])}</fieldset></div>
       <div class="field"><label for="w-city">City and state</label><input id="w-city" name="city_state" autocomplete="address-level2" placeholder="Omaha, NE"></div>
-      <div class="field"><label for="w-type">What kind of business is it?</label>
-        <select id="w-type" name="business_type"><option value="">Choose one</option>${typeOptions}</select></div>
-      <div class="field of-hidden" id="w-other-wrap"><label for="w-other">What kind of business?</label><input id="w-other" name="business_type_other"></div>
-      <div class="field"><label for="w-what">What does your company do, and what sets you apart from your competition?</label><textarea id="w-what" name="what_you_do"></textarea></div>
-      <div class="field"><label for="w-struct">Which structure fits?</label>
-        <select id="w-struct" name="structure"><option value="">Choose one</option>${structOptions}</select></div>
-      <div class="field"><label for="w-site">Current website, if you have one</label><input id="w-site" name="current_website" inputmode="url" placeholder="yourbusiness.com"></div>
-      <div class="field"><label for="w-social">Social pages, like Facebook or Instagram</label><input id="w-social" name="social_pages" placeholder="Paste links, or type None"></div>
-      <div class="field"><label for="w-gbp">Do you have a Google Business Profile?</label>
-        <select id="w-gbp" name="google_business_profile"><option value="">Choose one</option><option>Yes</option><option>No</option><option>Not sure</option></select></div>
-      <div class="field"><label for="w-like">Two or three websites you like, and what you like about them</label><textarea id="w-like" name="websites_you_like"></textarea></div>
-      <div class="field"><label for="w-logo">Your logo</label><input id="w-logo" name="logo" type="file" accept="image/*,.pdf,.svg,.ai,.eps">
-        <p class="hint">No logo yet? Describe the colors you want below instead.</p></div>
-      <div class="field"><label for="w-colors">Colors you want on the site</label><input id="w-colors" name="colors" placeholder="Navy and orange, match my truck, not sure yet"></div>
-      <div class="field"><label for="w-more">Anything else?</label><textarea id="w-more" name="anything_else" placeholder="Specific information you want on the site, special features like booking, a menu or online ordering, or questions for me."></textarea></div>
+      <div class="field"><label for="w-first">When someone lands on your new site, what's the first thing you want them to see?</label><input id="w-first" name="first_thing" placeholder="Our best project photos, our reviews, a free quote button"></div>
+      <div class="field"><label for="w-stand">What makes you better than the other guys in your area?</label><input id="w-stand" name="stand_out" placeholder="Same day quotes, 20 years in business, we clean up every time"></div>
+      <div class="field"><fieldset><legend>How do you want new customers to get in touch with you?</legend>${check('customer_contact', ['Call', 'Text', 'A form on my site'])}</fieldset></div>
       <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Next: start my site ${icon('arrow')}</button>
       <p class="form-note">I never sell your info. You hear from me, nobody else.</p>
     </form>
@@ -167,7 +182,6 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <p style="margin:0 0 6px">$100 today covers your first month, and that includes building and launching your site. It is live within 48 hours. After that it's $100 a month, cancel anytime.</p>
       <p style="margin:0 0 18px"><strong>Don't love it in your first month? You get your $100 back.</strong></p>
       <div id="checkout"><p class="hint" id="checkout-loading">Loading secure checkout...</p></div>
-      <p class="form-note" id="pay-later">Not ready to pay yet? Your answers are saved and I'll reach out the way you asked.</p>
     </div>
     <script>(function(){
       function toggle(sel, wrap, show){var s=document.getElementById(sel),w=document.getElementById(wrap);if(!s||!w)return;function f(){w.classList.toggle('of-hidden',!show(s.value));}s.addEventListener('change',f);f();}
@@ -182,7 +196,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
         fetch('/.netlify/functions/create-checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(info)})
           .then(function(r){if(!r.ok)throw 0;return r.json();})
           .then(function(d){return loadStripe().then(function(){return Stripe(d.publishableKey).initEmbeddedCheckout({fetchClientSecret:function(){return Promise.resolve(d.clientSecret);}});});})
-          .then(function(c){box.innerHTML='';c.mount('#checkout');})
+          .then(function(c){box.innerHTML='';c.mount('#checkout');if(window.gtag)gtag('event','begin_checkout',{currency:'USD',value:100});})
           .catch(function(){fail(info.email);});
       }
       if(form&&pay&&window.fetch&&window.FormData){
@@ -193,7 +207,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
           var fd=new FormData(form);
           fetch('/',{method:'POST',body:fd})
             .then(function(r){if(!r.ok)throw 0;
-              form.classList.add('of-hidden');pay.classList.remove('of-hidden');
+              form.classList.add('of-hidden');pay.classList.remove('of-hidden');if(window.gtag)gtag('event','generate_lead',{form_name:'website-offer'});
               pay.scrollIntoView({behavior:'smooth',block:'start'});
               startCheckout(fd);})
             .catch(function(){btn.disabled=false;form.submit();});
@@ -201,14 +215,32 @@ export function makeOfferPages({ head, icon, site, demos }) {
       }
     })();</script>`;
 
+    const rv = n => reviews.find(r => r.name.startsWith(n));
+    const quote = (r, cls = '') => r ? `<figure class="of-quote ${cls} reveal"><q>${r.text}</q><figcaption class="who">${r.name}<span aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></figcaption></figure>` : '';
+    const demoModal = live.length ? `<div class="dm" id="demo-modal" hidden role="dialog" aria-modal="true" aria-label="Example websites"><div class="dm__box">
+      <div class="dm__bar"><div class="pf-tabs" role="tablist">${live.map((d, i) => `<button type="button" role="tab" aria-selected="${i === 0}" data-src="${demoUrl(d)}">${d.tabLabel}</button>`).join('')}</div><button type="button" class="dm__x" aria-label="Close">&times;</button></div>
+      <iframe class="dm__frame" title="Example website"></iframe></div></div>
+    <script>(function(){var m=document.getElementById('demo-modal');if(!m)return;var f=m.querySelector('iframe'),tabs=[].slice.call(m.querySelectorAll('[data-src]'));
+      function pick(b){tabs.forEach(function(t){t.setAttribute('aria-selected',t===b);});f.src=b.getAttribute('data-src');}
+      function open(e){e.preventDefault();if(!f.src)pick(tabs[0]);m.hidden=false;document.body.style.overflow='hidden';if(window.gtag)gtag('event','view_examples');}
+      function close(){m.hidden=true;document.body.style.overflow='';}
+      tabs.forEach(function(t){t.addEventListener('click',function(){pick(t);});});
+      f.addEventListener('load',function(){try{[].slice.call(f.contentDocument.querySelectorAll('a[href^="/get-started"]')).forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();close();document.getElementById('form').scrollIntoView({behavior:'smooth'});});});}catch(e){}});
+      m.querySelector('.dm__x').addEventListener('click',close);m.addEventListener('click',function(e){if(e.target===m)close();});
+      document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!m.hidden)close();});
+      [].slice.call(document.querySelectorAll('a[href="/websites/"]')).forEach(function(a){a.addEventListener('click',open);});
+    })();</script>` : '';
+
     const body = `<main>
-    <section class="of-hero"><div class="wrap wrap--wide reveal">
+    <section class="of-hero"><div class="wrap wrap--wide reveal of-hero__grid"><div>
       <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Websites for small businesses</span>
       <h1 style="margin-top:16px">A real website for your business. <span class="grad">$100 a month.</span></h1>
-      <p class="lead">Here is how it works and the few decisions you make. Read top to bottom, fill out the form at the end, and I reach out.</p>
-      <div class="pills"><span>No build fee</span><span>Unlimited edits</span><span>Month to month</span></div>
-      <div class="hero__cta"><a class="btn btn--primary btn--lg" href="#build-form">Start the form ${icon('arrow')}</a>${examplesBtn('btn--on-dark btn--lg')}</div>
-    </div></section>
+      <p class="lead">Your first month is $100 instead of the regular $500, through October 31. Your site is live within 48 hours, with unlimited edits after that.</p>
+      <div class="pills"><span>First month $100, regular $500</span><span>Ends October 31</span><span>Cancel anytime</span></div>
+      <div class="hero__cta"><a class="btn btn--primary btn--lg" href="#form">Start my site ${icon('arrow')}</a>${examplesBtn('btn--on-dark btn--lg')}</div>
+    </div><div class="of-hero__art" aria-hidden="true"><div class="pl" style="--s:150px"><img src="${site.logo}" alt="" width="150" height="150"></div></div></div></section>
+
+    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Chris'))}</div></section>
 
     <section class="of-sec"><div class="wrap wrap--wide">
       <h2 class="reveal">How this works</h2>
@@ -216,48 +248,31 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <div class="of-tip reveal"><h3>Skip the long planning</h3><p>From experience, the fastest way to a site you love is to give me the basics and a general idea of the look, then react to the real thing. It is a lot easier to say what you don't like on a finished site than to describe what you want before it exists. So we don't spend weeks planning. I build it, you critique it, I fix it.</p></div>
     </div></section>
 
-    <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
-      <h2 class="reveal">Pick your structure</h2>
-      <p class="sub reveal">These are the common setups. Pick the closest one. Any of them can change later.</p>
-      <div class="of-types">${typeCards}</div>
-      <p class="reveal" style="margin-top:26px">${examplesBtn()}</p>
-    </div></section>
+    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Yadira'))}</div></section>
 
-    <section class="of-sec"><div class="wrap wrap--wide">
+    <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
       <h2 class="reveal">What I need from you</h2>
       <div class="of-grid3">
-        <div class="of-card reveal"><h3>Business basics</h3><p>The form below covers it, including a spot for your logo if you have one.</p></div>
-        <div class="of-card reveal" data-d="1"><h3>Photos</h3><p>Your own photos work best, and phone photos are fine. After the form you get a separate link to upload them.</p></div>
+        <div class="of-card reveal"><h3>A few quick answers</h3><p>The short form below. The details, like your logo and colors, come after you start.</p></div>
+        <div class="of-card reveal" data-d="1"><h3>Photos</h3><p>Your own photos work best, and phone photos are fine. Send them anytime. Until then your site launches with stock photos.</p></div>
         <div class="of-card reveal" data-d="2"><h3>Your domain</h3><p>Already have one? I connect it. Need one? I register it for you.</p></div>
       </div>
-      <div class="of-tip reveal"><h3>Two or three websites you like</h3><p>Find two or three websites from businesses like yours and tell me what you like about each one. They do not have to be local. If you run a lawn care company in Florida, look up lawn care companies in Texas or Ohio and pick the sites you like best. I use them as the starting point for yours.</p></div>
     </div></section>
 
-    <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
-      <h2 class="reveal">After launch</h2>
-      <p class="sub reveal">Unlimited edits for as long as you have the site. Text or email what you want changed and I change it. You never log into anything.</p>
-    </div></section>
-
-    <section class="of-sec"><div class="wrap wrap--wide">
-      <div class="of-price reveal">
-        <div><div class="big">$100<small> a month</small></div><p>Your first payment starts the build, and your site is live within 48 hours of it.</p></div>
-        <ul>
-          <li>${icon('check')} No build fee</li>
-          <li>${icon('check')} No contract. Cancel anytime</li>
-          <li>${icon('check')} Don't love it? Your first $100 back</li>
-          <li>${icon('check')} Hosting, security and backups included</li>
-          <li>${icon('check')} Unlimited edits by text or email</li>
-        </ul>
+    <section class="of-sec" id="form"><div class="wrap wrap--wide">
+      ${quote(rv('Jesse'), 'of-quote--card')}
+      <div class="of-price reveal" style="margin-top:28px">
+        <div>
+          <div class="was">Regular first month <s>$500</s></div>
+          <div class="big">$100<small> first month</small></div>
+          <p>Through October 31. Your first payment starts the build and your site is live within 48 hours. After that it is $100 a month.</p>
+          <div class="ticks"><span>${icon('check')} Cancel anytime</span><span>${icon('check')} First $100 back if you don't love it</span><span>${icon('check')} Hosting and unlimited edits included</span></div>
+        </div>
+        <ol class="of-next"><li><b>1</b>Fill out the form below</li><li><b>2</b>Pay your first $100</li><li><b>3</b>I build it, live within 48 hours</li><li><b>4</b>I reach out about photos and the look</li></ol>
       </div>
-    </div></section>
-
-    <section class="of-sec of-sec--alt" id="form"><div class="wrap wrap--wide">
-      <div class="center reveal"><h2>Tell me about your business</h2>
-      <p class="sub" style="margin-inline:auto">Fill this out, then start your site with your first $100 right below it. Questions first? Text <a href="${site.phoneHref}">${site.phone}</a>.</p>
-      <p style="margin-top:18px">${examplesBtn('btn--ghost', 'See example sites first')}</p></div>
       ${form}
     </div></section>
-    </main>`;
+    </main>${demoModal}`;
 
     return shell({
       title: 'Small Business Website, $100 a Month, No Build Fee | EvoVero',
@@ -271,7 +286,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
     const body = `<main><section class="of-hero"><div class="wrap wrap--wide reveal">
       <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Got it</span>
       <h1 style="margin-top:16px">Your answers are in. <span class="grad">I'll reach out.</span></h1>
-      <p class="lead">Next, I reach out the way you asked so we can go over the details. Questions in the meantime? Text <a style="color:#fff" href="${site.phoneHref}">${site.phone}</a>.</p>
+      <p class="lead">Next, I reach out the way you asked so we can go over the details. Questions in the meantime? Text <span style="white-space:nowrap"><a style="color:#fff" href="${site.phoneHref}">${site.phone}</a></span>.</p>
       <div class="hero__cta">${examplesBtn('btn--on-dark btn--lg')}</div>
     </div></section></main>`;
     return shell({
@@ -293,6 +308,43 @@ export function makeOfferPages({ head, icon, site, demos }) {
       ['Billing', 'After today it is $100 a month and you can cancel anytime. Don\'t love it in your first month? You get your $100 back.'],
     ];
     const steps = next.map(([h, p], i) => `<li class="wl-step" style="--i:${i}"><span class="wl-num">${i + 1}</span><div><h3>${h}</h3><p>${p}</p></div></li>`).join('');
+    const typeCards = [
+      { name: 'One page', pages: 'Everything on a single scrolling page', blurb: 'Good when you want something simple, fast and clean.' },
+      ...types,
+    ].map(t => `<div class="of-type"><h3>${t.name}</h3><div class="pg">${t.pages}</div><p>${t.blurb}</p></div>`).join('');
+    const typeOptions = types.map(t => `<option>${t.name}</option>`).join('') + '<option>Other</option>';
+    const structOptions = ['One page', ...types.map(t => t.name), 'Not sure yet'].map(x => `<option>${x}</option>`).join('');
+    const chk = (name, items) => `<div class="checkrow">${items.map(v => `<label><input type="checkbox" name="${name}" value="${v}"> ${v}</label>`).join('')}</div>`;
+    const details = `<section class="wl-sec wl-form-sec" id="details"><div class="wrap wrap--wide">
+      <h2>Last step: the details</h2>
+      <p class="wl-sub">These help me build it right the first time. Skip anything you are not sure about.</p>
+      <h3 class="wl-h3">Pick your structure</h3>
+      <div class="of-types">${typeCards}</div>
+      <form id="details-form" class="form-card of-form" name="website-details" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field" action="/get-started/welcome/">
+        <input type="hidden" name="form-name" value="website-details">
+        <input type="hidden" name="form_version" value="${DETAILS_VERSION}">
+        <input type="hidden" name="session_id" id="d-session">
+        <input type="hidden" name="email" id="d-email">
+        <p hidden><label>Skip this<input name="bot-field"></label></p>
+        <div class="field-row">
+          <div class="field"><label for="d-type">What kind of business is it?</label><select id="d-type" name="business_type"><option value="">Choose one</option>${typeOptions}</select></div>
+          <div class="field"><label for="d-struct">Which structure fits?</label><select id="d-struct" name="structure"><option value="">Choose one</option>${structOptions}</select></div>
+        </div>
+        <div class="field"><label for="d-what">What does your company do, and what services should be on the site?</label><textarea id="d-what" name="what_you_do"></textarea></div>
+        <div class="field"><label for="d-hours">Business hours</label><input id="d-hours" name="hours" placeholder="Mon to Fri 7 to 5, Sat by appointment"></div>
+        <div class="field-row">
+          <div class="field"><label for="d-site">Current website, if you have one</label><input id="d-site" name="current_website" inputmode="url" placeholder="yourbusiness.com"></div>
+          <div class="field"><label for="d-gbp">Do you have a Google Business Profile?</label><select id="d-gbp" name="google_business_profile"><option value="">Choose one</option><option>Yes</option><option>No</option><option>Not sure</option></select></div>
+        </div>
+        <div class="field"><label for="d-social">Social pages, like Facebook or Instagram</label><input id="d-social" name="social_pages" placeholder="Paste links, or type None"></div>
+        <div class="field"><label for="d-logo">Your logo</label><input id="d-logo" name="logo" type="file" accept="image/*,.pdf,.svg,.ai,.eps"><p class="hint">No logo yet? Describe the colors you want below instead.</p></div>
+        <div class="field"><label for="d-colors">Colors you want on the site</label><input id="d-colors" name="colors" placeholder="Navy and orange, match my truck, not sure yet"></div>
+        <div class="field"><fieldset><legend>Best way for me to reach you</legend>${chk('contact_pref', ['Text', 'Call', 'Email'])}</fieldset></div>
+        <div class="field"><label for="d-more">Anything else?</label><textarea id="d-more" name="anything_else" placeholder="Specific information you want on the site, or special features like booking, a menu or online ordering."></textarea></div>
+        <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Send my details ${icon('arrow')}</button>
+      </form>
+      <div id="details-done" class="form-card of-hidden"><h3 style="margin:0 0 6px">Got it. I'm on it.</h3><p style="margin:0">Your site is live within 48 hours. If I need anything, I reach out the way you picked.</p></div>
+    </div></section>`;
     const wcss = `
 .wl-hero{background:var(--grad-hero);color:var(--on-dark);padding-block:clamp(60px,9vw,120px) clamp(56px,8vw,96px);position:relative;overflow:hidden}
 .wl-hero:before{content:"";position:absolute;inset:-40% -10% auto auto;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle,rgba(110,160,255,.28),transparent 65%);animation:wl-float 9s ease-in-out infinite}
@@ -318,14 +370,29 @@ export function makeOfferPages({ head, icon, site, demos }) {
 .wl-num{width:40px;height:40px;border-radius:50%;background:var(--grad-blue);color:#fff;display:grid;place-items:center;font-family:var(--font-head);font-weight:700;position:relative;z-index:1}
 .wl-step h3{font-size:1.1rem;margin-bottom:4px}.wl-step p{color:var(--ink-soft);font-size:.98rem}
 .wl-help{margin-top:26px;color:var(--ink-soft)}
+.wl-hero .wrap,.wl-sec .wrap{max-width:900px;margin-inline:auto;padding-inline:clamp(20px,5vw,40px);text-align:center}
+.wl-logo{margin:18px auto 56px;animation:wl-pop .7s cubic-bezier(.2,1.4,.4,1) both}
+@media (max-width:640px){.wl-logo{--s:80px;margin-bottom:44px}}
+.wl-hero h1,.wl-hero .lead{margin-inline:auto}
+.wl-hero .lead{max-width:760px}
+.wl-hero .hero__cta{justify-content:center}
+.wl-list{margin-inline:auto;text-align:left}
+.wl-help{text-align:center}
+.wl-form-sec{background:var(--surface-2)}
+.wl-form-sec .wrap{text-align:left}
+.wl-form-sec h2{text-align:center}
+.wl-sub{text-align:center;color:var(--ink-soft);margin-top:10px}
+.wl-h3{margin-top:30px;font-size:1.15rem}
+.wl-form-sec .of-types{margin-top:14px}
 @media (prefers-reduced-motion:reduce){.wl-hero *,.wl-step,.wl-hero:before{animation:none!important;opacity:1!important;transform:none!important}}`;
     const body = `<style>${wcss}</style><main>
     <section class="wl-hero"><div class="wrap wrap--wide">
-      <div class="wl-check" id="wl-check"><svg viewBox="0 0 24 24"><path id="wl-icon" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+      <div class="pl wl-logo" id="wl-check"><img src="${site.logo}" alt="EvoVero" width="104" height="104"></div>
       <h1 id="wl-title">Thanks. <span class="grad">Here's what happens next.</span></h1>
-      <p class="lead" id="wl-lead">Questions anytime? Text <a style="color:#fff" href="${site.phoneHref}">${site.phone}</a>.</p>
-      <div class="hero__cta" id="wl-cta" style="margin-top:26px">${examplesBtn('btn--on-dark btn--lg')}</div>
+      <p class="lead" id="wl-lead">Questions anytime? Text <span style="white-space:nowrap"><a style="color:#fff" href="${site.phoneHref}">${site.phone}</a></span>.</p>
+      <div class="hero__cta" id="wl-cta" style="margin-top:26px"><a class="btn btn--primary btn--lg" href="#details">Last step: the details ${icon('arrow')}</a></div>
     </div></section>
+    ${details}
     <section class="wl-sec"><div class="wrap wrap--wide">
       <h2>What happens next</h2>
       <ol class="wl-list">${steps}</ol>
@@ -333,12 +400,18 @@ export function makeOfferPages({ head, icon, site, demos }) {
     </div></section>
     </main>
     <script>(function(){
+      var df=document.getElementById('details-form'),dd=document.getElementById('details-done');
+      if(df&&window.fetch&&window.FormData){df.addEventListener('submit',function(e){e.preventDefault();var b=df.querySelector('button[type=submit]');b.disabled=true;
+        fetch('/',{method:'POST',body:new FormData(df)}).then(function(r){if(!r.ok)throw 0;df.classList.add('of-hidden');dd.classList.remove('of-hidden');if(window.gtag)gtag('event','details_submitted');dd.scrollIntoView({behavior:'smooth',block:'center'});})
+        .catch(function(){b.disabled=false;df.submit();});});}
       var id=new URLSearchParams(location.search).get('session_id');if(!id)return;
+      var ds=document.getElementById('d-session');if(ds)ds.value=id;
       var t=document.getElementById('wl-title'),l=document.getElementById('wl-lead'),c=document.getElementById('wl-check'),cta=document.getElementById('wl-cta');
       fetch('/.netlify/functions/get-session?session_id='+encodeURIComponent(id)).then(function(r){return r.ok?r.json():null;}).then(function(d){
         if(!d)return;
-        if(d.status==='complete'){t.innerHTML='You\\'re in. <span class="grad">Your site is live within 48 hours.</span>';l.innerHTML='Your payment went through. Questions anytime? Text <a style="color:#fff" href="${site.phoneHref}">${site.phone}</a>.';}
-        else if(d.status==='open'){c.classList.add('is-warn');document.getElementById('wl-icon').setAttribute('d','M12 7v6M12 17h.01');t.innerHTML='Your payment didn\\'t go through. <span class="grad">Your answers are saved.</span>';l.textContent='Nothing was charged. You can try again, or text me and I\\'ll send you a link.';cta.innerHTML='<a class="btn btn--primary btn--lg" href="/get-started/#build-form">Try again</a>';var s=document.querySelector('.wl-sec');if(s)s.style.display='none';}
+        if(d.email){var de=document.getElementById('d-email');if(de)de.value=d.email;}
+        if(d.status==='complete'){var seen=false;try{seen=sessionStorage.getItem('paid_'+id);sessionStorage.setItem('paid_'+id,'1');}catch(e){}if(!seen&&window.gtag)gtag('event','purchase',{transaction_id:id,currency:'USD',value:100});t.innerHTML='You\\'re in. <span class="grad">Your site is live within 48 hours.</span>';l.innerHTML='Your payment went through. Questions anytime? Text <span style="white-space:nowrap"><a style="color:#fff" href="${site.phoneHref}">${site.phone}</a></span>.';}
+        else if(d.status==='open'){c.classList.add('is-warn');t.innerHTML='Your payment didn\\'t go through. <span class="grad">Your answers are saved.</span>';l.textContent='Nothing was charged. You can try again, or text me and I\\'ll send you a link.';cta.innerHTML='<a class="btn btn--primary btn--lg" href="/get-started/#build-form">Try again</a>';[].forEach.call(document.querySelectorAll('.wl-sec'),function(x){x.style.display='none';});}
       }).catch(function(){});
     })();</script>`;
     return shell({
