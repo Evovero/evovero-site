@@ -175,7 +175,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
 
       var SALE_LINK='https://buy.stripe.com/8x2cN5dl68QR9PP5zNdfG09';
       var form=document.getElementById('build-form'),pay=document.getElementById('pay'),box=document.getElementById('checkout');
-      function fail(email){box.innerHTML='<p>The card form did not load. <a href="'+SALE_LINK+(email?'?prefilled_email='+encodeURIComponent(email):'')+'" target="_blank" rel="noopener">Pay the first $100 on Stripe</a>, or text me and I will send you a link.</p>';}
+      function fail(email){box.innerHTML='<a class="btn btn--primary btn--lg" style="width:100%;justify-content:center" href="'+SALE_LINK+(email?'?prefilled_email='+encodeURIComponent(email):'')+'" target="_blank" rel="noopener">Pay your first $100 securely on Stripe</a><p class="hint" style="margin-top:10px;text-align:center">Trouble paying? Text <a href="sms:+14026984902">402-698-4902</a> and I will send you a link.</p>';}
       function loadStripe(){return new Promise(function(ok,no){if(window.Stripe)return ok();var s=document.createElement('script');s.src='https://js.stripe.com/v3/';s.onload=ok;s.onerror=no;document.head.appendChild(s);});}
       function startCheckout(fd){
         var info={email:fd.get('email'),business:fd.get('business_name'),name:fd.get('name')};
