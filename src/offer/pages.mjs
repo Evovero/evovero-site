@@ -11,7 +11,7 @@ const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorad
 
 const FORM_VERSION = '2026-10-17 v3';
 const DETAILS_VERSION = '2026-10-17 v1';
-const TRIAL_VERSION = '2026-10-18 trial v1';
+const TRIAL_VERSION = '2026-10-18 trial v2';
 
 
 const css = `
@@ -201,7 +201,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
       </div>
       <div class="field"><label for="w-city">City and state</label><input id="w-city" name="city_state" autocomplete="address-level2" placeholder="Omaha, NE"></div>
       <div class="field"><label for="w-first">When someone lands on your new site, what's the first thing you want them to see?</label><input id="w-first" name="first_thing" placeholder="Our best project photos, our reviews, a free quote button"></div>
-      <div class="field"><label for="w-stand">What makes you better than the other guys in your area?</label><input id="w-stand" name="stand_out" placeholder="Same day quotes, 20 years in business, we clean up every time"></div>
+      <div class="field"><label for="w-stand">What are you known for in your area?</label><input id="w-stand" name="stand_out" placeholder="Fast quotes, family owned, always on time"></div>
       <div class="field"><fieldset><legend>How do you want new customers to get in touch with you?</legend>${check('customer_contact', ['Call', 'Text', 'A form on my site'])}</fieldset></div>
       <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Next: start my site ${icon('arrow')}</button>
       <p class="form-note">I never sell your info. You hear from me, nobody else.</p>
@@ -457,9 +457,9 @@ export function makeOfferPages({ head, icon, site, demos }) {
   function freeTrial() {
     const steps = [
       ['Tell me about your business', 'Fill out the form below. No credit card, nothing up front.'],
-      ['I build it within 48 hours', 'I build your site from your answers and send you a private link to it.'],
-      ['Two weeks of free edits', 'Your 2 weeks start the day your site is ready. Send me every change you want.'],
-      ['Keep it, or don\'t', 'Keep it for $100 a month, with no build fee. Or walk away and owe nothing.'],
+      ['I build it within 48 hours', 'Then I send you a preview link to your new site.'],
+      ['You get 2 weeks to decide', 'Send me every change you want while you decide.'],
+      ['Keep it, or don\'t', 'Keep it for $100 a month. Don\'t like it? No hard feelings, you owe nothing.'],
     ];
     const typeOptions = types.map(t => `<option>${t.name}</option>`).join('') + '<option>Other</option>';
     const structOptions = ['One page', ...types.map(t => t.name), 'Not sure yet'].map(s => `<option>${s}</option>`).join('');
@@ -482,19 +482,18 @@ export function makeOfferPages({ head, icon, site, demos }) {
         <div class="field"><label for="t-ph">Phone</label><input id="t-ph" name="phone" type="tel" autocomplete="tel" required></div>
         <div class="field"><label for="t-em">Email</label><input id="t-em" name="email" type="email" autocomplete="email" required></div>
       </div>
-      <div class="field"><label for="t-city">City and state</label><input id="t-city" name="city_state" autocomplete="address-level2" placeholder="Omaha, NE"></div>
+      <div class="field"><label for="t-city">City and state</label><input id="t-city" name="city_state" autocomplete="address-level2" placeholder="Omaha, Nebraska"></div>
       <div class="field"><fieldset><legend>Best way for me to reach you</legend>${check('contact_pref', ['Text', 'Call', 'Email'])}</fieldset></div>
       ${group('About your business')}
-      <div class="field-row">
-        <div class="field"><label for="t-type">What kind of business is it?</label><select id="t-type" name="business_type"><option value="">Choose one</option>${typeOptions}</select></div>
-        <div class="field"><label for="t-struct">How big a site? <a href="/websites/" target="_blank" rel="noopener" class="ft-ex">See examples</a></label><select id="t-struct" name="structure"><option value="">Choose one</option>${structOptions}</select></div>
-      </div>
-      <div class="field"><label for="t-what">What does your company do, and what services should be on the site?</label><textarea id="t-what" name="what_you_do"></textarea></div>
-      <div class="field"><label for="t-stand">What makes you better than the other guys in your area?</label><input id="t-stand" name="stand_out" placeholder="Same day quotes, 20 years in business, we clean up every time"></div>
-      <div class="field"><label for="t-hours">Business hours</label><input id="t-hours" name="hours" placeholder="Mon to Fri 7 to 5, Sat by appointment"></div>
-      <div class="field"><fieldset><legend>How do you want new customers to get in touch with you?</legend>${check('customer_contact', ['Call', 'Text', 'A form on my site'])}</fieldset></div>
+      <div class="field"><label for="t-type">What kind of business is it?</label><select id="t-type" name="business_type"><option value="">Choose one</option>${typeOptions}</select></div>
+      <div class="field"><label for="t-svc">Your main services or products</label><input id="t-svc" name="services" placeholder="Pressure washing, gutter cleaning, window cleaning"></div>
+      <div class="field"><label for="t-known">What are you known for in your area?</label><input id="t-known" name="known_for" placeholder="Fast quotes, family owned, always on time"></div>
+      <div class="field"><label for="t-hours">Business hours</label><input id="t-hours" name="hours" placeholder="Mon to Fri 8 to 5, Sat by appointment"></div>
+      ${group('Picture your new site')}
+      <div class="field"><label for="t-first">When someone lands on your new site, what's the first thing you want them to see?</label><input id="t-first" name="first_thing" placeholder="Our best work, our reviews, a free quote button"></div>
+      <div class="field"><fieldset><legend>What should visitors be able to do on your site?</legend>${check('site_actions', ['Call me', 'Text me', 'Send a request form', 'See my work', 'See my menu or prices', 'Book a time (extra setup)'])}</fieldset></div>
+      <div class="field"><label for="t-love">Seen a website you love? Paste a link</label><input id="t-love" name="liked_site" inputmode="url" placeholder="Any business, anywhere"></div>
       ${group('The look')}
-      <div class="field"><label for="t-first">When someone lands on your new site, what's the first thing you want them to see?</label><input id="t-first" name="first_thing" placeholder="Our best project photos, our reviews, a free quote button"></div>
       <div class="field"><span class="of-label">Your logo and photos</span><div class="pd-box"><p id="t-up-note">Send your logo and any photos of your work, full quality. No photos yet? I start with stock photos.</p><a class="btn btn--ghost" href="/photos/" data-dropbox-open>Upload ${icon('arrow')}</a></div></div>
       <div class="field"><label for="t-colors">Colors you want on the site</label><input id="t-colors" name="colors" placeholder="Navy and orange, match my truck, not sure yet"></div>
       ${group('Where you are online now')}
@@ -503,8 +502,8 @@ export function makeOfferPages({ head, icon, site, demos }) {
         <div class="field"><label for="t-gbp">Do you have a Google Business Profile?</label><select id="t-gbp" name="google_business_profile"><option value="">Choose one</option><option>Yes</option><option>No</option><option>Not sure</option></select></div>
       </div>
       <div class="field"><label for="t-social">Social pages, like Facebook or Instagram</label><input id="t-social" name="social_pages" placeholder="Paste links, or type None"></div>
-      <div class="field"><label for="t-more">Anything else?</label><textarea id="t-more" name="anything_else" placeholder="Specific information you want on the site, or special features like booking, a menu or online ordering."></textarea></div>
-      <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Start my free site ${icon('arrow')}</button>
+      <div class="field"><label for="t-more">Anything else?</label><textarea id="t-more" name="anything_else"></textarea></div>
+      <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Build my free site ${icon('arrow')}</button>
       <p class="form-note">No credit card. I never sell your info. You hear from me, nobody else.</p>
     </form>
     <script>(function(){
@@ -522,10 +521,10 @@ export function makeOfferPages({ head, icon, site, demos }) {
 
     const rv = n => reviews.find(r => r.name.startsWith(n));
     const faq = [
-      ['Do I need a credit card?', 'No. Nothing up front. You only pay if you keep your site after your 2 weeks.'],
-      ['What happens after 2 weeks?', 'Keep it for $100 a month and I launch it on your web address. No build fee, cancel anytime. Don\'t want it? The preview comes down and you owe nothing.'],
-      ['How do edits work?', 'Text or email what you want changed and I change it. Unlimited, during your trial and for as long as you have the site. You never log into anything.'],
-      ['Is there a deadline?', 'Free trial requests have to be in by October 31. Your 2 weeks start whenever your site is ready.'],
+      ['Do I need a credit card to start?', 'No. Nothing up front, and nothing until you approve your site. When you\'re ready to keep it, I send you a secure link to set up your payment with a credit or debit card. Your $100 comes out on the same day each month, and you can change the card on file anytime with a link I send you.'],
+      ['How long do I have to decide?', 'Two weeks from the day I send you your finished site. Send me every change you want in that time, and I keep revising.'],
+      ['What if I keep it?', '$100 a month with no build fee, and I launch it on your web address. Edits stay unlimited. No contract, and you can cancel anytime with a text or email.'],
+      ['What if I don\'t?', 'No hard feelings. The preview comes down and you owe nothing. Requests have to be in by October 31.'],
     ];
     const quote = (r, cls = '', anim = 'reveal of-rise') => r ? `<figure class="of-quote ${cls} ${anim}"><q>${r.text}</q><figcaption class="who">${r.name}<span aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></figcaption></figure>` : '';
     const tcss = `.ft-group{margin:30px 0 14px;padding-top:22px;border-top:1px solid var(--line);font-size:1.12rem}.ft-group:first-of-type{margin-top:6px;padding-top:0;border-top:0}
@@ -534,11 +533,11 @@ export function makeOfferPages({ head, icon, site, demos }) {
 
     const body = `<style>${tcss}</style><main>
     <section class="of-hero"><div class="wrap wrap--wide reveal of-hero__grid"><div>
-      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Free trial, no credit card</span>
-      <h1 style="margin-top:16px">Try a website for your business. <span class="grad">Free for 2 weeks.</span></h1>
-      <p class="lead">Tell me about your business and I build your site within 48 hours. Your 2 weeks start the day it is ready. Keep it after that for $100 a month, or walk away and owe nothing.</p>
-      <div class="pills"><span>No credit card</span><span>Built in 48 hours</span><span>Unlimited edits</span><span>Requests close October 31</span></div>
-      <div class="hero__cta"><a class="btn btn--primary btn--lg" href="#form">Start my free site ${icon('arrow')}</a>${examplesBtn('btn--on-dark btn--lg')}</div>
+      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> No credit card, nothing up front</span>
+      <h1 style="margin-top:16px">I'll build your business a website. <span class="grad">Free.</span></h1>
+      <p class="lead">Tell me about your business and I build your site within 48 hours. Once it's built, you get 2 weeks to decide if you want to keep it. Keep it for $100 a month. Don't like it? No hard feelings, you owe nothing.</p>
+      <div class="pills"><span>No credit card</span><span>Built in 48 hours</span><span>2 weeks to decide</span><span>Requests close October 31</span></div>
+      <div class="hero__cta"><a class="btn btn--primary btn--lg" href="#form">Build my free site ${icon('arrow')}</a>${examplesBtn('btn--on-dark btn--lg')}</div>
     </div><div class="of-hero__art" aria-hidden="true"><div class="pl" style="--s:150px"><img src="/assets/evovero-logo-300.webp" alt="" width="150" height="150"></div></div></div></section>
 
     <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Chris'), '', '')}</div></section>
@@ -546,7 +545,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
     <section class="of-sec"><div class="wrap wrap--wide">
       <h2 class="reveal">How this works</h2>
       <div class="of-steps">${steps.map((s, i) => `<div class="of-step reveal" data-d="${i}"><b>${i + 1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>
-      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Start my free site ${icon('arrow')}</a></div>
+      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Build my free site ${icon('arrow')}</a></div>
     </div></section>
 
     <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Yadira'))}</div></section>
@@ -554,7 +553,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
     <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
       <h2 class="reveal">Questions people ask</h2>
       <div class="of-faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
-      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Start my free site ${icon('arrow')}</a></div>
+      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Build my free site ${icon('arrow')}</a></div>
     </div></section>
 
     <section class="of-sec" id="form"><div class="wrap wrap--wide">
@@ -562,24 +561,24 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <div class="of-price reveal" style="margin-top:28px">
         <div>
           <div class="was">Build fee <s>$500</s> waived</div>
-          <div class="big">Free<small> for 2 weeks</small></div>
-          <div class="big">$100<small> a month after, only if you keep it</small></div>
-          <p>Requests in by October 31. Your 2 weeks start the day your site is ready.</p>
-          <div class="ticks"><span>${icon('check')} No credit card</span><span>${icon('check')} Unlimited edits</span><span>${icon('check')} Cancel anytime</span></div>
+          <div class="big">Free<small> to build</small></div>
+          <div class="big">$100<small> a month, only if you keep it</small></div>
+          <p>Once it's built, you get 2 weeks to decide. Requests in by <span style="white-space:nowrap">October 31</span>.</p>
+          <div class="ticks"><span>${icon('check')} No credit card</span><span>${icon('check')} No contract</span><span>${icon('check')} Cancel anytime with a text</span></div>
         </div>
-        <ol class="of-next"><li><b>1</b>Fill out the form below</li><li><b>2</b>I build it within 48 hours</li><li><b>3</b>2 weeks of free edits</li><li><b>4</b>Keep it for $100 a month, or don't</li></ol>
+        <ol class="of-next"><li><b>1</b>Fill out the form below</li><li><b>2</b>I build it within 48 hours</li><li><b>3</b>You get 2 weeks to decide</li><li><b>4</b>Keep it for $100 a month, or don't</li></ol>
       </div>
       ${form}
     </div></section>
     </main>${demoModalHtml()}${dropboxModal('free-trial', { site })}${dropboxForm}${dropboxScript}
-    <a class="of-sticky" id="of-sticky" href="#form">Start my free site ${icon('arrow')}</a>
+    <a class="of-sticky" id="of-sticky" href="#form">Build my free site ${icon('arrow')}</a>
     <script>(function(){var b=document.getElementById('of-sticky'),f=document.getElementById('form'),h=document.querySelector('.of-hero');if(!b||!f)return;var t=0;
       function u(){t=0;var show=h.getBoundingClientRect().bottom<0&&f.getBoundingClientRect().top>window.innerHeight*0.6;b.classList.toggle('on',show);}
       window.addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(u);},{passive:true});})();</script>`;
 
     return shell({
-      title: 'Free Website Trial for Small Businesses, No Card | EvoVero',
-      desc: 'Try a real website for your small business free for 2 weeks. No credit card. Built in 48 hours with unlimited edits. Keep it for $100 a month or owe nothing.',
+      title: 'Free Website for Your Business, Built in 48 Hours | EvoVero',
+      desc: 'I build your small business website free in 48 hours. No credit card. Then you get 2 weeks to decide. Keep it for $100 a month, or walk away and owe nothing.',
       path: '/free-trial',
     }, examplesBtn(), body);
   }
@@ -588,9 +587,9 @@ export function makeOfferPages({ head, icon, site, demos }) {
   function freeTrialThanks() {
     const steps = [
       ['I build your site', 'From your answers, within 48 hours. Stock photos fill in until I have yours.'],
-      ['You get your link', 'I send it the way you picked: text, call or email. Your 2 weeks start that day.'],
+      ['You get your preview link', 'I send it the way you picked: text, call or email. Your 2 weeks to decide start that day.'],
       ['Send your changes', 'Everything you want changed, even one long email. I keep revising until it is right.'],
-      ['Keep it, or don\'t', 'Keep it for $100 a month, no build fee, cancel anytime. Or walk away and owe nothing.'],
+      ['Keep it, or don\'t', 'Keep it for $100 a month, no build fee, no contract. Don\'t like it? No hard feelings, you owe nothing.'],
     ];
     const body = `<main><section class="of-hero"><div class="wrap wrap--wide reveal">
       <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Got it</span>
@@ -604,7 +603,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
     </div></section></main>${dropboxModal('free-trial-thanks', { site })}${dropboxForm}${dropboxScript}`;
     return shell({
       title: 'Free Trial Received, Your Website Is on the Way | EvoVero',
-      desc: 'Your free website trial request reached Spencer at EvoVero. He builds your site within 48 hours and sends the link. Your 2 weeks start the day it is ready.',
+      desc: 'Your free website request reached Spencer at EvoVero. He builds your site within 48 hours and sends the preview link. Your 2 weeks start the day it is ready.',
       path: '/free-trial/thanks',
     }, '', body);
   }

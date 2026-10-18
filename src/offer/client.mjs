@@ -34,7 +34,14 @@ const css = `
 .cg-foot{border-top:1px solid var(--line);padding-block:26px;font-size:.92rem;color:var(--ink-soft)}
 .cg-foot .wrap{display:flex;flex-wrap:wrap;gap:12px 22px;justify-content:space-between}
 .cg-foot a{color:inherit}
-@media (max-width:600px){.cg-top .hide-sm{display:none}}
+.cg-narrow{max-width:820px;margin-inline:auto}
+.cg-narrow .cg-steps,.cg-narrow .cg-fine{max-width:none}
+.cg-deal{margin-top:20px}
+.cg-form{margin-top:24px}
+.cg-hp{position:absolute;left:-9999px}
+.cg-note{margin:4px 0 18px;padding:12px 14px;border-radius:12px;background:var(--surface-2,#eef3fc);color:var(--ink);font-size:.95rem;line-height:1.5}
+.cg-form .checkrow label{color:var(--ink)}
+@media (max-width:600px){.cg-top .hide-sm{display:none}.cg-form .field-row{grid-template-columns:1fr}}
 `;
 
 export function makeClientPages({ head, icon, site }) {
@@ -90,7 +97,7 @@ export function makeClientPages({ head, icon, site }) {
       <p class="sub" style="margin-top:22px">Questions about any of these? Email <a href="${mail}">${site.email}</a>.</p>
     </div></section>
     <section class="cg-sec"><div class="wrap wrap--wide">
-      <div class="cg-band"><div><strong>Know a business that needs a website?</strong><p>Every business you refer that becomes a client earns you a free month of your website.</p></div>
+      <div class="cg-band"><div><strong>Save $100 for every business you send my way.</strong><p>When a business you refer becomes a client, $100 comes off your monthly fee. Credits stack, so a few referrals can cover your website.</p></div>
       <a class="btn btn--on-dark btn--lg" href="/referrals/">How referrals work ${icon('arrow')}</a></div>
     </div></section>
     </main>`;
@@ -104,41 +111,82 @@ export function makeClientPages({ head, icon, site }) {
   /* ---------------- /referrals ---------------- */
   function referrals() {
     const steps = [
-      ['Send them my way', `Have them mention your name when they reach out, or email me their name and business at <a href="${mail}">${site.email}</a> and I will reach out.`],
-      ['They become a client', 'Your credit is earned once their first payment clears and their 30 day refund window passes.'],
-      ['Your next month is free', 'Each earned credit is worth $100 and covers one month of your website, starting with your next charge. Refer ten businesses and you get ten free months. There is no cap.'],
+      ['Send them my way', `Text <a href="sms:${site.phoneHref.replace('tel:', '')}">${site.phone}</a> or email <a href="${mail}">${site.email}</a> with their name and number, or use the form below.`],
+      ['They become a client', 'Your credit is earned once their first payment clears.'],
+      ['You get $100 off', 'The $100 comes off your next monthly charge with me. Credits stack, so two referrals is $200 off. There is no cap.'],
     ].map(([h, p]) => `<li><div><h3>${h}</h3><p>${p}</p></div></li>`).join('');
 
+    const form = `<form class="form-card cg-form" name="referral" method="POST" action="/referrals/thanks/" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="referral">
+      <p class="cg-hp"><label>Leave this empty <input name="bot-field"></label></p>
+      <div class="field-row">
+        <div class="field"><label for="r-you">Your name</label><input id="r-you" name="your_name" autocomplete="name" required></div>
+        <div class="field"><label for="r-you-contact">Your phone or email</label><input id="r-you-contact" name="your_contact" autocomplete="email"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="r-name">Their name</label><input id="r-name" name="referral_name" required></div>
+        <div class="field"><label for="r-biz">Their business (optional)</label><input id="r-biz" name="referral_business"></div>
+      </div>
+      <div class="field"><label for="r-contact">Their phone or email</label><input id="r-contact" name="referral_contact" required></div>
+      <div class="field"><label>Do they know I'll be reaching out?</label>
+        <div class="checkrow"><label><input type="radio" name="they_know" value="Yes, I told them" required> Yes, I told them</label><label><input type="radio" name="they_know" value="Not yet, I will tell them now"> Not yet, I'll tell them now</label></div>
+      </div>
+      <p class="cg-note">Please message them before or right after you send this, so they expect to hear from me.</p>
+      <button class="btn btn--primary btn--lg" type="submit" style="width:100%;justify-content:center">Send referral ${icon('arrow')}</button>
+    </form>`;
+
     const body = `<main>
-    <section class="cg-hero"><div class="wrap wrap--wide">
+    <section class="cg-hero"><div class="wrap wrap--wide"><div class="cg-narrow">
       <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Referral program</span>
-      <h1>Refer a business. Get a free month.</h1>
-      <p>Every business you send my way that becomes a website client earns you a $100 credit, which covers a month of your website.</p>
-    </div></section>
-    <section class="cg-sec"><div class="wrap wrap--wide">
+      <h1>Refer a business. Get $100 off.</h1>
+      <p>Every business you refer that becomes a client earns you a $100 credit toward your monthly fee with me. They start on the same deal you got.</p>
+    </div></div></section>
+    <section class="cg-sec"><div class="wrap wrap--wide"><div class="cg-narrow">
       <h2>How it works</h2>
       <ol class="cg-steps">${steps}</ol>
-      <h2 style="margin-top:48px">The fine print</h2>
+      <div class="cg-card cg-deal"><h3>They get your deal</h3><p>Your referral starts on the same deal you did. If your build or setup fee was waived through a promotion, theirs is waived too.</p></div>
+    </div></div></section>
+    <section class="cg-sec cg-sec--alt" id="refer"><div class="wrap wrap--wide"><div class="cg-narrow">
+      <h2>Send a referral</h2>
+      <p class="sub">Text or email me directly anytime, or fill this out. It takes a minute.</p>
+      ${form}
+    </div></div></section>
+    <section class="cg-sec"><div class="wrap wrap--wide"><div class="cg-narrow">
+      <h2>The fine print</h2>
       <ul class="cg-fine">
-        <li>Credits keep your site live. They are never paid out in cash and cannot be added to a refund.</li>
-        <li>If you take your own first month refund, any credits you have go with it.</li>
-        <li>One credit per business. A business that already had a site with me, or another business you own, does not count.</li>
-        <li>Credits apply while your plan is active and end if you cancel.</li>
+        <li>Credits come off the monthly fees you pay me. They can't be used for ad spend, marketing services I don't provide, or software you pay for elsewhere, and they are never paid out in cash.</li>
+        <li>Credits stack and carry forward month to month while you're a client. They end if you cancel.</li>
+        <li>One credit per business. A business that already works with me, or another business you own, doesn't count.</li>
+        <li>If you take your own first month refund, any credits go with it.</li>
         <li>Full details are in the <a href="/terms/">terms</a>.</li>
       </ul>
-      <div class="cg-band"><div><strong>Have someone in mind?</strong><p>Send me their name and business, or have them mention you when they reach out.</p></div>
-      <a class="btn btn--on-dark btn--lg" href="${mail}?subject=Referral">Email a referral ${icon('arrow')}</a></div>
-    </div></section>
+    </div></div></section>
     </main>`;
     return shell({
-      title: 'Refer a Business, Get a Free Month of Your Website | EvoVero',
-      desc: 'Refer a business to EvoVero. When they become a website client, you earn a $100 credit, a free month of your website. No cap. See how it works and fine print.',
+      title: 'Refer a Business to EvoVero, Get $100 Off Your Monthly Fee',
+      desc: 'Refer a business to EvoVero. When they become a client, you get $100 off your monthly fee, and they start on the same deal you got. Send your referral here.',
       path: '/referrals',
-    }, `<a class="btn btn--ghost hide-sm" href="/client-guide/">Client guide</a><a class="btn btn--primary" href="${mail}?subject=Referral">Email a referral</a>`, body);
+    }, `<a class="btn btn--ghost hide-sm" href="/client-guide/">Client guide</a><a class="btn btn--primary" href="#refer">Send a referral</a>`, body);
+  }
+
+  /* ---------------- /referrals/thanks ---------------- */
+  function referralThanks() {
+    const body = `<main><section class="cg-hero" style="min-height:calc(100vh - 140px)"><div class="wrap wrap--wide"><div class="cg-narrow">
+      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Got it</span>
+      <h1>Thanks for the referral.</h1>
+      <p>I'll reach out to them soon. Your $100 credit is earned once their first payment clears, and it comes off your next monthly charge.</p>
+      <p style="margin-top:26px"><a class="btn btn--on-dark btn--lg" href="/referrals/">Back to referrals ${icon('arrow')}</a></p>
+    </div></div></section></main>`;
+    return shell({
+      title: 'Referral Received, Thanks for Sending Them My Way | EvoVero',
+      desc: 'Your referral reached Spencer at EvoVero. He reaches out to them soon, and your $100 credit is earned once their first payment clears. Thanks for sending them.',
+      path: '/referrals/thanks',
+    }, `<a class="btn btn--ghost" href="/client-guide/">Client guide</a>`, body);
   }
 
   return [
     ['/client-guide', clientGuide()],
     ['/referrals', referrals()],
+    ['/referrals/thanks', referralThanks()],
   ];
 }
