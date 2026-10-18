@@ -11,6 +11,7 @@ const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorad
 
 const FORM_VERSION = '2026-10-17 v3';
 const DETAILS_VERSION = '2026-10-17 v1';
+const TRIAL_VERSION = '2026-10-18 trial v1';
 
 
 const css = `
@@ -146,10 +147,27 @@ export function makeOfferPages({ head, icon, site, demos }) {
     <span>&copy; ${new Date().getFullYear()} EvoVero</span>
     <span style="display:flex;gap:18px;flex-wrap:wrap"><a href="${site.phoneHref}">${site.phone}</a><a href="mailto:${site.email}">${site.email}</a>${reviewsLink ? '<a href="/reviews/" target="_blank" rel="noopener">Reviews</a>' : ''}<a href="/privacy-policy/">Privacy</a><a href="/terms/">Terms</a></span>
   </div></footer><script src="/site.js" defer></script></body></html>`;
-  const shell = (p, buttons, body) => head({ ...p, noindex: true, schema: [], fast: true }) + `<style>${css}${dropboxCss}</style>` + top(buttons, !p.path.startsWith('/get-started')) + body + foot(p.path.startsWith('/get-started'));
+  // Funnel pages (/get-started, /free-trial) get an unlinked logo (no outs) and the Reviews footer link.
+  const isFunnel = path => path.startsWith('/get-started') || path.startsWith('/free-trial');
+  const shell = (p, buttons, body) => head({ ...p, noindex: true, schema: [], fast: true }) + `<style>${css}${dropboxCss}</style>` + top(buttons, !isFunnel(p.path)) + body + foot(isFunnel(p.path));
 
   const examplesBtn = (cls = 'btn--ghost', label = 'See example sites') =>
     `<a class="btn ${cls}" href="/websites/" target="_blank" rel="noopener">${label} ${icon('arrow')}</a>`;
+
+  const demoModalHtml = () => live.length ? `<div class="dm" id="demo-modal" hidden role="dialog" aria-modal="true" aria-label="Example websites"><div class="dm__box">
+      <div class="dm__bar"><div class="pf-tabs" role="tablist">${live.map((d, i) => `<button type="button" role="tab" aria-selected="${i === 0}" data-src="${demoUrl(d)}">${d.tabLabel}</button>`).join('')}</div><button type="button" class="dm__x" aria-label="Close">&times;</button></div>
+      <iframe class="dm__frame" title="Example website"></iframe></div></div>
+    <script>(function(){var m=document.getElementById('demo-modal');if(!m)return;var f=m.querySelector('iframe'),tabs=[].slice.call(m.querySelectorAll('[data-src]'));
+      function pick(b){tabs.forEach(function(t){t.setAttribute('aria-selected',t===b);});f.src=b.getAttribute('data-src');}
+      function open(e){e.preventDefault();if(!f.src)pick(tabs[0]);m.hidden=false;document.body.style.overflow='hidden';if(window.gtag)gtag('event','view_examples');}
+      function close(){m.hidden=true;document.body.style.overflow='';}
+      tabs.forEach(function(t){t.addEventListener('click',function(){pick(t);});});
+      f.addEventListener('load',function(){try{[].slice.call(f.contentDocument.querySelectorAll('a[href^="/get-started"]')).forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();close();document.getElementById('form').scrollIntoView({behavior:'smooth'});});});}catch(e){}});
+      m.querySelector('.dm__x').addEventListener('click',close);m.addEventListener('click',function(e){if(e.target===m)close();});
+      document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!m.hidden)close();});
+      [].slice.call(document.querySelectorAll('a[href="/websites/"]')).forEach(function(a){a.addEventListener('click',open);});
+    })();</script>` : '';
+
 
   /* ---------------- /get-started ---------------- */
   function getStarted() {
@@ -234,19 +252,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
       ['What if I don\'t love it?', 'Tell me in your first month and you get your first $100 back.'],
     ];
     const quote = (r, cls = '', anim = 'reveal of-rise') => r ? `<figure class="of-quote ${cls} ${anim}"><q>${r.text}</q><figcaption class="who">${r.name}<span aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></figcaption></figure>` : '';
-    const demoModal = live.length ? `<div class="dm" id="demo-modal" hidden role="dialog" aria-modal="true" aria-label="Example websites"><div class="dm__box">
-      <div class="dm__bar"><div class="pf-tabs" role="tablist">${live.map((d, i) => `<button type="button" role="tab" aria-selected="${i === 0}" data-src="${demoUrl(d)}">${d.tabLabel}</button>`).join('')}</div><button type="button" class="dm__x" aria-label="Close">&times;</button></div>
-      <iframe class="dm__frame" title="Example website"></iframe></div></div>
-    <script>(function(){var m=document.getElementById('demo-modal');if(!m)return;var f=m.querySelector('iframe'),tabs=[].slice.call(m.querySelectorAll('[data-src]'));
-      function pick(b){tabs.forEach(function(t){t.setAttribute('aria-selected',t===b);});f.src=b.getAttribute('data-src');}
-      function open(e){e.preventDefault();if(!f.src)pick(tabs[0]);m.hidden=false;document.body.style.overflow='hidden';if(window.gtag)gtag('event','view_examples');}
-      function close(){m.hidden=true;document.body.style.overflow='';}
-      tabs.forEach(function(t){t.addEventListener('click',function(){pick(t);});});
-      f.addEventListener('load',function(){try{[].slice.call(f.contentDocument.querySelectorAll('a[href^="/get-started"]')).forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();close();document.getElementById('form').scrollIntoView({behavior:'smooth'});});});}catch(e){}});
-      m.querySelector('.dm__x').addEventListener('click',close);m.addEventListener('click',function(e){if(e.target===m)close();});
-      document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!m.hidden)close();});
-      [].slice.call(document.querySelectorAll('a[href="/websites/"]')).forEach(function(a){a.addEventListener('click',open);});
-    })();</script>` : '';
+    const demoModal = demoModalHtml();
 
     const body = `<main>
     <section class="of-hero"><div class="wrap wrap--wide reveal of-hero__grid"><div>
@@ -445,6 +451,164 @@ export function makeOfferPages({ head, icon, site, demos }) {
     }, examplesBtn(), body);
   }
 
+  /* ---------------- /free-trial (2 week free trial, Halloween 2026) ---------------- */
+  // Form first, no payment step. Every question from /get-started AND the post pay details form
+  // lives on this one page, so a trial site can be built without a call. Requests close Oct 31.
+  function freeTrial() {
+    const steps = [
+      ['Tell me about your business', 'Fill out the form below. No credit card, nothing up front.'],
+      ['I build it within 48 hours', 'I build your site from your answers and send you a private link to it.'],
+      ['Two weeks of free edits', 'Your 2 weeks start the day your site is ready. Send me every change you want.'],
+      ['Keep it, or don\'t', 'Keep it for $100 a month, with no build fee. Or walk away and owe nothing.'],
+    ];
+    const typeOptions = types.map(t => `<option>${t.name}</option>`).join('') + '<option>Other</option>';
+    const structOptions = ['One page', ...types.map(t => t.name), 'Not sure yet'].map(s => `<option>${s}</option>`).join('');
+    const check = (name, items) => `<div class="checkrow">${items.map(v => `<label><input type="checkbox" name="${name}" value="${v}"> ${v}</label>`).join('')}</div>`;
+    const group = t => `<h3 class="ft-group">${t}</h3>`;
+
+    const form = `<form id="trial-form" class="form-card of-form" name="website-trial" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field" action="/free-trial/thanks/">
+      <input type="hidden" name="form-name" value="website-trial">
+      <input type="hidden" name="form_version" value="${TRIAL_VERSION}">
+      <input type="hidden" name="source" id="t-src">
+      <input type="hidden" name="uploads" id="t-uploads">
+      <p hidden><label>Skip this<input name="bot-field"></label></p>
+      <p class="ft-note">Only your name, phone and email are required. Skip anything you are not sure about.</p>
+      ${group('About you')}
+      <div class="field-row">
+        <div class="field"><label for="t-name">Your name</label><input id="t-name" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="t-biz">Business name</label><input id="t-biz" name="business_name" autocomplete="organization"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="t-ph">Phone</label><input id="t-ph" name="phone" type="tel" autocomplete="tel" required></div>
+        <div class="field"><label for="t-em">Email</label><input id="t-em" name="email" type="email" autocomplete="email" required></div>
+      </div>
+      <div class="field"><label for="t-city">City and state</label><input id="t-city" name="city_state" autocomplete="address-level2" placeholder="Omaha, NE"></div>
+      <div class="field"><fieldset><legend>Best way for me to reach you</legend>${check('contact_pref', ['Text', 'Call', 'Email'])}</fieldset></div>
+      ${group('About your business')}
+      <div class="field-row">
+        <div class="field"><label for="t-type">What kind of business is it?</label><select id="t-type" name="business_type"><option value="">Choose one</option>${typeOptions}</select></div>
+        <div class="field"><label for="t-struct">How big a site? <a href="/websites/" target="_blank" rel="noopener" class="ft-ex">See examples</a></label><select id="t-struct" name="structure"><option value="">Choose one</option>${structOptions}</select></div>
+      </div>
+      <div class="field"><label for="t-what">What does your company do, and what services should be on the site?</label><textarea id="t-what" name="what_you_do"></textarea></div>
+      <div class="field"><label for="t-stand">What makes you better than the other guys in your area?</label><input id="t-stand" name="stand_out" placeholder="Same day quotes, 20 years in business, we clean up every time"></div>
+      <div class="field"><label for="t-hours">Business hours</label><input id="t-hours" name="hours" placeholder="Mon to Fri 7 to 5, Sat by appointment"></div>
+      <div class="field"><fieldset><legend>How do you want new customers to get in touch with you?</legend>${check('customer_contact', ['Call', 'Text', 'A form on my site'])}</fieldset></div>
+      ${group('The look')}
+      <div class="field"><label for="t-first">When someone lands on your new site, what's the first thing you want them to see?</label><input id="t-first" name="first_thing" placeholder="Our best project photos, our reviews, a free quote button"></div>
+      <div class="field"><span class="of-label">Your logo and photos</span><div class="pd-box"><p id="t-up-note">Send your logo and any photos of your work, full quality. No photos yet? I start with stock photos.</p><a class="btn btn--ghost" href="/photos/" data-dropbox-open>Upload ${icon('arrow')}</a></div></div>
+      <div class="field"><label for="t-colors">Colors you want on the site</label><input id="t-colors" name="colors" placeholder="Navy and orange, match my truck, not sure yet"></div>
+      ${group('Where you are online now')}
+      <div class="field-row">
+        <div class="field"><label for="t-site">Current website, if you have one</label><input id="t-site" name="current_website" inputmode="url" placeholder="yourbusiness.com"></div>
+        <div class="field"><label for="t-gbp">Do you have a Google Business Profile?</label><select id="t-gbp" name="google_business_profile"><option value="">Choose one</option><option>Yes</option><option>No</option><option>Not sure</option></select></div>
+      </div>
+      <div class="field"><label for="t-social">Social pages, like Facebook or Instagram</label><input id="t-social" name="social_pages" placeholder="Paste links, or type None"></div>
+      <div class="field"><label for="t-more">Anything else?</label><textarea id="t-more" name="anything_else" placeholder="Specific information you want on the site, or special features like booking, a menu or online ordering."></textarea></div>
+      <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Start my free site ${icon('arrow')}</button>
+      <p class="form-note">No credit card. I never sell your info. You hear from me, nobody else.</p>
+    </form>
+    <script>(function(){
+      var src=new URLSearchParams(location.search).get('src');var s=document.getElementById('t-src');if(s)s.value=src||'direct';
+      var up=document.getElementById('t-uploads'),un=document.getElementById('t-up-note'),all=[];
+      document.addEventListener('pd:uploaded',function(e){all=all.concat(e.detail.files);if(up)up.value=all.join('\\n');if(un)un.textContent=all.length+(all.length===1?' file':' files')+' sent. Add more anytime.';});
+      var form=document.getElementById('trial-form');
+      if(form&&window.fetch&&window.FormData){form.addEventListener('submit',function(e){
+        e.preventDefault();var btn=form.querySelector('button[type=submit]');btn.disabled=true;
+        fetch('/',{method:'POST',body:new FormData(form)})
+          .then(function(r){if(!r.ok)throw 0;if(window.gtag)gtag('event','generate_lead',{form_name:'website-trial'});setTimeout(function(){location.href='/free-trial/thanks/';},300);})
+          .catch(function(){btn.disabled=false;form.submit();});
+      });}
+    })();</script>`;
+
+    const rv = n => reviews.find(r => r.name.startsWith(n));
+    const faq = [
+      ['Do I need a credit card?', 'No. Nothing up front. You only pay if you keep your site after your 2 weeks.'],
+      ['What happens after 2 weeks?', 'Keep it for $100 a month and I launch it on your web address. No build fee, cancel anytime. Don\'t want it? The preview comes down and you owe nothing.'],
+      ['How do edits work?', 'Text or email what you want changed and I change it. Unlimited, during your trial and for as long as you have the site. You never log into anything.'],
+      ['Is there a deadline?', 'Free trial requests have to be in by October 31. Your 2 weeks start whenever your site is ready.'],
+    ];
+    const quote = (r, cls = '', anim = 'reveal of-rise') => r ? `<figure class="of-quote ${cls} ${anim}"><q>${r.text}</q><figcaption class="who">${r.name}<span aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></figcaption></figure>` : '';
+    const tcss = `.ft-group{margin:30px 0 14px;padding-top:22px;border-top:1px solid var(--line);font-size:1.12rem}.ft-group:first-of-type{margin-top:6px;padding-top:0;border-top:0}
+.ft-note{margin:0 0 6px;color:var(--ink-soft);font-size:.95rem}.ft-ex{font-weight:500;font-size:.88rem;margin-left:6px}
+.of-price .big+.big{margin-top:14px}`;
+
+    const body = `<style>${tcss}</style><main>
+    <section class="of-hero"><div class="wrap wrap--wide reveal of-hero__grid"><div>
+      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Free trial, no credit card</span>
+      <h1 style="margin-top:16px">Try a website for your business. <span class="grad">Free for 2 weeks.</span></h1>
+      <p class="lead">Tell me about your business and I build your site within 48 hours. Your 2 weeks start the day it is ready. Keep it after that for $100 a month, or walk away and owe nothing.</p>
+      <div class="pills"><span>No credit card</span><span>Built in 48 hours</span><span>Unlimited edits</span><span>Requests close October 31</span></div>
+      <div class="hero__cta"><a class="btn btn--primary btn--lg" href="#form">Start my free site ${icon('arrow')}</a>${examplesBtn('btn--on-dark btn--lg')}</div>
+    </div><div class="of-hero__art" aria-hidden="true"><div class="pl" style="--s:150px"><img src="/assets/evovero-logo-300.webp" alt="" width="150" height="150"></div></div></div></section>
+
+    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Chris'), '', '')}</div></section>
+
+    <section class="of-sec"><div class="wrap wrap--wide">
+      <h2 class="reveal">How this works</h2>
+      <div class="of-steps">${steps.map((s, i) => `<div class="of-step reveal" data-d="${i}"><b>${i + 1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>
+      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Start my free site ${icon('arrow')}</a></div>
+    </div></section>
+
+    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Yadira'))}</div></section>
+
+    <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
+      <h2 class="reveal">Questions people ask</h2>
+      <div class="of-faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
+      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Start my free site ${icon('arrow')}</a></div>
+    </div></section>
+
+    <section class="of-sec" id="form"><div class="wrap wrap--wide">
+      ${quote(rv('Jesse'), 'of-quote--card')}
+      <div class="of-price reveal" style="margin-top:28px">
+        <div>
+          <div class="was">Build fee <s>$500</s> waived</div>
+          <div class="big">Free<small> for 2 weeks</small></div>
+          <div class="big">$100<small> a month after, only if you keep it</small></div>
+          <p>Requests in by October 31. Your 2 weeks start the day your site is ready.</p>
+          <div class="ticks"><span>${icon('check')} No credit card</span><span>${icon('check')} Unlimited edits</span><span>${icon('check')} Cancel anytime</span></div>
+        </div>
+        <ol class="of-next"><li><b>1</b>Fill out the form below</li><li><b>2</b>I build it within 48 hours</li><li><b>3</b>2 weeks of free edits</li><li><b>4</b>Keep it for $100 a month, or don't</li></ol>
+      </div>
+      ${form}
+    </div></section>
+    </main>${demoModalHtml()}${dropboxModal('free-trial', { site })}${dropboxForm}${dropboxScript}
+    <a class="of-sticky" id="of-sticky" href="#form">Start my free site ${icon('arrow')}</a>
+    <script>(function(){var b=document.getElementById('of-sticky'),f=document.getElementById('form'),h=document.querySelector('.of-hero');if(!b||!f)return;var t=0;
+      function u(){t=0;var show=h.getBoundingClientRect().bottom<0&&f.getBoundingClientRect().top>window.innerHeight*0.6;b.classList.toggle('on',show);}
+      window.addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(u);},{passive:true});})();</script>`;
+
+    return shell({
+      title: 'Free Website Trial for Small Businesses, No Card | EvoVero',
+      desc: 'Try a real website for your small business free for 2 weeks. No credit card. Built in 48 hours with unlimited edits. Keep it for $100 a month or owe nothing.',
+      path: '/free-trial',
+    }, examplesBtn(), body);
+  }
+
+  /* ---------------- /free-trial/thanks ---------------- */
+  function freeTrialThanks() {
+    const steps = [
+      ['I build your site', 'From your answers, within 48 hours. Stock photos fill in until I have yours.'],
+      ['You get your link', 'I send it the way you picked: text, call or email. Your 2 weeks start that day.'],
+      ['Send your changes', 'Everything you want changed, even one long email. I keep revising until it is right.'],
+      ['Keep it, or don\'t', 'Keep it for $100 a month, no build fee, cancel anytime. Or walk away and owe nothing.'],
+    ];
+    const body = `<main><section class="of-hero"><div class="wrap wrap--wide reveal">
+      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Got it</span>
+      <h1 style="margin-top:16px">Your answers are in. <span class="grad">Your free site is on the way.</span></h1>
+      <p class="lead">I build it within 48 hours and send you the link. Questions in the meantime? Text <span style="white-space:nowrap"><a style="color:#fff" href="${site.phoneHref}">${site.phone}</a></span>.</p>
+    </div></section>
+    <section class="of-sec"><div class="wrap wrap--wide">
+      <h2 class="reveal">What happens next</h2>
+      <div class="of-steps">${steps.map((s, i) => `<div class="of-step reveal" data-d="${i}"><b>${i + 1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>
+      <div class="pd-box reveal" style="margin-top:28px"><p><b>Have your logo or photos handy?</b> Send them now and they go on your first version.</p><a class="btn btn--ghost" href="/photos/" data-dropbox-open>Send photos ${icon('arrow')}</a></div>
+    </div></section></main>${dropboxModal('free-trial-thanks', { site })}${dropboxForm}${dropboxScript}`;
+    return shell({
+      title: 'Free Trial Received, Your Website Is on the Way | EvoVero',
+      desc: 'Your free website trial request reached Spencer at EvoVero. He builds your site within 48 hours and sends the link. Your 2 weeks start the day it is ready.',
+      path: '/free-trial/thanks',
+    }, '', body);
+  }
+
   /* ---------------- /photos (Photo Dropbox, one link for everyone) ---------------- */
   function photoDropbox() {
     const p = {
@@ -525,6 +689,8 @@ export function makeOfferPages({ head, icon, site, demos }) {
     ['/get-started', getStarted()],
     ['/get-started/thanks', getStartedThanks()],
     ['/get-started/welcome', getStartedWelcome()],
+    ['/free-trial', freeTrial()],
+    ['/free-trial/thanks', freeTrialThanks()],
     ['/websites', websites()],
     ['/photos', photoDropbox()],
   ];

@@ -1,2 +1,3 @@
 # Short branded link for the W100 first touch text (2026-10-17). Carriers filter public shorteners like bit.ly.
 /mysite    /get-started/?src=text    301!
+/mytrial    /free-trial/?src=text    301!
