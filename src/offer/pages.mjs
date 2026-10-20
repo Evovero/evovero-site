@@ -520,24 +520,27 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <div class="hero__cta"><a class="btn btn--primary btn--lg" href="#form">Make it yours ${icon('arrow')}</a>${examplesBtn('btn--on-dark btn--lg')}</div>
     </div><div class="of-hero__art" aria-hidden="true"><div class="pl" style="--s:150px"><img src="/assets/evovero-logo-300.webp" alt="" width="150" height="150"></div></div></div></section>
 
+    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Chris'), '', '')}</div></section>
+
     <section class="of-sec"><div class="wrap wrap--wide">
       <h2 class="reveal">How this works</h2>
       <div class="of-steps">${steps.map((s, i) => `<div class="of-step reveal" data-d="${i}"><b>${i + 1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>
     </div></section>
+
+    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Jesse'))}</div></section>
 
     <section class="of-sec of-sec--alt" id="form"><div class="wrap wrap--wide">
       <h2 class="reveal">Make it yours</h2>
       ${form}
     </div></section>
 
+    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Yadira'))}</div></section>
+
     <section class="of-sec"><div class="wrap wrap--wide ft-ex reveal">
       <h2>See the kind of sites I build</h2>
       <p>Coffee shops, lawn care, concrete, salons, photographers and more. Tap through a few to picture yours.</p>
       ${examplesBtn('btn--primary btn--lg')}
     </div></section>
-
-    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Chris'), '', '')}</div></section>
-    <section class="of-sec"><div class="wrap wrap--wide">${quote(rv('Yadira'))}${quote(rv('Jesse'), 'of-quote--card')}</div></section>
 
     <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
       <h2 class="reveal">Questions people ask</h2>
