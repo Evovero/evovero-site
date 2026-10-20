@@ -11,7 +11,7 @@ const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorad
 
 const FORM_VERSION = '2026-10-17 v3';
 const DETAILS_VERSION = '2026-10-17 v1';
-const TRIAL_VERSION = '2026-10-18 trial v2';
+const TRIAL_VERSION = '2026-10-20 F4 extras';
 
 
 const css = `
@@ -452,18 +452,16 @@ export function makeOfferPages({ head, icon, site, demos }) {
   }
 
   /* ---------------- /free-trial (2 week free trial, Halloween 2026) ---------------- */
-  // Form first, no payment step. Every question from /get-started AND the post pay details form
-  // lives on this one page, so a trial site can be built without a call. Requests close Oct 31.
+  // W100 F4 (2026-10-20): the Meta instant form is the intake. Everyone landing here already gave
+  // name, phone, email, company, city, state and services. This page confirms what happens next and
+  // takes OPTIONAL extras only (logo and photos, colors, anything specific). Ask nothing twice.
   function freeTrial() {
     const steps = [
-      ['Tell me about your business', 'Fill out the form below. No credit card, nothing up front.'],
-      ['I build it within 48 hours', 'Then I send you a preview link to your new site.'],
-      ['You get 2 weeks to decide', 'Send me every change you want while you decide.'],
-      ['Keep it, or don\'t', 'Keep it for $100 a month. Don\'t like it? No hard feelings, you owe nothing.'],
+      ['I build your first version', 'From what you told me, plus your logo and photos if you send them.'],
+      ['You get a preview link', 'Within 48 hours, I text and email it to you.'],
+      ['Send me every change', 'You get 2 weeks to look it over. I keep revising until it is right.'],
+      ['Keep it, or don\'t', 'Keep it for $100 a month. No credit card, no contract. Don\'t love it? You owe nothing.'],
     ];
-    const typeOptions = types.map(t => `<option>${t.name}</option>`).join('') + '<option>Other</option>';
-    const structOptions = ['One page', ...types.map(t => t.name), 'Not sure yet'].map(s => `<option>${s}</option>`).join('');
-    const check = (name, items) => `<div class="checkrow">${items.map(v => `<label><input type="checkbox" name="${name}" value="${v}"> ${v}</label>`).join('')}</div>`;
     const group = t => `<h3 class="ft-group">${t}</h3>`;
 
     const form = `<form id="trial-form" class="form-card of-form" name="website-trial" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field" action="/free-trial/thanks/">
@@ -472,39 +470,20 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <input type="hidden" name="source" id="t-src">
       <input type="hidden" name="uploads" id="t-uploads">
       <p hidden><label>Skip this<input name="bot-field"></label></p>
-      <p class="ft-note">Only your name, phone and email are required. Skip anything you are not sure about.</p>
-      ${group('About you')}
+      <p class="ft-note">None of this is required. Anything you send goes on your first version.</p>
+      ${group('So I know it is you')}
       <div class="field-row">
         <div class="field"><label for="t-name">Your name</label><input id="t-name" name="name" autocomplete="name" required></div>
-        <div class="field"><label for="t-biz">Business name</label><input id="t-biz" name="business_name" autocomplete="organization"></div>
+        <div class="field"><label for="t-contact">Email or phone</label><input id="t-contact" name="email_or_phone" autocomplete="email" required></div>
       </div>
-      <div class="field-row">
-        <div class="field"><label for="t-ph">Phone</label><input id="t-ph" name="phone" type="tel" autocomplete="tel" required></div>
-        <div class="field"><label for="t-em">Email</label><input id="t-em" name="email" type="email" autocomplete="email" required></div>
-      </div>
-      <div class="field"><label for="t-city">City and state</label><input id="t-city" name="city_state" autocomplete="address-level2" placeholder="Omaha, Nebraska"></div>
-      <div class="field"><fieldset><legend>Best way for me to reach you</legend>${check('contact_pref', ['Text', 'Call', 'Email'])}</fieldset></div>
-      ${group('About your business')}
-      <div class="field"><label for="t-type">What kind of business is it?</label><select id="t-type" name="business_type"><option value="">Choose one</option>${typeOptions}</select></div>
-      <div class="field"><label for="t-svc">Your main services or products</label><input id="t-svc" name="services" placeholder="Pressure washing, gutter cleaning, window cleaning"></div>
-      <div class="field"><label for="t-known">What are you known for in your area?</label><input id="t-known" name="known_for" placeholder="Fast quotes, family owned, always on time"></div>
-      <div class="field"><label for="t-hours">Business hours</label><input id="t-hours" name="hours" placeholder="Mon to Fri 8 to 5, Sat by appointment"></div>
-      ${group('Picture your new site')}
-      <div class="field"><label for="t-first">When someone lands on your new site, what's the first thing you want them to see?</label><input id="t-first" name="first_thing" placeholder="Our best work, our reviews, a free quote button"></div>
-      <div class="field"><fieldset><legend>What should visitors be able to do on your site?</legend>${check('site_actions', ['Call me', 'Text me', 'Send a request form', 'See my work', 'See my menu or prices', 'Book a time (extra setup)'])}</fieldset></div>
-      <div class="field"><label for="t-love">Seen a website you love? Paste a link</label><input id="t-love" name="liked_site" inputmode="url" placeholder="Any business, anywhere"></div>
-      ${group('The look')}
-      <div class="field"><span class="of-label">Your logo and photos</span><div class="pd-box"><p id="t-up-note">Send your logo and any photos of your work, full quality. No photos yet? I start with stock photos.</p><a class="btn btn--ghost" href="/photos/" data-dropbox-open>Upload ${icon('arrow')}</a></div></div>
-      <div class="field"><label for="t-colors">Colors you want on the site</label><input id="t-colors" name="colors" placeholder="Navy and orange, match my truck, not sure yet"></div>
-      ${group('Where you are online now')}
-      <div class="field-row">
-        <div class="field"><label for="t-site">Current website, if you have one</label><input id="t-site" name="current_website" inputmode="url" placeholder="yourbusiness.com"></div>
-        <div class="field"><label for="t-gbp">Do you have a Google Business Profile?</label><select id="t-gbp" name="google_business_profile"><option value="">Choose one</option><option>Yes</option><option>No</option><option>Not sure</option></select></div>
-      </div>
-      <div class="field"><label for="t-social">Social pages, like Facebook or Instagram</label><input id="t-social" name="social_pages" placeholder="Paste links, or type None"></div>
-      <div class="field"><label for="t-more">Anything else?</label><textarea id="t-more" name="anything_else"></textarea></div>
-      <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Build my free site ${icon('arrow')}</button>
-      <p class="form-note">No credit card. I never sell your info. You hear from me, nobody else.</p>
+      ${group('Logo and photos')}
+      <div class="field"><div class="pd-box"><p id="t-up-note">Send your logo and photos of your work, full quality. No photos yet? I start with stock photos and you can swap yours in later.</p><a class="btn btn--ghost" href="/photos/" data-dropbox-open>Upload ${icon('arrow')}</a></div></div>
+      ${group('Colors')}
+      <div class="field"><label for="t-colors">Send a logo and I'll match it. No logo? A couple of colors, or I'll go with a clean black and white look.</label><input id="t-colors" name="colors" placeholder="Navy and orange, match my truck, black and white"></div>
+      ${group('Anything specific')}
+      <div class="field"><label for="t-more">A tagline, a catchphrase, or something that sets you apart. Describe what you'd like to see.</label><textarea id="t-more" name="anything_else"></textarea></div>
+      <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Send it over ${icon('arrow')}</button>
+      <p class="form-note">I never sell your info. You hear from me, nobody else.</p>
     </form>
     <script>(function(){
       var src=new URLSearchParams(location.search).get('src');var s=document.getElementById('t-src');if(s)s.value=src||'direct';
@@ -514,64 +493,59 @@ export function makeOfferPages({ head, icon, site, demos }) {
       if(form&&window.fetch&&window.FormData){form.addEventListener('submit',function(e){
         e.preventDefault();var btn=form.querySelector('button[type=submit]');btn.disabled=true;
         fetch('/',{method:'POST',body:new FormData(form)})
-          .then(function(r){if(!r.ok)throw 0;if(window.gtag)gtag('event','generate_lead',{form_name:'website-trial'});setTimeout(function(){location.href='/free-trial/thanks/';},300);})
+          .then(function(r){if(!r.ok)throw 0;if(window.gtag)gtag('event','trial_extras',{form_name:'website-trial'});setTimeout(function(){location.href='/free-trial/thanks/';},300);})
           .catch(function(){btn.disabled=false;form.submit();});
       });}
     })();</script>`;
 
     const rv = n => reviews.find(r => r.name.startsWith(n));
     const faq = [
-      ['Do I need a credit card to start?', 'No. Nothing up front, and nothing until you approve your site. When you\'re ready to keep it, I send you a secure link to set up your payment with a credit or debit card. Your $100 comes out on the same day each month, and you can change the card on file anytime with a link I send you.'],
-      ['How long do I have to decide?', 'Two weeks from the day I send you your finished site. Send me every change you want in that time, and I keep revising.'],
+      ['Do I need a credit card?', 'No. Nothing up front, and nothing until you approve your site. When you\'re ready to keep it, I send you a secure link to set up your payment with a credit or debit card. Your $100 comes out on the same day each month, and you can change the card on file anytime with a link I send you.'],
+      ['How long do I have to decide?', 'Two weeks from the day I send you your preview. Send me every change you want in that time, and I keep revising.'],
       ['What if I keep it?', '$100 a month with no build fee, and I launch it on your web address. Edits stay unlimited. No contract, and you can cancel anytime with a text or email.'],
-      ['What if I don\'t?', 'No hard feelings. The preview comes down and you owe nothing. Requests have to be in by October 31.'],
+      ['What if I don\'t?', 'No hard feelings. The preview comes down and you owe nothing.'],
+      ['What happens after October 31?', 'Free builds close October 31. After that, it\'s regular pricing: $500 to get started, then $100 a month.'],
     ];
     const quote = (r, cls = '', anim = 'reveal of-rise') => r ? `<figure class="of-quote ${cls} ${anim}"><q>${r.text}</q><figcaption class="who">${r.name}<span aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></figcaption></figure>` : '';
     const tcss = `.ft-group{margin:30px 0 14px;padding-top:22px;border-top:1px solid var(--line);font-size:1.12rem}.ft-group:first-of-type{margin-top:6px;padding-top:0;border-top:0}
-.ft-note{margin:0 0 6px;color:var(--ink-soft);font-size:.95rem}.ft-ex{font-weight:500;font-size:.88rem;margin-left:6px}
-.of-price .big+.big{margin-top:14px}`;
+.ft-note{margin:0 0 6px;color:var(--ink-soft);font-size:.95rem}
+.ft-ex{text-align:center}.ft-ex p{max-width:620px;margin:10px auto 22px;color:var(--ink-soft)}`;
 
     const body = `<style>${tcss}</style><main>
     <section class="of-hero"><div class="wrap wrap--wide reveal of-hero__grid"><div>
-      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> No credit card, nothing up front</span>
-      <h1 style="margin-top:16px">I'll build your business a website. <span class="grad">Free.</span></h1>
-      <p class="lead">Tell me about your business and I build your site within 48 hours. Once it's built, you get 2 weeks to decide if you want to keep it. Keep it for $100 a month. Don't like it? No hard feelings, you owe nothing.</p>
-      <div class="pills"><span>No credit card</span><span>Built in 48 hours</span><span>2 weeks to decide</span><span>Requests close October 31</span></div>
-      <div class="hero__cta"><a class="btn btn--primary btn--lg" href="#form">Build my free site ${icon('arrow')}</a>${examplesBtn('btn--on-dark btn--lg')}</div>
+      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Your request is in</span>
+      <h1 style="margin-top:16px">See your website first. <span class="grad">Love it or owe nothing.</span></h1>
+      <p class="lead">Your preview is on the way. Within 48 hours, I'll text and email you the link. Want it to look more like your business? Send your logo, photos and colors below.</p>
+      <div class="pills"><span>No credit card</span><span>Built in 48 hours</span><span>2 weeks to decide</span></div>
+      <div class="hero__cta"><a class="btn btn--primary btn--lg" href="#form">Make it yours ${icon('arrow')}</a>${examplesBtn('btn--on-dark btn--lg')}</div>
     </div><div class="of-hero__art" aria-hidden="true"><div class="pl" style="--s:150px"><img src="/assets/evovero-logo-300.webp" alt="" width="150" height="150"></div></div></div></section>
-
-    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Chris'), '', '')}</div></section>
 
     <section class="of-sec"><div class="wrap wrap--wide">
       <h2 class="reveal">How this works</h2>
       <div class="of-steps">${steps.map((s, i) => `<div class="of-step reveal" data-d="${i}"><b>${i + 1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>
-      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Build my free site ${icon('arrow')}</a></div>
     </div></section>
 
-    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Yadira'))}</div></section>
+    <section class="of-sec of-sec--alt" id="form"><div class="wrap wrap--wide">
+      <h2 class="reveal">Make it yours</h2>
+      ${form}
+    </div></section>
+
+    <section class="of-sec"><div class="wrap wrap--wide ft-ex reveal">
+      <h2>See the kind of sites I build</h2>
+      <p>Coffee shops, lawn care, concrete, salons, photographers and more. Tap through a few to picture yours.</p>
+      ${examplesBtn('btn--primary btn--lg')}
+    </div></section>
+
+    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Chris'), '', '')}</div></section>
+    <section class="of-sec"><div class="wrap wrap--wide">${quote(rv('Yadira'))}${quote(rv('Jesse'), 'of-quote--card')}</div></section>
 
     <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
       <h2 class="reveal">Questions people ask</h2>
       <div class="of-faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
-      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Build my free site ${icon('arrow')}</a></div>
-    </div></section>
-
-    <section class="of-sec" id="form"><div class="wrap wrap--wide">
-      ${quote(rv('Jesse'), 'of-quote--card')}
-      <div class="of-price reveal" style="margin-top:28px">
-        <div>
-          <div class="was">Build fee <s>$500</s> waived</div>
-          <div class="big">Free<small> to build</small></div>
-          <div class="big">$100<small> a month, only if you keep it</small></div>
-          <p>Once it's built, you get 2 weeks to decide. Requests in by <span style="white-space:nowrap">October 31</span>.</p>
-          <div class="ticks"><span>${icon('check')} No credit card</span><span>${icon('check')} No contract</span><span>${icon('check')} Cancel anytime with a text</span></div>
-        </div>
-        <ol class="of-next"><li><b>1</b>Fill out the form below</li><li><b>2</b>I build it within 48 hours</li><li><b>3</b>You get 2 weeks to decide</li><li><b>4</b>Keep it for $100 a month, or don't</li></ol>
-      </div>
-      ${form}
+      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Make it yours ${icon('arrow')}</a></div>
     </div></section>
     </main>${demoModalHtml()}${dropboxModal('free-trial', { site })}${dropboxForm}${dropboxScript}
-    <a class="of-sticky" id="of-sticky" href="#form">Build my free site ${icon('arrow')}</a>
+    <a class="of-sticky" id="of-sticky" href="#form">Make it yours ${icon('arrow')}</a>
     <script>(function(){var b=document.getElementById('of-sticky'),f=document.getElementById('form'),h=document.querySelector('.of-hero');if(!b||!f)return;var t=0;
       function u(){t=0;var show=h.getBoundingClientRect().bottom<0&&f.getBoundingClientRect().top>window.innerHeight*0.6;b.classList.toggle('on',show);}
       window.addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(u);},{passive:true});})();</script>`;
@@ -586,14 +560,14 @@ export function makeOfferPages({ head, icon, site, demos }) {
   /* ---------------- /free-trial/thanks ---------------- */
   function freeTrialThanks() {
     const steps = [
-      ['I build your site', 'From your answers, within 48 hours. Stock photos fill in until I have yours.'],
-      ['You get your preview link', 'I send it the way you picked: text, call or email. Your 2 weeks to decide start that day.'],
+      ['I build your site', 'Within 48 hours. Stock photos fill in until I have yours.'],
+      ['You get your preview link', 'I text and email it to you. Your 2 weeks to decide start that day.'],
       ['Send your changes', 'Everything you want changed, even one long email. I keep revising until it is right.'],
       ['Keep it, or don\'t', 'Keep it for $100 a month, no build fee, no contract. Don\'t like it? No hard feelings, you owe nothing.'],
     ];
     const body = `<main><section class="of-hero"><div class="wrap wrap--wide reveal">
       <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Got it</span>
-      <h1 style="margin-top:16px">Your answers are in. <span class="grad">Your free site is on the way.</span></h1>
+      <h1 style="margin-top:16px">Got it. <span class="grad">It all goes on your first version.</span></h1>
       <p class="lead">I build it within 48 hours and send you the link. Questions in the meantime? Text <span style="white-space:nowrap"><a style="color:#fff" href="${site.phoneHref}">${site.phone}</a></span>.</p>
     </div></section>
     <section class="of-sec"><div class="wrap wrap--wide">
