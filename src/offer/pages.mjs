@@ -516,12 +516,13 @@ export function makeOfferPages({ head, icon, site, demos }) {
         <button type="button" class="btn btn--primary btn--lg ft-next" data-next>Next ${icon('arrow')}</button>
       </fieldset>
 
-      <fieldset class="ft-q" data-q="who"><legend id="ft-who-legend">Last one. So I can match this to your request.</legend>
+      <fieldset class="ft-q" data-q="who"><legend id="ft-who-legend">Last one.</legend>
+        <p class="ft-help">So this matches the right business, enter your name, business name, phone and email. I'll get you your preview within 48 hours.</p>
         <div class="field"><label for="t-name">Your name</label><input id="t-name" name="name" autocomplete="name" required></div>
         <div class="field"><label for="t-biz">Business name</label><input id="t-biz" name="business" autocomplete="organization" required></div>
-        <div class="field" id="t-contact-wrap" hidden><label for="t-contact">Phone or email</label><input id="t-contact" name="email_or_phone" autocomplete="tel"></div>
+        <div class="field-row ft-pair"><div class="field"><label for="t-phone">Phone</label><input id="t-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel"></div><div class="field"><label for="t-email">Email</label><input id="t-email" name="email" type="email" autocomplete="email" inputmode="email"></div></div>
         <p class="ft-err" id="ft-err" hidden></p>
-        <button class="btn btn--primary btn--lg ft-send" type="submit">Send my picks ${icon('arrow')}</button>
+        <button class="btn btn--primary btn--lg ft-send" type="submit">Finish ${icon('arrow')}</button>
         <p class="ft-assure">No credit card. Don't keep it and you owe nothing.</p>
       </fieldset>
 
@@ -535,9 +536,10 @@ export function makeOfferPages({ head, icon, site, demos }) {
 .ft-hero p.lead{margin-top:14px}
 .ft-step{font-family:var(--font-head);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem;color:var(--blue-light)}
 .ft-pick{display:grid;gap:14px;justify-items:center}
-.ft-tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;max-width:100%;padding:2px;justify-self:stretch}
+.ft-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:100%;padding:2px;justify-self:stretch}
 .ft-tabs::-webkit-scrollbar{display:none}
-@media (min-width:641px){.ft-tabs{flex-wrap:wrap;justify-content:center}}
+@media (max-width:640px){.ft-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px}.ft-tabs button{padding:8px 6px;font-size:.84rem;text-align:center;white-space:nowrap}}
+.ft-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:640px){.ft-pair{grid-template-columns:1fr}}
 .ft-tabs button{flex:none;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.07);color:#fff;border-radius:999px;padding:10px 16px;font-family:var(--font-head);font-weight:600;font-size:.92rem;cursor:pointer}
 .ft-tabs button[aria-selected="true"]{background:#fff;color:var(--navy-abyss,#0b1430);border-color:#fff}
 .ft-phone{width:min(300px,78vw);border-radius:38px;padding:10px;background:#0b1020;box-shadow:0 0 0 1px rgba(255,255,255,.14),0 30px 70px rgba(0,0,0,.45)}
@@ -582,7 +584,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .ft-steps3{grid-template-columns:repeat(3,1fr)}
 @media (max-width:900px){.ft-hero__grid{grid-template-columns:1fr;gap:26px}.ft-steps3{grid-template-columns:1fr}}
-@media (max-width:640px){.ft-hero{padding-top:22px;padding-bottom:32px}.ft-hero__copy{text-align:center}.ft-hero h1{font-size:1.75rem;margin-top:8px}.ft-hero p.lead{margin-top:10px;font-size:1rem}.ft-hero__grid{gap:18px}.ft-pick{gap:12px}.ft-phone{width:min(236px,62vw);border-radius:32px;padding:8px}.ft-phone__screen{border-radius:25px}.ft-closest{width:100%}.ft-chips--3{grid-template-columns:1fr}}`;
+@media (max-width:640px){.ft-hero{padding-top:22px;padding-bottom:32px}.ft-hero__copy{text-align:center}.ft-hero h1{font-size:1.75rem;margin-top:8px}.ft-hero p.lead{margin-top:8px;font-size:.98rem}.ft-hero__grid{gap:18px}.ft-pick{gap:12px}.ft-phone{width:min(206px,55vw);border-radius:28px;padding:7px}.ft-phone__screen{border-radius:25px}.ft-closest{width:100%}.ft-chips--3{grid-template-columns:1fr}}`;
 
     const script = `<script>(function(){
   var KEY='ft_v2',form=document.getElementById('trial-form');if(!form)return;
@@ -600,7 +602,6 @@ export function makeOfferPages({ head, icon, site, demos }) {
   // Tap through
   form.classList.add('js-ft');
   var known=['form','text','email'].indexOf(src)>-1;
-  if(!known){document.getElementById('ft-who-legend').textContent='Last one. Where should I send your preview?';var cw=document.getElementById('t-contact-wrap');cw.hidden=false;document.getElementById('t-contact').required=true;}
   var qs=[].slice.call(form.querySelectorAll('.ft-q')),cur=0,count=document.getElementById('ft-count'),bar=document.getElementById('ft-bar'),back=document.getElementById('ft-back');
   function logoAns(){var r=form.querySelector('input[name=has_logo]:checked');return r?r.value:'';}
   function syncLogo(){var a=logoAns();[].slice.call(form.querySelectorAll('[data-if-logo]')).forEach(function(el){el.hidden=el.getAttribute('data-if-logo')!==a;});}
@@ -622,8 +623,8 @@ export function makeOfferPages({ head, icon, site, demos }) {
   go(typeof d.q==='number'?d.q:0,false);
   // Submit
   var err=document.getElementById('ft-err');
-  form.addEventListener('submit',function(e){e.preventDefault();var n=document.getElementById('t-name'),b=document.getElementById('t-biz'),c=document.getElementById('t-contact');
-    var miss=[];if(!n.value.trim())miss.push('your name');if(!b.value.trim())miss.push('your business name');if(c.required&&!c.value.trim())miss.push('a phone or email');
+  form.addEventListener('submit',function(e){e.preventDefault();var n=document.getElementById('t-name'),b=document.getElementById('t-biz'),ph=document.getElementById('t-phone'),em=document.getElementById('t-email');
+    var miss=[];if(!n.value.trim())miss.push('your name');if(!b.value.trim())miss.push('your business name');if(!ph.value.trim()&&!em.value.trim())miss.push('a phone or email');
     if(miss.length){err.textContent='Add '+(miss.length>1?miss.slice(0,-1).join(', ')+' and '+miss[miss.length-1]:miss[0])+' so I know where to send your preview.';err.hidden=false;go(qs.length-1,false);return;}err.hidden=true;
     if(!demoIn.value)demoIn.value='none picked';
     var btn=form.querySelector('.ft-send');btn.disabled=true;
@@ -670,12 +671,12 @@ export function makeOfferPages({ head, icon, site, demos }) {
     <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
       <h2 class="reveal">Questions people ask</h2>
       <div class="of-faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
-      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Fill out my answers ${icon('arrow')}</a></div>
+      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Personalize my website ${icon('arrow')}</a></div>
     </div></section>
 
     <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Yadira'))}</div></section>
     </main>
-    <a class="of-sticky" id="of-sticky" href="#form">Fill out my answers ${icon('arrow')}</a>
+    <a class="of-sticky" id="of-sticky" href="#form">Personalize my website ${icon('arrow')}</a>
     ${script}`;
 
     return shell({
@@ -686,7 +687,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
   }
 
   /* ---------------- /free-trial/thanks ---------------- */
-  // Step 1 done. Logo and photos live here only, with a skip option (text them later).
+  // All done. Logo and photos live here only, optional (text them later).
   function freeTrialThanks() {
     const smsHref = site.phoneHref.replace('tel:', 'sms:');
     const steps = [
@@ -696,15 +697,15 @@ export function makeOfferPages({ head, icon, site, demos }) {
     ];
     const body = `<style>.ft-steps3{grid-template-columns:repeat(3,1fr)}@media (max-width:900px){.ft-steps3{grid-template-columns:1fr}}.of-step.is-done b{background:#15803d}.ft-up{max-width:600px;margin:0 auto}.ft-skip{margin-top:14px;text-align:center;color:var(--ink-soft);font-size:.95rem}</style><main><section class="of-hero"><div class="wrap wrap--wide reveal">
       <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Your picks are in</span>
-      <h1 style="margin-top:16px">Step 1 done. <span class="grad">Your preview is next.</span></h1>
+      <h1 style="margin-top:16px">All done. <span class="grad">Your preview is next.</span></h1>
       <p class="lead">I'll text and email you the link within 48 hours.</p>
     </div></section>
     <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
       <div class="ft-up">
-        <h2 class="reveal" style="font-size:clamp(1.4rem,3vw,1.9rem)">Got a logo or photos?</h2>
-        <p class="sub" style="margin-bottom:20px">Add them here, or text them to me later.</p>
+        <h2 class="reveal" style="font-size:clamp(1.4rem,3vw,1.9rem)">If you've got a minute, send me your photos and logo here.</h2>
+        <p class="sub" style="margin-bottom:20px">Otherwise, we can add them later.</p>
         <div class="form-card">${uploader('ft-thanks', 'free-trial-thanks', { site })}</div>
-        <p class="ft-skip">No logo or photos handy? Skip this. You can text them to <a href="${smsHref}">${site.phone}</a> anytime.</p>
+        <p class="ft-skip">You can also text them to <a href="${smsHref}">${site.phone}</a> anytime.</p>
       </div>
     </div></section>
     <section class="of-sec"><div class="wrap wrap--wide">
