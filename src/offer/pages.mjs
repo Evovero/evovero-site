@@ -11,7 +11,7 @@ const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorad
 
 const FORM_VERSION = '2026-10-17 v3';
 const DETAILS_VERSION = '2026-10-17 v1';
-const TRIAL_VERSION = '2026-10-20 F4 extras';
+const TRIAL_VERSION = '2026-10-23 F5 rebuild';
 
 
 const css = `
@@ -451,138 +451,272 @@ export function makeOfferPages({ head, icon, site, demos }) {
     }, examplesBtn(), body);
   }
 
-  /* ---------------- /free-trial (2 week free trial, Halloween 2026) ---------------- */
-  // W100 F4 (2026-10-20): the Meta instant form is the intake. Everyone landing here already gave
-  // name, phone, email, company, city, state and services. This page confirms what happens next and
-  // takes OPTIONAL extras only (logo and photos, colors, anything specific). Ask nothing twice.
+  /* ---------------- /free-trial (W100 Halloween, F5 rebuild 2026-10-23) ---------------- */
+  // F5 (2026-10-23): the Meta instant form ending card says "Okay, here are the next steps." with
+  // 3 numbered steps and a "See website demos" button to /free-trial/?src=form. This page is step 1
+  // of those 3, so the first screen is the demos, word for word with the card. Picking a demo IS the
+  // style question. Then a few tap through questions. Logo and photos live on the thank you page only.
+  // Every word here is mirrored in the Notion build doc "2026-10-23 W100 Halloween build doc", section 6.
+  // Answers save in the browser as they tap (a reload no longer wipes them). GA4 gets ft_step per screen.
   function freeTrial() {
+    const smsHref = site.phoneHref.replace('tel:', 'sms:');
+    const ftDemos = live.map(d => ({ slug: d.slug, label: d.tabLabel, name: d.name }));
     const steps = [
-      ['I build your first version', 'From what you told me, plus your logo and photos if you send them.'],
-      ['You get a preview link', 'Within 48 hours, I text and email it to you.'],
-      ['Send me every change', 'You get 2 weeks to look it over. I keep revising until it is right.'],
-      ['Keep it, or don\'t', 'Keep it for $100 a month. No credit card, no contract. Don\'t love it? You owe nothing.'],
+      ['Pick your style', 'See a few demo sites and pick the one closest to yours. Then a few quick taps about your business.'],
+      ['Get your preview', 'I build your preview and text and email you the link within 48 hours.'],
+      ['Try it for 2 weeks', 'Send me every change you want. Keep it for $100 a month, or owe nothing.'],
     ];
-    const group = t => `<h3 class="ft-group">${t}</h3>`;
-
-    const form = `<form id="trial-form" class="form-card of-form" name="website-trial" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field" action="/free-trial/thanks/">
-      <input type="hidden" name="form-name" value="website-trial">
-      <input type="hidden" name="form_version" value="${TRIAL_VERSION}">
-      <input type="hidden" name="source" id="t-src">
-      <input type="hidden" name="uploads" id="t-uploads">
-      <p hidden><label>Skip this<input name="bot-field"></label></p>
-      <p class="ft-note">None of this is required. Anything you send goes on your first version.</p>
-      ${group('So I know it is you')}
-      <div class="field-row">
-        <div class="field"><label for="t-name">Your name</label><input id="t-name" name="name" autocomplete="name" required></div>
-        <div class="field"><label for="t-contact">Email or phone</label><input id="t-contact" name="email_or_phone" autocomplete="email" required></div>
-      </div>
-      ${group('Logo and photos')}
-      <div class="field"><div class="pd-box"><p id="t-up-note">Send your logo and photos of your work, full quality. No photos yet? I start with stock photos and you can swap yours in later.</p><a class="btn btn--ghost" href="/photos/" data-dropbox-open>Upload ${icon('arrow')}</a></div></div>
-      ${group('Colors')}
-      <div class="field"><label for="t-colors">Send a logo and I'll match it. No logo? A couple of colors, or I'll go with a clean black and white look.</label><input id="t-colors" name="colors" placeholder="Navy and orange, match my truck, black and white"></div>
-      ${group('Anything specific')}
-      <div class="field"><label for="t-more">A tagline, a catchphrase, or something that sets you apart. Describe what you'd like to see.</label><textarea id="t-more" name="anything_else"></textarea></div>
-      <button class="btn btn--primary btn--lg" type="submit" style="width:100%">Send it over ${icon('arrow')}</button>
-      <p class="form-note">I never sell your info. You hear from me, nobody else.</p>
-    </form>
-    <script>(function(){
-      var src=new URLSearchParams(location.search).get('src');var s=document.getElementById('t-src');if(s)s.value=src||'direct';
-      var up=document.getElementById('t-uploads'),un=document.getElementById('t-up-note'),all=[];
-      document.addEventListener('pd:uploaded',function(e){all=all.concat(e.detail.files);if(up)up.value=all.join('\\n');if(un)un.textContent=all.length+(all.length===1?' file':' files')+' sent. Add more anytime.';});
-      var form=document.getElementById('trial-form');
-      if(form&&window.fetch&&window.FormData){form.addEventListener('submit',function(e){
-        e.preventDefault();var btn=form.querySelector('button[type=submit]');btn.disabled=true;
-        fetch('/',{method:'POST',body:new FormData(form)})
-          .then(function(r){if(!r.ok)throw 0;if(window.gtag)gtag('event','trial_extras',{form_name:'website-trial'});setTimeout(function(){location.href='/free-trial/thanks/';},300);})
-          .catch(function(){btn.disabled=false;form.submit();});
-      });}
-    })();</script>`;
-
+    const colors = ['Black', 'White', 'Gray', 'Navy', 'Blue', 'Light blue', 'Green', 'Red', 'Orange', 'Yellow', 'Purple', 'Pink', 'Brown', 'Gold'];
+    const swatch = { Black: '#111', White: '#fff', Gray: '#9aa3b2', Navy: '#1b2a55', Blue: '#2f6fe0', 'Light blue': '#8fc3f5', Green: '#2e8b57', Red: '#d32f2f', Orange: '#f08a24', Yellow: '#f5c518', Purple: '#7b4bc4', Pink: '#ec7fb1', Brown: '#7a4e2d', Gold: '#c9a227' };
     const rv = n => reviews.find(r => r.name.startsWith(n));
+    const quote = (r, cls = '', anim = 'reveal of-rise') => r ? `<figure class="of-quote ${cls} ${anim}"><q>${r.text}</q><figcaption class="who">${r.name}<span aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></figcaption></figure>` : '';
     const faq = [
       ['Do I need a credit card?', 'No. Nothing up front, and nothing until you approve your site. When you\'re ready to keep it, I send you a secure link to set up your payment with a credit or debit card. Your $100 comes out on the same day each month, and you can change the card on file anytime with a link I send you.'],
       ['How long do I have to decide?', 'Two weeks from the day I send you your preview. Send me every change you want in that time, and I keep revising.'],
       ['What if I keep it?', '$100 a month with no build fee, and I launch it on your web address. Edits stay unlimited. No contract, and you can cancel anytime with a text or email.'],
       ['What if I don\'t?', 'No hard feelings. The preview comes down and you owe nothing.'],
-      ['What happens after October 31?', 'Free builds close October 31. After that, it\'s regular pricing: $500 to get started, then $100 a month.'],
+      ['What happens after October 31?', 'Requests for the free trial close October 31. After that, it\'s regular pricing: $500 to get started, then $100 a month.'],
     ];
-    const quote = (r, cls = '', anim = 'reveal of-rise') => r ? `<figure class="of-quote ${cls} ${anim}"><q>${r.text}</q><figcaption class="who">${r.name}<span aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></figcaption></figure>` : '';
-    const tcss = `.ft-group{margin:30px 0 14px;padding-top:22px;border-top:1px solid var(--line);font-size:1.12rem}.ft-group:first-of-type{margin-top:6px;padding-top:0;border-top:0}
-.ft-note{margin:0 0 6px;color:var(--ink-soft);font-size:.95rem}
-.ft-ex{text-align:center}.ft-ex p{max-width:620px;margin:10px auto 22px;color:var(--ink-soft)}`;
+
+    const picker = `<div class="ft-pick" id="ft-pick">
+      <div class="ft-tabs" role="tablist" aria-label="Demo websites">${ftDemos.map((d, i) => `<button type="button" role="tab" aria-selected="${i === 0}" data-demo="${d.slug}" data-label="${d.label}">${d.label}</button>`).join('')}</div>
+      <div class="ft-phone"><div class="ft-phone__screen">${ftDemos.map((d, i) => `<img src="/assets/ft-demos/${d.slug}.webp" alt="Demo website for ${d.name}, a ${d.label.toLowerCase()}" width="600" height="1385" data-shot="${d.slug}"${i ? ' hidden loading="lazy"' : ''}>`).join('')}</div></div>
+      <button type="button" class="btn btn--primary btn--lg ft-closest" id="ft-closest">This one is closest ${icon('arrow')}</button>
+      <p class="ft-picked" id="ft-picked" hidden></p>
+    </div>`;
+
+    const chip = (name, value, label, type = 'radio', extra = '') => `<label class="ft-chip"><input type="${type}" name="${name}" value="${value}"${extra}><span>${label}</span></label>`;
+    const form = `<form id="trial-form" class="ft-form" name="website-trial" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/free-trial/thanks/" novalidate>
+      <input type="hidden" name="form-name" value="website-trial">
+      <input type="hidden" name="form_version" value="${TRIAL_VERSION}">
+      <input type="hidden" name="source" id="t-src">
+      <input type="hidden" name="demo_pick" id="t-demo">
+      <p hidden><label>Skip this<input name="bot-field"></label></p>
+      <div class="ft-top"><span class="ft-count" id="ft-count" aria-live="polite"></span><div class="ft-prog"><i id="ft-bar"></i></div></div>
+      <p class="ft-note">Nothing here is final. You get unlimited changes.</p>
+
+      <fieldset class="ft-q" data-q="logo"><legend>Do you have a logo?</legend>
+        <div class="ft-chips ft-chips--2">${chip('has_logo', 'Yes', 'Yes, I have one', 'radio', ' data-auto')}${chip('has_logo', 'No', 'No, not yet', 'radio', ' data-auto')}</div>
+      </fieldset>
+
+      <fieldset class="ft-q" data-q="colors"><legend><span data-if-logo="Yes">What colors are in your logo?</span><span data-if-logo="No">Pick a few colors you like.</span><span data-if-logo="">What colors do you want?</span></legend>
+        <p class="ft-help" data-if-logo="No">This can always change later.</p>
+        <div class="ft-chips ft-chips--colors">${colors.map(c => chip('colors', c, `<i style="background:${swatch[c]}"></i>${c}`, 'checkbox')).join('')}${chip('colors', 'Other', 'Other', 'checkbox', ' data-other="t-colors-other"')}</div>
+        <div class="field ft-other" id="t-colors-other-wrap" hidden><label for="t-colors-other">Which colors?</label><input id="t-colors-other" name="colors_other" placeholder="Match my truck, forest green and tan"></div>
+        <button type="button" class="btn btn--primary btn--lg ft-next" data-next>Next ${icon('arrow')}</button>
+      </fieldset>
+
+      <fieldset class="ft-q" data-q="reach"><legend>If I have a question, how should I reach you?</legend>
+        <div class="ft-chips ft-chips--3">${chip('contact_pref', 'Text', 'Text', 'radio', ' data-auto')}${chip('contact_pref', 'Call', 'Call', 'radio', ' data-auto')}${chip('contact_pref', 'Email', 'Email', 'radio', ' data-auto')}</div>
+      </fieldset>
+
+      <fieldset class="ft-q" data-q="more"><legend>Anything specific you want on it?</legend>
+        <p class="ft-help">A tagline, your best service, something that sets you apart. Skip it if nothing comes to mind.</p>
+        <div class="field"><label class="sr-only" for="t-more">Anything specific</label><textarea id="t-more" name="anything_else" rows="3"></textarea></div>
+        <button type="button" class="btn btn--primary btn--lg ft-next" data-next>Next ${icon('arrow')}</button>
+      </fieldset>
+
+      <fieldset class="ft-q" data-q="who"><legend id="ft-who-legend">Last one. So I can match this to your request.</legend>
+        <div class="field"><label for="t-name">Your name</label><input id="t-name" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="t-biz">Business name</label><input id="t-biz" name="business" autocomplete="organization" required></div>
+        <div class="field" id="t-contact-wrap" hidden><label for="t-contact">Phone or email</label><input id="t-contact" name="email_or_phone" autocomplete="tel"></div>
+        <p class="ft-err" id="ft-err" hidden></p>
+        <button class="btn btn--primary btn--lg ft-send" type="submit">Send my picks ${icon('arrow')}</button>
+        <p class="ft-assure">No credit card. Don't keep it and you owe nothing.</p>
+      </fieldset>
+
+      <button type="button" class="ft-back" id="ft-back" hidden>&larr; Back</button>
+    </form>`;
+
+    const tcss = `
+.ft-hero{padding-block:clamp(36px,6vw,72px) clamp(40px,6vw,72px)}
+.ft-hero__grid{display:grid;grid-template-columns:1fr minmax(300px,380px);gap:48px;align-items:center}
+.ft-hero h1{font-size:clamp(1.9rem,4.6vw,3.2rem);margin-top:14px}
+.ft-hero p.lead{margin-top:14px}
+.ft-step{font-family:var(--font-head);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem;color:var(--blue-light)}
+.ft-pick{display:grid;gap:14px;justify-items:center}
+.ft-tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;max-width:100%;padding:2px;justify-self:stretch}
+.ft-tabs::-webkit-scrollbar{display:none}
+@media (min-width:641px){.ft-tabs{flex-wrap:wrap;justify-content:center}}
+.ft-tabs button{flex:none;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.07);color:#fff;border-radius:999px;padding:10px 16px;font-family:var(--font-head);font-weight:600;font-size:.92rem;cursor:pointer}
+.ft-tabs button[aria-selected="true"]{background:#fff;color:var(--navy-abyss,#0b1430);border-color:#fff}
+.ft-phone{width:min(300px,78vw);border-radius:38px;padding:10px;background:#0b1020;box-shadow:0 0 0 1px rgba(255,255,255,.14),0 30px 70px rgba(0,0,0,.45)}
+.ft-phone__screen{border-radius:30px;overflow:hidden;aspect-ratio:9/16;background:#fff;position:relative}
+.ft-phone__screen img{width:100%;height:auto;display:block}
+.ft-phone__screen img[hidden]{display:none}
+.ft-closest{width:min(300px,78vw);justify-content:center}
+.ft-picked{color:#fff;font-family:var(--font-head);font-weight:600;font-size:.95rem;text-align:center}
+.ft-picked b{color:var(--blue-light)}
+.ft-formsec{scroll-margin-top:80px}
+.ft-form{max-width:640px;margin:22px auto 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-lg);padding:clamp(22px,4vw,36px);position:relative}
+.ft-top{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.ft-count{font-family:var(--font-head);font-weight:600;font-size:.88rem;color:var(--ink-soft);white-space:nowrap}
+.ft-prog{flex:1;height:6px;background:var(--line);border-radius:999px;overflow:hidden}.ft-prog i{display:block;height:100%;width:0;background:var(--grad-blue);transition:width .35s}
+.ft-note{margin:0 0 18px;color:var(--ink-soft);font-size:.93rem}
+.ft-q{border:0;margin:0;padding:0;display:grid;gap:14px}
+.ft-q+.ft-q{margin-top:28px}
+.js-ft .ft-q{display:none}.js-ft .ft-q.on{display:grid;animation:ft-in .35s ease both}.js-ft .ft-q+.ft-q{margin-top:0}
+@keyframes ft-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.js-ft .ft-q.on{animation:none}}
+.ft-q legend{font-family:var(--font-head);font-weight:700;font-size:clamp(1.25rem,2.6vw,1.5rem);color:var(--ink);line-height:1.3;padding:0;margin-bottom:4px}
+.ft-help{margin:-6px 0 0;color:var(--ink-soft);font-size:.95rem}
+.ft-chips{display:grid;gap:10px}
+.ft-chips--2{grid-template-columns:1fr 1fr}.ft-chips--3{grid-template-columns:repeat(3,1fr)}
+.ft-chips--colors{grid-template-columns:repeat(auto-fill,minmax(124px,1fr))}
+.ft-chip{position:relative;cursor:pointer}
+.ft-chip input{position:absolute;opacity:0;pointer-events:none}
+.ft-chip span{display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:var(--surface);font-family:var(--font-head);font-weight:600;color:var(--ink);text-align:center;transition:border-color .15s,background .15s,transform .1s}
+.ft-chips--colors .ft-chip span{justify-content:flex-start;min-height:50px;font-size:.95rem}
+.ft-chip span i{width:18px;height:18px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.ft-chip:hover span{border-color:var(--blue-light)}
+.ft-chip input:checked+span{border-color:var(--blue);background:rgba(58,107,181,.08);box-shadow:0 0 0 3px rgba(58,107,181,.14)}
+.ft-chip input:focus-visible+span{outline:2px solid var(--blue);outline-offset:2px}
+.ft-chip:active span{transform:scale(.98)}
+.ft-form .field label{display:block;font-family:var(--font-head);font-weight:600;color:var(--ink);margin-bottom:6px}
+.ft-form input:not([type=radio]):not([type=checkbox]),.ft-form textarea{width:100%;padding:14px 16px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--surface);font:inherit;font-size:1rem;color:var(--ink)}
+.ft-next,.ft-send{width:100%;justify-content:center}
+.ft-assure{text-align:center;color:var(--ink-soft);font-size:.93rem;margin:0}
+.ft-err{color:#c62828;font-size:.92rem;margin:0}
+.ft-back{margin-top:16px;background:none;border:0;color:var(--ink-soft);font:inherit;font-size:.93rem;cursor:pointer;padding:6px 0}
+.ft-form:not(.js-ft) [data-if-logo]:not([data-if-logo=""]){display:none}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ft-steps3{grid-template-columns:repeat(3,1fr)}
+@media (max-width:900px){.ft-hero__grid{grid-template-columns:1fr;gap:26px}.ft-steps3{grid-template-columns:1fr}}
+@media (max-width:640px){.ft-hero{padding-top:22px;padding-bottom:32px}.ft-hero__copy{text-align:center}.ft-hero h1{font-size:1.75rem;margin-top:8px}.ft-hero p.lead{margin-top:10px;font-size:1rem}.ft-hero__grid{gap:18px}.ft-pick{gap:12px}.ft-phone{width:min(236px,62vw);border-radius:32px;padding:8px}.ft-phone__screen{border-radius:25px}.ft-closest{width:100%}.ft-chips--3{grid-template-columns:1fr}}`;
+
+    const script = `<script>(function(){
+  var KEY='ft_v2',form=document.getElementById('trial-form');if(!form)return;
+  var params=new URLSearchParams(location.search),src=params.get('src')||'direct';
+  document.getElementById('t-src').value=src;
+  function ga(n,p){try{if(window.gtag)gtag('event',n,p||{});}catch(e){}}
+  function load(){try{return JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){return {};}}
+  function save(){try{var d={q:cur,v:{}};[].slice.call(form.elements).forEach(function(el){if(!el.name||el.type==='hidden'&&el.name!=='demo_pick')return;if(el.type==='radio'||el.type==='checkbox'){if(el.checked)(d.v[el.name]=d.v[el.name]||[]).push(el.value);}else if(el.value)d.v[el.name]=[el.value];});localStorage.setItem(KEY,JSON.stringify(d));}catch(e){}}
+  // Demo picker
+  var tabs=[].slice.call(document.querySelectorAll('.ft-tabs [data-demo]')),shots=[].slice.call(document.querySelectorAll('[data-shot]')),demoIn=document.getElementById('t-demo'),picked=document.getElementById('ft-picked'),curDemo=tabs[0];
+  function show(b){curDemo=b;tabs.forEach(function(t){t.setAttribute('aria-selected',t===b);});shots.forEach(function(s){s.hidden=s.getAttribute('data-shot')!==b.getAttribute('data-demo');});}
+  tabs.forEach(function(t){t.addEventListener('click',function(){show(t);ga('ft_demo_view',{demo:t.getAttribute('data-demo')});});});
+  function markPicked(slug){var t=tabs.filter(function(x){return x.getAttribute('data-demo')===slug;})[0];if(!t)return;demoIn.value=slug;picked.hidden=false;picked.innerHTML='Your pick: <b>'+t.getAttribute('data-label')+'</b>. Tap another to change it.';}
+  document.getElementById('ft-closest').addEventListener('click',function(){var slug=curDemo.getAttribute('data-demo');markPicked(slug);save();ga('ft_demo_pick',{demo:slug});document.getElementById('form').scrollIntoView({behavior:'smooth',block:'start'});});
+  // Tap through
+  form.classList.add('js-ft');
+  var known=['form','text','email'].indexOf(src)>-1;
+  if(!known){document.getElementById('ft-who-legend').textContent='Last one. Where should I send your preview?';var cw=document.getElementById('t-contact-wrap');cw.hidden=false;document.getElementById('t-contact').required=true;}
+  var qs=[].slice.call(form.querySelectorAll('.ft-q')),cur=0,count=document.getElementById('ft-count'),bar=document.getElementById('ft-bar'),back=document.getElementById('ft-back');
+  function logoAns(){var r=form.querySelector('input[name=has_logo]:checked');return r?r.value:'';}
+  function syncLogo(){var a=logoAns();[].slice.call(form.querySelectorAll('[data-if-logo]')).forEach(function(el){el.hidden=el.getAttribute('data-if-logo')!==a;});}
+  var fired={},seen=false;function track1(){if(!seen||fired[cur])return;fired[cur]=1;ga('ft_step',{step:qs[cur].getAttribute('data-q'),n:cur+1});}
+  function go(i,track,focus){cur=Math.max(0,Math.min(qs.length-1,i));qs.forEach(function(q,k){q.classList.toggle('on',k===cur);});count.textContent='Question '+(cur+1)+' of '+qs.length;bar.style.width=((cur+1)/qs.length*100)+'%';back.hidden=cur===0;syncLogo();save();if(track)track1();if(focus){var f=qs[cur].querySelector('input:not([type=hidden]),textarea');if(f)try{f.focus({preventScroll:true});}catch(x){f.focus();}}}
+  form.addEventListener('change',function(e){var el=e.target;if(el.hasAttribute('data-other')){document.getElementById(el.getAttribute('data-other')+'-wrap').hidden=!el.checked;if(el.checked)document.getElementById(el.getAttribute('data-other')).focus();}
+    if(el.name==='has_logo')syncLogo();save();
+    if(el.hasAttribute('data-auto')&&el.checked&&intent){var kb=intent==='key';intent='';setTimeout(function(){go(cur+1,true,kb);},220);}});
+  var intent='',was=null;form.addEventListener('pointerdown',function(e){intent='ptr';var c=e.target.closest&&e.target.closest('.ft-chip');var i=c&&c.querySelector('input[data-auto]');was=i&&i.checked?i:null;});
+  form.addEventListener('click',function(e){if(was&&e.target===was){was=null;intent='';setTimeout(function(){go(cur+1,true,false);},150);}});form.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){intent='key';if(e.key==='Enter'&&e.target.type==='radio'){e.preventDefault();if(!e.target.checked){e.target.checked=true;e.target.dispatchEvent(new Event('change',{bubbles:true}));}else go(cur+1,true,true);}}else intent='';});
+  form.addEventListener('input',function(){save();var e=document.getElementById('ft-err');if(e)e.hidden=true;});
+  [].slice.call(form.querySelectorAll('[data-next]')).forEach(function(b){b.addEventListener('click',function(e){go(cur+1,true,e.detail===0);});});
+  if('IntersectionObserver' in window){new IntersectionObserver(function(en){if(en[0].isIntersecting&&!seen){seen=true;track1();}},{threshold:.4}).observe(form);}else{seen=true;}
+  back.addEventListener('click',function(){go(cur-1,false);});
+  // Restore saved answers
+  var d=load();if(d.v){Object.keys(d.v).forEach(function(n){var vals=d.v[n];[].slice.call(form.querySelectorAll('[name="'+n+'"]')).forEach(function(el){if(el.type==='radio'||el.type==='checkbox')el.checked=vals.indexOf(el.value)>-1;else el.value=vals[0];});});
+    var oth=form.querySelector('[data-other]');if(oth&&oth.checked)document.getElementById(oth.getAttribute('data-other')+'-wrap').hidden=false;
+    if(demoIn.value){markPicked(demoIn.value);var t=tabs.filter(function(x){return x.getAttribute('data-demo')===demoIn.value;})[0];if(t)show(t);}}
+  go(typeof d.q==='number'?d.q:0,false);
+  // Submit
+  var err=document.getElementById('ft-err');
+  form.addEventListener('submit',function(e){e.preventDefault();var n=document.getElementById('t-name'),b=document.getElementById('t-biz'),c=document.getElementById('t-contact');
+    var miss=[];if(!n.value.trim())miss.push('your name');if(!b.value.trim())miss.push('your business name');if(c.required&&!c.value.trim())miss.push('a phone or email');
+    if(miss.length){err.textContent='Add '+(miss.length>1?miss.slice(0,-1).join(', ')+' and '+miss[miss.length-1]:miss[0])+' so I know where to send your preview.';err.hidden=false;go(qs.length-1,false);return;}err.hidden=true;
+    if(!demoIn.value)demoIn.value='none picked';
+    var btn=form.querySelector('.ft-send');btn.disabled=true;
+    try{localStorage.setItem('ft_who',JSON.stringify({name:n.value.trim(),business:b.value.trim()}));}catch(x){}
+    var fd=new FormData(form);fd.set('colors',fd.getAll('colors').join(', '));
+    fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(fd).toString()})
+      .then(function(r){if(!r.ok)throw 0;ga('trial_extras',{form_name:'website-trial'});ga('ft_submit',{demo:demoIn.value,src:src});try{localStorage.removeItem(KEY);}catch(x){}setTimeout(function(){location.href='/free-trial/thanks/';},300);})
+      .catch(function(){btn.disabled=false;HTMLFormElement.prototype.submit.call(form);});
+  });
+  // Sticky button: shows once the hero is gone and the form is not on screen
+  var sb=document.getElementById('of-sticky'),fs=document.getElementById('form'),h=document.querySelector('.of-hero'),tk=0;
+  if(sb&&fs&&h){window.addEventListener('scroll',function(){if(tk)return;tk=requestAnimationFrame(function(){tk=0;var r=fs.getBoundingClientRect();sb.classList.toggle('on',h.getBoundingClientRect().bottom<0&&(r.top>window.innerHeight*0.6||r.bottom<0));});},{passive:true});}
+})();</script>`;
+
+    const heroCopy = `<div class="ft-hero__copy">
+        <span class="ft-step" id="ft-eyebrow">Step 1 of 3</span>
+        <h1 id="ft-h1">Pick the demo closest to what you want</h1>
+        <p class="lead">Tap through these. Nothing is final, and you can change anything later.</p>
+      </div>`;
+    // Known leads (src=form from the ending card, src=text from /mytrial, src=email) see Step 1 of 3.
+    // Anyone else (direct, shared link) gets the ad's own line and is asked for a phone or email.
+    const heroSwap = `<script>(function(){if(['form','text','email'].indexOf(new URLSearchParams(location.search).get('src'))>-1)return;var e=document.getElementById('ft-eyebrow'),h=document.getElementById('ft-h1');if(e)e.textContent='Try it free';if(h)h.textContent='Need a website? Try one before you pay anything.';})();</script>`;
 
     const body = `<style>${tcss}</style><main>
-    <section class="of-hero"><div class="wrap wrap--wide reveal of-hero__grid"><div>
-      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Your request is in</span>
-      <h1 style="margin-top:16px">See your website first. <span class="grad">Love it or owe nothing.</span></h1>
-      <p class="lead">Your preview is on the way. Within 48 hours, I'll text and email you the link. Want it to look more like your business? Send your logo, photos and colors below.</p>
-      <div class="pills"><span>No credit card</span><span>Built in 48 hours</span><span>2 weeks to decide</span></div>
-      <div class="hero__cta"><a class="btn btn--primary btn--lg" href="#form">Make it yours ${icon('arrow')}</a>${examplesBtn('btn--on-dark btn--lg')}</div>
-    </div><div class="of-hero__art" aria-hidden="true"><div class="pl" style="--s:150px"><img src="/assets/evovero-logo-300.webp" alt="" width="150" height="150"></div></div></div></section>
+    <section class="of-hero ft-hero"><div class="wrap wrap--wide ft-hero__grid">
+      ${heroCopy}${heroSwap}
+      ${picker}
+    </div></section>
+
+    <section class="of-sec of-sec--alt ft-formsec" id="form"><div class="wrap wrap--wide">
+      <h2 class="reveal" style="text-align:center">A few quick taps</h2>
+      ${form}
+    </div></section>
 
     <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Chris'), '', '')}</div></section>
 
     <section class="of-sec"><div class="wrap wrap--wide">
       <h2 class="reveal">How this works</h2>
-      <div class="of-steps">${steps.map((s, i) => `<div class="of-step reveal" data-d="${i}"><b>${i + 1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>
+      <div class="of-steps ft-steps3">${steps.map((s, i) => `<div class="of-step reveal" data-d="${i}"><b>${i + 1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>
     </div></section>
 
     <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Jesse'))}</div></section>
 
-    <section class="of-sec of-sec--alt" id="form"><div class="wrap wrap--wide">
-      <h2 class="reveal">Make it yours</h2>
-      ${form}
-    </div></section>
-
-    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Yadira'))}</div></section>
-
-    <section class="of-sec"><div class="wrap wrap--wide ft-ex reveal">
-      <h2>See the kind of sites I build</h2>
-      <p>Coffee shops, lawn care, concrete, salons, photographers and more. Tap through a few to picture yours.</p>
-      ${examplesBtn('btn--primary btn--lg')}
-    </div></section>
-
     <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
       <h2 class="reveal">Questions people ask</h2>
       <div class="of-faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
-      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Make it yours ${icon('arrow')}</a></div>
+      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Fill out my answers ${icon('arrow')}</a></div>
     </div></section>
-    </main>${demoModalHtml()}${dropboxModal('free-trial', { site })}${dropboxForm}${dropboxScript}
-    <a class="of-sticky" id="of-sticky" href="#form">Make it yours ${icon('arrow')}</a>
-    <script>(function(){var b=document.getElementById('of-sticky'),f=document.getElementById('form'),h=document.querySelector('.of-hero');if(!b||!f)return;var t=0;
-      function u(){t=0;var show=h.getBoundingClientRect().bottom<0&&f.getBoundingClientRect().top>window.innerHeight*0.6;b.classList.toggle('on',show);}
-      window.addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(u);},{passive:true});})();</script>`;
+
+    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Yadira'))}</div></section>
+    </main>
+    <a class="of-sticky" id="of-sticky" href="#form">Fill out my answers ${icon('arrow')}</a>
+    ${script}`;
 
     return shell({
-      title: 'Free Website for Your Business, Built in 48 Hours | EvoVero',
-      desc: 'I build your small business website free in 48 hours. No credit card. Then you get 2 weeks to decide. Keep it for $100 a month, or walk away and owe nothing.',
+      title: 'Try Your New Website Free, Pick the Demo You Like | EvoVero',
+      desc: 'Pick the demo site closest to what you want, answer a few quick taps, and get a preview in 48 hours. No credit card. Keep it for $100 a month, or owe nothing.',
       path: '/free-trial',
-    }, examplesBtn(), body);
+    }, `<a class="btn btn--ghost" href="${smsHref}">Text me</a>`, body);
   }
 
   /* ---------------- /free-trial/thanks ---------------- */
+  // Step 1 done. Logo and photos live here only, with a skip option (text them later).
   function freeTrialThanks() {
+    const smsHref = site.phoneHref.replace('tel:', 'sms:');
     const steps = [
-      ['I build your site', 'Within 48 hours. Stock photos fill in until I have yours.'],
-      ['You get your preview link', 'I text and email it to you. Your 2 weeks to decide start that day.'],
-      ['Send your changes', 'Everything you want changed, even one long email. I keep revising until it is right.'],
-      ['Keep it, or don\'t', 'Keep it for $100 a month, no build fee, no contract. Don\'t like it? No hard feelings, you owe nothing.'],
+      ['Pick your style', 'Done. I have your picks.'],
+      ['Get your preview', 'I build your preview and text and email you the link within 48 hours.'],
+      ['Try it for 2 weeks', 'Send me every change you want. Keep it for $100 a month, or owe nothing.'],
     ];
-    const body = `<main><section class="of-hero"><div class="wrap wrap--wide reveal">
-      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Got it</span>
-      <h1 style="margin-top:16px">Got it. <span class="grad">It all goes on your first version.</span></h1>
-      <p class="lead">I build it within 48 hours and send you the link. Questions in the meantime? Text <span style="white-space:nowrap"><a style="color:#fff" href="${site.phoneHref}">${site.phone}</a></span>.</p>
+    const body = `<style>.ft-steps3{grid-template-columns:repeat(3,1fr)}@media (max-width:900px){.ft-steps3{grid-template-columns:1fr}}.of-step.is-done b{background:#15803d}.ft-up{max-width:600px;margin:0 auto}.ft-skip{margin-top:14px;text-align:center;color:var(--ink-soft);font-size:.95rem}</style><main><section class="of-hero"><div class="wrap wrap--wide reveal">
+      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Your picks are in</span>
+      <h1 style="margin-top:16px">Step 1 done. <span class="grad">Your preview is next.</span></h1>
+      <p class="lead">I'll text and email you the link within 48 hours.</p>
+    </div></section>
+    <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
+      <div class="ft-up">
+        <h2 class="reveal" style="font-size:clamp(1.4rem,3vw,1.9rem)">Got a logo or photos?</h2>
+        <p class="sub" style="margin-bottom:20px">Add them here, or text them to me later.</p>
+        <div class="form-card">${uploader('ft-thanks', 'free-trial-thanks', { site })}</div>
+        <p class="ft-skip">No logo or photos handy? Skip this. You can text them to <a href="${smsHref}">${site.phone}</a> anytime.</p>
+      </div>
     </div></section>
     <section class="of-sec"><div class="wrap wrap--wide">
       <h2 class="reveal">What happens next</h2>
-      <div class="of-steps">${steps.map((s, i) => `<div class="of-step reveal" data-d="${i}"><b>${i + 1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>
-      <div class="pd-box reveal" style="margin-top:28px"><p><b>Have your logo or photos handy?</b> Send them now and they go on your first version.</p><a class="btn btn--ghost" href="/photos/" data-dropbox-open>Send photos ${icon('arrow')}</a></div>
-    </div></section></main>${dropboxModal('free-trial-thanks', { site })}${dropboxForm}${dropboxScript}`;
+      <div class="of-steps ft-steps3">${steps.map((s, i) => `<div class="of-step reveal${i === 0 ? ' is-done' : ''}" data-d="${i}"><b>${i === 0 ? '&#10003;' : i + 1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>
+    </div></section></main>${dropboxForm}${dropboxScript}
+    <script>(function(){try{var w=JSON.parse(localStorage.getItem('ft_who')||'{}');var v=w.business||w.name;if(!v)return;[].slice.call(document.querySelectorAll('[data-name]')).forEach(function(i){if(!i.value)i.value=v;});}catch(e){}})();</script>`;
     return shell({
-      title: 'Free Trial Received, Your Website Is on the Way | EvoVero',
-      desc: 'Your free website request reached Spencer at EvoVero. He builds your site within 48 hours and sends the preview link. Your 2 weeks start the day it is ready.',
+      title: 'Step 1 Done, Your Website Preview Is Next | EvoVero Trial',
+      desc: 'Your picks reached Spencer at EvoVero. He builds your preview and texts and emails you the link within 48 hours. Add your logo or photos here if you have them.',
       path: '/free-trial/thanks',
-    }, '', body);
+    }, `<a class="btn btn--ghost" href="${smsHref}">Text me</a>`, body);
   }
 
   /* ---------------- /photos (Photo Dropbox, one link for everyone) ---------------- */
