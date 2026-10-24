@@ -538,10 +538,10 @@ export function makeOfferPages({ head, icon, site, demos }) {
 .ft-pick{display:grid;gap:14px;justify-items:center}
 .ft-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:100%;padding:2px;justify-self:stretch}
 .ft-tabs::-webkit-scrollbar{display:none}
-@media (max-width:640px){.ft-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px}.ft-tabs button{padding:8px 6px;font-size:.84rem;text-align:center;white-space:nowrap}}
 .ft-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:640px){.ft-pair{grid-template-columns:1fr}}
 .ft-tabs button{flex:none;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.07);color:#fff;border-radius:999px;padding:10px 16px;font-family:var(--font-head);font-weight:600;font-size:.92rem;cursor:pointer}
 .ft-tabs button[aria-selected="true"]{background:#fff;color:var(--navy-abyss,#0b1430);border-color:#fff}
+@media (max-width:640px){.ft-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.ft-tabs button{min-width:0;padding:8px 4px;font-size:.82rem;line-height:1.25;text-align:center;white-space:normal;overflow-wrap:break-word}}
 .ft-phone{width:min(300px,78vw);border-radius:38px;padding:10px;background:#0b1020;box-shadow:0 0 0 1px rgba(255,255,255,.14),0 30px 70px rgba(0,0,0,.45)}
 .ft-phone__screen{border-radius:30px;overflow:hidden;aspect-ratio:9/16;background:#fff;position:relative}
 .ft-phone__screen img{width:100%;height:auto;display:block}
@@ -583,7 +583,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
 .ft-form:not(.js-ft) [data-if-logo]:not([data-if-logo=""]){display:none}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .ft-steps3{grid-template-columns:repeat(3,1fr)}
-@media (max-width:900px){.ft-hero__grid{grid-template-columns:1fr;gap:26px}.ft-steps3{grid-template-columns:1fr}}
+@media (max-width:900px){.ft-hero__grid{grid-template-columns:minmax(0,1fr);gap:26px}.ft-hero__grid>*{min-width:0}.ft-steps3{grid-template-columns:1fr}}
 @media (max-width:640px){.ft-hero{padding-top:22px;padding-bottom:32px}.ft-hero__copy{text-align:center}.ft-hero h1{font-size:1.75rem;margin-top:8px}.ft-hero p.lead{margin-top:8px;font-size:.98rem}.ft-hero__grid{gap:18px}.ft-pick{gap:12px}.ft-phone{width:min(206px,55vw);border-radius:28px;padding:7px}.ft-phone__screen{border-radius:25px}.ft-closest{width:100%}.ft-chips--3{grid-template-columns:1fr}}`;
 
     const script = `<script>(function(){
