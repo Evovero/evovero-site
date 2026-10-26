@@ -6,6 +6,7 @@ export default {
   slug: 'lawn-care',
   type: 'service',
   live: true,
+  palette: 'Green, Yellow',
   tabLabel: 'Lawn and landscape',
   urlLabel: 'cedarhollowlawn.com',
   name: 'Cedar Hollow Lawn Co.',

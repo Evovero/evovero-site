@@ -6,6 +6,7 @@ export default {
   slug: 'photographer',
   type: 'portfolio',
   live: true,
+  palette: 'Black, White, Gold',
   tabLabel: 'Photographer',
   urlLabel: 'ashgrovephoto.com',
   name: 'Ashgrove Photo Co.',

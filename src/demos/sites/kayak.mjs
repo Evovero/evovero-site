@@ -6,6 +6,7 @@ export default {
   slug: 'kayak-rental',
   type: 'trips',
   live: true,
+  palette: 'Blue, Orange',
   tabLabel: 'Kayak rental',
   urlLabel: 'willowbendpaddle.com',
   name: 'Willow Bend Paddle Co.',
@@ -18,7 +19,7 @@ export default {
   area: 'North Dock, Willow Lake Park, Cedar Hollow',
   hours: [['May to September', '9am to sunset, every day'], ['April and October', 'Weekends, 10am to 5pm'], ['November to March', 'Closed for the season']],
   primaryCta: { label: 'Book a kayak', short: 'Book', href: 'book/' },
-  colors: { primary: '#0E7C86', primaryDark: '#0A5A62', accent: '#F59E3B', ink: '#0F2A33', soft: '#4E6670', bg: '#F6FAFB', bg2: '#E6F1F3', line: '#D2E3E7', dark: '#0B1F26' },
+  colors: { primary: '#1F6FC2', primaryDark: '#16528F', accent: '#F59E3B', ink: '#0F2236', soft: '#4E6074', bg: '#F6F9FC', bg2: '#E6EEF7', line: '#D2DEEB', dark: '#0B1A2B' },
   fonts: {
     url: 'Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Inter:wght@400;500;600',
     head: { css: "'Bricolage Grotesque', system-ui, sans-serif", weight: 700, tracking: '-.02em' },

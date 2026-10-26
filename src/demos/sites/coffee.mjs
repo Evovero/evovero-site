@@ -6,6 +6,7 @@ export default {
   slug: 'coffee-shop',
   type: 'food',
   live: true,
+  palette: 'Brown, Gold',
   tabLabel: 'Coffee shop',
   urlLabel: 'littleembercoffee.com',
   name: 'Little Ember Coffee',

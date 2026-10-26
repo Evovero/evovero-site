@@ -11,6 +11,11 @@ import photographer from './sites/photographer.mjs';
 
 export const demos = [lawn, concrete, coffee, kayak, salon, photographer];
 
+// Viewer order on /free-trial (Spencer 2026-10-25): first five show, the rest sit behind "See more".
+// A slug with no built demo is skipped, so new demos are added here and to the list above.
+export const planned = [];
+export const viewerOrder = ['concrete', 'photo-booth', 'funeral-home', 'church', 'photographer', 'veterans-post', 'lawn-care', 'farm-floral', 'towing', 'junk-hauling', 'coffee-shop', 'hair-salon', 'kayak-rental'];
+
 export function buildDemos(OUT) {
   let n = 0;
   for (const d of demos) n += renderDemo(d, OUT);

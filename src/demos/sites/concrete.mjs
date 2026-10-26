@@ -6,6 +6,7 @@ export default {
   slug: 'concrete',
   type: 'service',
   live: true,
+  palette: 'Orange, Gray, Black',
   tabLabel: 'Concrete contractor',
   urlLabel: 'ironlineconcrete.com',
   name: 'Ironline Concrete',

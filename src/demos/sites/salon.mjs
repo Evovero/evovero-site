@@ -6,6 +6,7 @@ export default {
   slug: 'hair-salon',
   type: 'appointments',
   live: true,
+  palette: 'Red, White',
   tabLabel: 'Salon and barber',
   urlLabel: 'coppercombstudio.com',
   name: 'Copper Comb Studio',

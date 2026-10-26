@@ -5,13 +5,15 @@
 
 import { types, typeById } from './types.mjs';
 import { reviews } from '../data/reviews.mjs';
+import { planned, viewerOrder } from '../demos/index.mjs';
+import { viewerHtml, viewerHeroCss, viewerCss, viewerJs, SWATCH } from './viewer.mjs';
 import { dropboxCss, uploader, dropboxForm, dropboxScript, dropboxModal } from './dropbox.mjs';
 
 const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
 
 const FORM_VERSION = '2026-10-17 v3';
 const DETAILS_VERSION = '2026-10-17 v1';
-const TRIAL_VERSION = '2026-10-23 F5 rebuild';
+const TRIAL_VERSION = '2026-10-25 F6 demo viewer';
 
 
 const css = `
@@ -138,6 +140,8 @@ const css = `
 export function makeOfferPages({ head, icon, site, demos }) {
   const live = demos.filter(d => d.live);
   const demoUrl = d => `/websites/demo/${d.slug}/`;
+  const pool = [...live, ...planned.filter(p => !live.some(d => d.slug === p.slug))];
+  const viewerItems = viewerOrder.map(s => pool.find(d => d.slug === s)).filter(Boolean);
 
   // Minimal shell: logo plus one or two buttons. No site navigation, by design.
   const top = (buttons, linkLogo = true) => `<header class="of-top"><div class="wrap wrap--wide">
@@ -451,7 +455,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
     }, examplesBtn(), body);
   }
 
-  /* ---------------- /free-trial (W100 Halloween, F5 rebuild 2026-10-23) ---------------- */
+  /* ---------------- /free-trial (W100 Halloween, F5 rebuild 2026-10-23, F6 demo viewer 2026-10-25) ---------------- */
   // F5 (2026-10-23): the Meta instant form ending card says "Okay, here are the next steps." with
   // 3 numbered steps and a "See website demos" button to /free-trial/?src=form. This page is step 1
   // of those 3, so the first screen is the demos, word for word with the card. Picking a demo IS the
@@ -478,12 +482,8 @@ export function makeOfferPages({ head, icon, site, demos }) {
       ['What happens after October 31?', 'Requests for the free trial close October 31. After that, it\'s regular pricing: $500 to get started, then $100 a month.'],
     ];
 
-    const picker = `<div class="ft-pick" id="ft-pick">
-      <div class="ft-tabs" role="tablist" aria-label="Demo websites">${ftDemos.map((d, i) => `<button type="button" role="tab" aria-selected="${i === 0}" data-demo="${d.slug}" data-label="${d.label}">${d.label}</button>`).join('')}</div>
-      <div class="ft-phone"><div class="ft-phone__screen">${ftDemos.map((d, i) => `<img src="/assets/ft-demos/${d.slug}.webp" alt="Demo website for ${d.name}, a ${d.label.toLowerCase()}" width="600" height="1385" data-shot="${d.slug}"${i ? ' hidden loading="lazy"' : ''}>`).join('')}</div></div>
-      <button type="button" class="btn btn--primary btn--lg ft-closest" id="ft-closest">This one is closest ${icon('arrow')}</button>
-      <p class="ft-picked" id="ft-picked" hidden></p>
-    </div>`;
+    const vItems = viewerItems.map(d => ({ slug: d.slug, tabLabel: d.tabLabel, name: d.name, palette: d.palette, url: demoUrl(d) }));
+    const picker = viewerHtml(vItems, icon, d => d.url) + `<script type="application/json" id="dv-data">${JSON.stringify(vItems)}</script><script>window.ftSwatch=${JSON.stringify(SWATCH)};</script>`;
 
     const chip = (name, value, label, type = 'radio', extra = '') => `<label class="ft-chip"><input type="${type}" name="${name}" value="${value}"${extra}><span>${label}</span></label>`;
     const form = `<form id="trial-form" class="ft-form" name="website-trial" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/free-trial/thanks/" novalidate>
@@ -529,7 +529,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <button type="button" class="ft-back" id="ft-back" hidden>&larr; Back</button>
     </form>`;
 
-    const tcss = `
+    const tcss = viewerCss + `
 .ft-hero{padding-block:clamp(36px,6vw,72px) clamp(40px,6vw,72px)}
 .ft-hero__grid{display:grid;grid-template-columns:1fr minmax(300px,380px);gap:48px;align-items:center}
 .ft-hero h1{font-size:clamp(1.9rem,4.6vw,3.2rem);margin-top:14px}
@@ -584,7 +584,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .ft-steps3{grid-template-columns:repeat(3,1fr)}
 @media (max-width:900px){.ft-hero__grid{grid-template-columns:minmax(0,1fr);gap:26px}.ft-hero__grid>*{min-width:0}.ft-steps3{grid-template-columns:1fr}}
-@media (max-width:640px){.ft-hero{padding-top:22px;padding-bottom:32px}.ft-hero__copy{text-align:center}.ft-hero h1{font-size:1.75rem;margin-top:8px}.ft-hero p.lead{margin-top:8px;font-size:.98rem}.ft-hero__grid{gap:18px}.ft-pick{gap:12px}.ft-phone{width:min(206px,55vw);border-radius:28px;padding:7px}.ft-phone__screen{border-radius:25px}.ft-closest{width:100%}.ft-chips--3{grid-template-columns:1fr}}`;
+@media (max-width:640px){.ft-hero{padding-top:22px;padding-bottom:32px}.ft-hero__copy{text-align:center}.ft-hero h1{font-size:1.75rem;margin-top:8px}.ft-hero p.lead{margin-top:8px;font-size:.98rem}.ft-hero__grid{gap:18px}.ft-pick{gap:12px}.ft-phone{width:min(206px,55vw);border-radius:28px;padding:7px}.ft-phone__screen{border-radius:25px}.ft-closest{width:100%}.ft-chips--3{grid-template-columns:1fr}}`+viewerHeroCss+``;
 
     const script = `<script>(function(){
   var KEY='ft_v2',form=document.getElementById('trial-form');if(!form)return;
@@ -593,12 +593,13 @@ export function makeOfferPages({ head, icon, site, demos }) {
   function ga(n,p){try{if(window.gtag)gtag('event',n,p||{});}catch(e){}}
   function load(){try{return JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){return {};}}
   function save(){try{var d={q:cur,v:{}};[].slice.call(form.elements).forEach(function(el){if(!el.name||el.type==='hidden'&&el.name!=='demo_pick')return;if(el.type==='radio'||el.type==='checkbox'){if(el.checked)(d.v[el.name]=d.v[el.name]||[]).push(el.value);}else if(el.value)d.v[el.name]=[el.value];});localStorage.setItem(KEY,JSON.stringify(d));}catch(e){}}
-  // Demo picker
-  var tabs=[].slice.call(document.querySelectorAll('.ft-tabs [data-demo]')),shots=[].slice.call(document.querySelectorAll('[data-shot]')),demoIn=document.getElementById('t-demo'),picked=document.getElementById('ft-picked'),curDemo=tabs[0];
-  function show(b){curDemo=b;tabs.forEach(function(t){t.setAttribute('aria-selected',t===b);});shots.forEach(function(s){s.hidden=s.getAttribute('data-shot')!==b.getAttribute('data-demo');});}
-  tabs.forEach(function(t){t.addEventListener('click',function(){show(t);ga('ft_demo_view',{demo:t.getAttribute('data-demo')});});});
-  function markPicked(slug){var t=tabs.filter(function(x){return x.getAttribute('data-demo')===slug;})[0];if(!t)return;demoIn.value=slug;picked.hidden=false;picked.innerHTML='Your pick: <b>'+t.getAttribute('data-label')+'</b>. Tap another to change it.';}
-  document.getElementById('ft-closest').addEventListener('click',function(){var slug=curDemo.getAttribute('data-demo');markPicked(slug);save();ga('ft_demo_pick',{demo:slug});document.getElementById('form').scrollIntoView({behavior:'smooth',block:'start'});});
+  // Demo viewer (viewer.mjs) feeds the hidden demo_pick field
+  ${viewerJs}
+  var V=window.ftViewer,demoIn=document.getElementById('t-demo'),picked=document.getElementById('ft-picked');
+  function markPicked(slug){var l=V.label(slug);if(!l)return;demoIn.value=slug;picked.hidden=false;picked.innerHTML='Your pick: <b>'+l+'</b>. Tap another to change it.';}
+  function pick(slug){markPicked(slug);save();ga('ft_demo_pick',{demo:slug});document.getElementById('form').scrollIntoView({behavior:'smooth',block:'start'});}
+  V.onPick(pick);
+  document.getElementById('ft-closest').addEventListener('click',function(){pick(V.current());});
   // Tap through
   form.classList.add('js-ft');
   var known=['form','text','email'].indexOf(src)>-1;
@@ -619,7 +620,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
   // Restore saved answers
   var d=load();if(d.v){Object.keys(d.v).forEach(function(n){var vals=d.v[n];[].slice.call(form.querySelectorAll('[name="'+n+'"]')).forEach(function(el){if(el.type==='radio'||el.type==='checkbox')el.checked=vals.indexOf(el.value)>-1;else el.value=vals[0];});});
     var oth=form.querySelector('[data-other]');if(oth&&oth.checked)document.getElementById(oth.getAttribute('data-other')+'-wrap').hidden=false;
-    if(demoIn.value){markPicked(demoIn.value);var t=tabs.filter(function(x){return x.getAttribute('data-demo')===demoIn.value;})[0];if(t)show(t);}}
+    if(demoIn.value){markPicked(demoIn.value);V.select(demoIn.value,'restore');}}
   go(typeof d.q==='number'?d.q:0,false);
   // Submit
   var err=document.getElementById('ft-err');
@@ -649,7 +650,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
     const heroSwap = `<script>(function(){if(['form','text','email'].indexOf(new URLSearchParams(location.search).get('src'))>-1)return;var e=document.getElementById('ft-eyebrow'),h=document.getElementById('ft-h1');if(e)e.textContent='Try it free';if(h)h.textContent='Need a website? Try one before you pay anything.';})();</script>`;
 
     const body = `<style>${tcss}</style><main>
-    <section class="of-hero ft-hero"><div class="wrap wrap--wide ft-hero__grid">
+    <section class="of-hero ft-hero"><div class="wrap wrap--wide">
       ${heroCopy}${heroSwap}
       ${picker}
     </div></section>
