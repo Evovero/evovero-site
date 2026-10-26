@@ -483,7 +483,9 @@ export function makeOfferPages({ head, icon, site, demos }) {
     ];
 
     const vItems = viewerItems.map(d => ({ slug: d.slug, tabLabel: d.tabLabel, name: d.name, palette: d.palette, url: demoUrl(d) }));
-    const picker = viewerHtml(vItems, icon, d => d.url) + `<script type="application/json" id="dv-data">${JSON.stringify(vItems)}</script><script>window.ftSwatch=${JSON.stringify(SWATCH)};</script>`;
+    const chris = rv('Chris');
+    const proof = chris ? `<span class="st" aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><q>${chris.text}</q><b>${chris.name}</b>` : '';
+    const picker = viewerHtml(vItems, icon, d => d.url, proof) + `<script type="application/json" id="dv-data">${JSON.stringify(vItems)}</script><script>window.ftSwatch=${JSON.stringify(SWATCH)};</script>`;
 
     const chip = (name, value, label, type = 'radio', extra = '') => `<label class="ft-chip"><input type="${type}" name="${name}" value="${value}"${extra}><span>${label}</span></label>`;
     const form = `<form id="trial-form" class="ft-form" name="website-trial" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/free-trial/thanks/" novalidate>
@@ -659,8 +661,6 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <h2 class="reveal" style="text-align:center">A few quick taps</h2>
       ${form}
     </div></section>
-
-    <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Chris'), '', '')}</div></section>
 
     <section class="of-sec"><div class="wrap wrap--wide">
       <h2 class="reveal">How this works</h2>

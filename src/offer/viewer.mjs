@@ -10,7 +10,7 @@ export const FIRST = 5;
 
 const dots = palette => `<span class="dv-dots" aria-hidden="true">${palette.split(',').map(c => `<i style="background:${SWATCH[c.trim()] || '#ccc'}"></i>`).join('')}</span>`;
 
-export function viewerHtml(items, icon, demoUrl) {
+export function viewerHtml(items, icon, demoUrl, proof = '') {
   const row = (d, i, cls = '') => `<button type="button" class="dv-row${cls}" data-demo="${d.slug}" aria-pressed="${i === 0}">${dots(d.palette)}<span class="dv-row__t"><b>${d.tabLabel}</b><small>${d.palette}</small></span></button>`;
   const chip = (d, i) => `<button type="button" class="dv-chip" data-demo="${d.slug}" aria-pressed="${i === 0}">${dots(d.palette)}${d.tabLabel}</button>`;
   const more = items.length - FIRST;
@@ -27,19 +27,21 @@ export function viewerHtml(items, icon, demoUrl) {
     <div class="dv-list" id="dv-list">${items.map((d, i) => row(d, i, i >= FIRST ? ' dv-extra' : '')).join('')}</div>
     ${more > 0 ? `<button type="button" class="dv-more" id="dv-more" aria-expanded="false">See ${more} more</button>` : ''}
   </aside>
-  <button type="button" class="btn btn--primary btn--lg ft-closest" id="ft-closest">This one is closest ${icon('arrow')}</button>
+  <button type="button" class="btn btn--lg ft-closest" id="ft-closest">I like this one ${icon('arrow')}</button>
   <p class="ft-picked" id="ft-picked" hidden></p>
+  ${proof ? `<div class="dv-proof">${proof}</div>` : ''}
 </div>
 <div class="dv-sheet" id="dv-sheet" hidden role="dialog" aria-modal="true" aria-label="All demo websites"><div class="dv-sheet__box">
   <div class="dv-sheet__top"><b>All demos</b><button type="button" class="dv-x" data-close aria-label="Close">&times;</button></div>
   <div class="dv-sheet__list">${items.map((d, i) => row(d, i)).join('')}</div>
 </div></div>
-<div class="dv-full" id="dv-full" hidden role="dialog" aria-modal="true" aria-label="Demo website"><div class="dv-full__top"><span class="dv-full__name" id="dv-full-name"></span><button type="button" class="dv-close" data-close aria-label="Close the demo">Close <span aria-hidden="true">&times;</span></button></div><div class="dv-full__slot" id="dv-full-slot"></div><div class="dv-full__foot"><button type="button" class="btn btn--primary btn--lg" id="dv-full-pick">This one is closest ${icon('arrow')}</button></div></div>`;
+<div class="dv-full" id="dv-full" hidden role="dialog" aria-modal="true" aria-label="Demo website"><div class="dv-full__top"><span class="dv-full__name" id="dv-full-name"></span><button type="button" class="dv-close" data-close aria-label="Close the demo">Close <span aria-hidden="true">&times;</span></button></div><div class="dv-full__slot" id="dv-full-slot"></div><div class="dv-full__foot"><button type="button" class="btn btn--primary btn--lg" id="dv-full-pick">I like this one ${icon('arrow')}</button></div></div>`;
 }
 
 export const viewerCss = `
 .ft-hero__copy{max-width:760px}
-.dv{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);grid-template-areas:"stage side" "stage pick" "stage picked";grid-template-rows:auto auto 1fr;gap:16px 24px;margin-top:30px;align-items:start}
+.of-hero.ft-hero{overflow:clip}
+.dv{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);grid-template-areas:"stage side" "stage pick" "stage picked" "stage proof";grid-template-rows:auto auto auto 1fr;gap:16px 24px;margin-top:30px;align-items:start}
 .dv-chips,.dv-chiphead{display:none}
 .dv-stage{grid-area:stage;min-width:0;border-radius:18px;overflow:hidden;background:#0b1020;box-shadow:0 0 0 1px rgba(255,255,255,.14),0 30px 70px rgba(0,0,0,.45)}
 .dv-bar{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#141b33;color:#fff;min-height:48px}
@@ -64,7 +66,12 @@ export const viewerCss = `
 .dv-row .dv-dots i{box-shadow:0 0 0 2px rgba(255,255,255,.9)}
 .dv-row__t{display:grid;gap:2px;min-width:0}.dv-row__t b{font:600 .98rem var(--font-head)}.dv-row__t small{color:var(--on-dark-soft);font-size:.82rem}
 .dv-more{margin-top:8px;width:100%;border:1px dashed rgba(255,255,255,.3);background:transparent;color:#fff;border-radius:12px;padding:10px;font:600 .9rem var(--font-head);cursor:pointer}
-.dv .ft-closest{grid-area:pick;width:100%;justify-content:center}
+.dv .ft-closest{grid-area:pick;width:100%;justify-content:center;background:#fff;color:var(--navy-abyss);font-size:1.12rem;font-weight:700;min-height:60px;box-shadow:0 10px 30px rgba(0,0,0,.35),0 0 0 4px rgba(255,255,255,.14)}
+.dv .ft-closest:hover{background:#f1f5ff}
+.dv .ft-closest svg{color:var(--blue)}
+.dv-proof{grid-area:proof;text-align:center;color:var(--on-dark-soft);font-size:.95rem;line-height:1.5}
+.dv-proof .st{display:block;color:#f5c518;letter-spacing:2px;font-size:1rem;margin-bottom:2px}
+.dv-proof q{quotes:none;color:#fff}.dv-proof b{display:block;margin-top:2px;color:var(--on-dark-soft);font-weight:600;font-size:.88rem}
 .dv .ft-picked{grid-area:picked;margin:0}
 .dv-sheet{position:fixed;inset:0;z-index:300;background:rgba(5,9,22,.6);display:flex;align-items:flex-end;justify-content:center}
 .dv-sheet[hidden]{display:none}
@@ -85,7 +92,7 @@ export const viewerCss = `
 @media (min-width:980px){.dv .ft-closest{max-width:none}}
 body.dv-lock{overflow:hidden}
 @media (max-width:979px){
-  .dv{grid-template-columns:minmax(0,1fr);grid-template-areas:"chiphead" "chips" "stage" "pick" "picked";gap:10px;margin-top:16px}
+  .dv{grid-template-columns:minmax(0,1fr);grid-template-areas:"chiphead" "chips" "stage" "pick" "picked" "proof";gap:10px;margin-top:16px}
   .dv-chiphead{grid-area:chiphead;display:flex;align-items:center;justify-content:space-between;margin-bottom:-4px;color:var(--on-dark-soft);font-size:.86rem}
   .dv-chiphead button{border:0;background:none;color:#fff;font:600 .9rem var(--font-head);text-decoration:underline;text-underline-offset:3px;padding:6px 0;cursor:pointer}
   .dv-side{display:none}
@@ -99,9 +106,9 @@ body.dv-lock{overflow:hidden}
   .dv-bar__dots{display:none}.dv-bar{padding:8px 10px 8px 14px;gap:8px}.dv-bar__pal span{display:none}
   .dv-open{padding:7px 12px}
   .dv-screen iframe{height:min(50svh,460px);pointer-events:none}
-  .dv-tap{display:flex;position:absolute;inset:0;align-items:flex-end;justify-content:flex-end;padding:0 12px 12px 0;border:0;background:linear-gradient(180deg,transparent 70%,rgba(8,14,32,.35));cursor:pointer}
+  .dv-tap{display:flex;position:absolute;inset:0;align-items:flex-start;justify-content:flex-end;padding:12px 12px 0 0;border:0;background:transparent;cursor:pointer}
   .dv-tap span{background:rgba(8,14,32,.82);color:#fff;border-radius:999px;padding:9px 16px;font:600 .88rem var(--font-head);box-shadow:0 6px 20px rgba(0,0,0,.3)}
-  .dv .ft-closest{width:100%}
+  .dv .ft-closest{width:100%;position:sticky;bottom:calc(12px + env(safe-area-inset-bottom));z-index:5}
 }`;
 
 // Runs inside the /free-trial script. Exposes window.ftViewer = { current(), select(slug), onPick(fn) }.
@@ -144,4 +151,4 @@ export const viewerJs = `(function(){
 })();`;
 
 export const viewerHeroCss = `
-@media (min-width:980px){.ft-hero{padding-block:36px 56px}.ft-hero h1{font-size:clamp(2rem,3.2vw,2.7rem)}.dv{margin-top:22px}.dv-screen iframe{height:min(620px,calc(100vh - 210px))}}`;
+@media (min-width:980px){.ft-hero__copy{max-width:none;text-align:center}.ft-hero .ft-hero__copy h1{margin-left:auto;margin-right:auto}.ft-hero .ft-hero__copy p.lead{max-width:860px;margin-left:auto;margin-right:auto}.ft-hero{padding-block:36px 56px}.ft-hero h1{font-size:clamp(2rem,3.2vw,2.7rem)}.dv{margin-top:22px}.dv-screen iframe{height:min(620px,calc(100vh - 210px))}}`;
