@@ -678,7 +678,7 @@ function thankYou() {
       <a class="btn btn--primary btn--lg" href="${site.booking}">Book a time now ${icon('arrow')}</a>
       <p style="margin-top:18px"><a class="link-arrow" href="/">Back to home ${icon('arrow')}</a></p>
     </div></section></div>`;
-  return page({ title: "Thank You | EvoVero", desc: "Thanks for reaching out to EvoVero.", path: "/thank-you", schema: [], body });
+  return page({ title: "Thank You | EvoVero", desc: "Thanks for reaching out to EvoVero.", path: "/thank-you", noindex: true, schema: [], body });
 }
 
 /* ----------------------------------------------------------------
