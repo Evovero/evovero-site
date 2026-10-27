@@ -13,7 +13,7 @@ const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorad
 
 const FORM_VERSION = '2026-10-17 v3';
 const DETAILS_VERSION = '2026-10-17 v1';
-const TRIAL_VERSION = '2026-10-25 F6 demo viewer';
+const TRIAL_VERSION = '2026-10-27 F7 landing page pass';
 
 
 const css = `
@@ -466,9 +466,14 @@ export function makeOfferPages({ head, icon, site, demos }) {
     const smsHref = site.phoneHref.replace('tel:', 'sms:');
     const ftDemos = live.map(d => ({ slug: d.slug, label: d.tabLabel, name: d.name }));
     const steps = [
-      ['Pick your style', 'See a few demo sites and pick the one closest to yours. Then a few quick taps about your business.'],
+      ['Pick your style', 'See a few demo sites and pick the one closest to yours. Then a few quick taps about your business or organization.'],
       ['Get your preview', 'I build your preview and text and email you the link within 48 hours.'],
       ['Try it for 2 weeks', 'Send me every change you want. Keep it for $100 a month, or owe nothing.'],
+    ];
+    const catches = [
+      ['No card to start', 'Nothing is charged to try it. You only set up a payment if you decide to keep it.'],
+      ['You see it first', 'You get 2 weeks with your preview. Send me every change you want in that time.'],
+      ['Keep it or walk away', 'Keep it for $100 a month, no contract, cancel anytime. Or let it go and owe nothing.'],
     ];
     const colors = ['Black', 'White', 'Gray', 'Navy', 'Blue', 'Light blue', 'Green', 'Red', 'Orange', 'Yellow', 'Purple', 'Pink', 'Brown', 'Gold'];
     const swatch = { Black: '#111', White: '#fff', Gray: '#9aa3b2', Navy: '#1b2a55', Blue: '#2f6fe0', 'Light blue': '#8fc3f5', Green: '#2e8b57', Red: '#d32f2f', Orange: '#f08a24', Yellow: '#f5c518', Purple: '#7b4bc4', Pink: '#ec7fb1', Brown: '#7a4e2d', Gold: '#c9a227' };
@@ -495,7 +500,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <input type="hidden" name="demo_pick" id="t-demo">
       <p hidden><label>Skip this<input name="bot-field"></label></p>
       <div class="ft-top"><span class="ft-count" id="ft-count" aria-live="polite"></span><div class="ft-prog"><i id="ft-bar"></i></div></div>
-      <p class="ft-note">Nothing here is final. You get unlimited changes.</p>
+      <p class="ft-note">Your answers are how I make the preview look like yours. Nothing is final.</p>
 
       <fieldset class="ft-q" data-q="logo"><legend>Do you have a logo?</legend>
         <div class="ft-chips ft-chips--2">${chip('has_logo', 'Yes', 'Yes, I have one', 'radio', ' data-auto')}${chip('has_logo', 'No', 'No, not yet', 'radio', ' data-auto')}</div>
@@ -519,13 +524,14 @@ export function makeOfferPages({ head, icon, site, demos }) {
       </fieldset>
 
       <fieldset class="ft-q" data-q="who"><legend id="ft-who-legend">Last one.</legend>
-        <p class="ft-help">So this matches the right business, enter your name, business name, phone and email. I'll get you your preview within 48 hours.</p>
+        <p class="ft-help" id="ft-who-help">So this matches the right business or organization, enter your name, its name, your phone and email. I'll get you your preview within 48 hours.</p>
         <div class="field"><label for="t-name">Your name</label><input id="t-name" name="name" autocomplete="name" required></div>
-        <div class="field"><label for="t-biz">Business name</label><input id="t-biz" name="business" autocomplete="organization" required></div>
-        <div class="field-row ft-pair"><div class="field"><label for="t-phone">Phone</label><input id="t-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel"></div><div class="field"><label for="t-email">Email</label><input id="t-email" name="email" type="email" autocomplete="email" inputmode="email"></div></div>
+        <div class="field"><label for="t-biz">Business or organization name</label><input id="t-biz" name="business" autocomplete="organization" required></div>
+        <div class="field-row ft-pair" id="ft-contact"><div class="field"><label for="t-phone">Phone</label><input id="t-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel"></div><div class="field"><label for="t-email">Email</label><input id="t-email" name="email" type="email" autocomplete="email" inputmode="email"></div></div>
         <p class="ft-err" id="ft-err" hidden></p>
-        <button class="btn btn--primary btn--lg ft-send" type="submit">Finish ${icon('arrow')}</button>
+        <button class="btn btn--primary btn--lg ft-send" type="submit">Send me my preview ${icon('arrow')}</button>
         <p class="ft-assure">No credit card. Don't keep it and you owe nothing.</p>
+        <p class="ft-consent">By sending this, you agree I can text and email you about your preview. Message and data rates may apply. Reply STOP to opt out. <a href="/privacy-policy/" target="_blank" rel="noopener">Privacy</a> and <a href="/terms/" target="_blank" rel="noopener">Terms</a>.</p>
       </fieldset>
 
       <button type="button" class="ft-back" id="ft-back" hidden>&larr; Back</button>
@@ -581,6 +587,8 @@ export function makeOfferPages({ head, icon, site, demos }) {
 .ft-next,.ft-send{width:100%;justify-content:center}
 .ft-assure{text-align:center;color:var(--ink-soft);font-size:.93rem;margin:0}
 .ft-err{color:#c62828;font-size:.92rem;margin:0}
+.ft-consent{text-align:center;color:var(--ink-soft);font-size:.8rem;line-height:1.45;margin:0}.ft-consent a{color:var(--ink-soft);text-decoration:underline}
+.ft-catch{margin-top:26px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.ft-catch li{list-style:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--sh-sm)}.ft-catch h3{font-size:1.08rem;margin-bottom:6px}.ft-catch p{font-size:.96rem;color:var(--ink-soft)}.ft-catch{padding:0}@media (max-width:900px){.ft-catch{grid-template-columns:1fr}}
 .ft-back{margin-top:16px;background:none;border:0;color:var(--ink-soft);font:inherit;font-size:.93rem;cursor:pointer;padding:6px 0}
 .ft-form:not(.js-ft) [data-if-logo]:not([data-if-logo=""]){display:none}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -605,6 +613,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
   // Tap through
   form.classList.add('js-ft');
   var known=['form','text','email'].indexOf(src)>-1;
+  if(known){var fc=document.getElementById('ft-contact'),fh=document.getElementById('ft-who-help');if(fc)fc.style.display='none';if(fh)fh.textContent='So I match this to the right business or organization. I already have your phone and email from the form.';}
   var qs=[].slice.call(form.querySelectorAll('.ft-q')),cur=0,count=document.getElementById('ft-count'),bar=document.getElementById('ft-bar'),back=document.getElementById('ft-back');
   function logoAns(){var r=form.querySelector('input[name=has_logo]:checked');return r?r.value:'';}
   function syncLogo(){var a=logoAns();[].slice.call(form.querySelectorAll('[data-if-logo]')).forEach(function(el){el.hidden=el.getAttribute('data-if-logo')!==a;});}
@@ -627,7 +636,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
   // Submit
   var err=document.getElementById('ft-err');
   form.addEventListener('submit',function(e){e.preventDefault();var n=document.getElementById('t-name'),b=document.getElementById('t-biz'),ph=document.getElementById('t-phone'),em=document.getElementById('t-email');
-    var miss=[];if(!n.value.trim())miss.push('your name');if(!b.value.trim())miss.push('your business name');if(!ph.value.trim()&&!em.value.trim())miss.push('a phone or email');
+    var miss=[];if(!n.value.trim())miss.push('your name');if(!b.value.trim())miss.push('your business or organization name');if(!known&&!ph.value.trim()&&!em.value.trim())miss.push('a phone or email');
     if(miss.length){err.textContent='Add '+(miss.length>1?miss.slice(0,-1).join(', ')+' and '+miss[miss.length-1]:miss[0])+' so I know where to send your preview.';err.hidden=false;go(qs.length-1,false);return;}err.hidden=true;
     if(!demoIn.value)demoIn.value='none picked';
     var btn=form.querySelector('.ft-send');btn.disabled=true;
@@ -644,8 +653,8 @@ export function makeOfferPages({ head, icon, site, demos }) {
 
     const heroCopy = `<div class="ft-hero__copy">
         <span class="ft-step" id="ft-eyebrow">Step 1 of 3</span>
-        <h1 id="ft-h1">Pick the demo closest to what you want</h1>
-        <p class="lead">Tap through these. Nothing is final, and you can change anything later.</p>
+        <h1 id="ft-h1">Pick a style. Get your website preview in 48 hours.</h1>
+        <p class="lead">Tap a demo, answer a few quick questions, and I build yours. No card, and nothing is final.</p>
       </div>`;
     // Known leads (src=form from the ending card, src=text from /mytrial, src=email) see Step 1 of 3.
     // Anyone else (direct, shared link) gets the ad's own line and is asked for a phone or email.
@@ -663,8 +672,8 @@ export function makeOfferPages({ head, icon, site, demos }) {
     </div></section>
 
     <section class="of-sec"><div class="wrap wrap--wide">
-      <h2 class="reveal">How this works</h2>
-      <div class="of-steps ft-steps3">${steps.map((s, i) => `<div class="of-step reveal" data-d="${i}"><b>${i + 1}</b><h3>${s[0]}</h3><p>${s[1]}</p></div>`).join('')}</div>
+      <h2 class="reveal">What's the catch?</h2>
+      <ul class="ft-catch">${catches.map(([h, p]) => `<li class="reveal"><h3>${h}</h3><p>${p}</p></li>`).join('')}</ul>
     </div></section>
 
     <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Jesse'))}</div></section>
@@ -672,12 +681,12 @@ export function makeOfferPages({ head, icon, site, demos }) {
     <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
       <h2 class="reveal">Questions people ask</h2>
       <div class="of-faq">${faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
-      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Personalize my website ${icon('arrow')}</a></div>
+      <div class="of-cta-row"><a class="btn btn--primary btn--lg" href="#form">Get my preview ${icon('arrow')}</a></div>
     </div></section>
 
     <section class="of-band"><div class="wrap wrap--wide">${quote(rv('Yadira'))}</div></section>
     </main>
-    <a class="of-sticky" id="of-sticky" href="#form">Personalize my website ${icon('arrow')}</a>
+    <a class="of-sticky" id="of-sticky" href="#form">Get my preview ${icon('arrow')}</a>
     ${script}`;
 
     return shell({
@@ -692,20 +701,21 @@ export function makeOfferPages({ head, icon, site, demos }) {
   function freeTrialThanks() {
     const smsHref = site.phoneHref.replace('tel:', 'sms:');
     const steps = [
-      ['Pick your style', 'Done. I have your picks.'],
+      ['Pick your style', 'Done. I have everything I need.'],
       ['Get your preview', 'I build your preview and text and email you the link within 48 hours.'],
       ['Try it for 2 weeks', 'Send me every change you want. Keep it for $100 a month, or owe nothing.'],
     ];
-    const body = `<style>.ft-steps3{grid-template-columns:repeat(3,1fr)}@media (max-width:900px){.ft-steps3{grid-template-columns:1fr}}.of-step.is-done b{background:#15803d}.ft-up{max-width:600px;margin:0 auto}.ft-skip{margin-top:14px;text-align:center;color:var(--ink-soft);font-size:.95rem}</style><main><section class="of-hero"><div class="wrap wrap--wide reveal">
-      <span class="eyebrow eyebrow--on-dark"><span class="dot"></span> Your picks are in</span>
-      <h1 style="margin-top:16px">All done. <span class="grad">Your preview is next.</span></h1>
+    const body = `<style>.ft-steps3{grid-template-columns:repeat(3,1fr)}@media (max-width:900px){.ft-steps3{grid-template-columns:1fr}}.of-step.is-done b{background:#15803d}.ft-up{max-width:600px;margin:0 auto}.ft-skip{margin-top:14px;text-align:center;color:var(--ink-soft);font-size:.95rem}
+.ft-done{display:inline-grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#15803d;color:#fff;font-size:2rem;font-weight:700;box-shadow:0 0 0 8px rgba(21,128,61,.18)}
+      <span class="ft-done" aria-hidden="true">&#10003;</span>
+      <h1 style="margin-top:20px">You're all set. <span class="grad">Your preview is next.</span></h1>
       <p class="lead">I'll text and email you the link within 48 hours.</p>
     </div></section>
     <section class="of-sec of-sec--alt"><div class="wrap wrap--wide">
       <div class="ft-up">
-        <h2 class="reveal" style="font-size:clamp(1.4rem,3vw,1.9rem)">If you've got a minute, send me your photos and logo here.</h2>
-        <p class="sub" style="margin-bottom:20px">Otherwise, we can add them later.</p>
-        <div class="form-card">${uploader('ft-thanks', 'free-trial-thanks', { site })}</div>
+        <h2 class="reveal" style="font-size:clamp(1.3rem,3vw,1.7rem)">If you have a minute and your photos or logo are handy, send them here.</h2>
+        <p class="sub" style="margin-bottom:20px">Otherwise, I'll ask for them later.</p>
+        <div class="form-card">${uploader('ft-thanks', 'free-trial-thanks', { site, nameLabel: 'Your name, business or organization' })}</div>
         <p class="ft-skip">You can also text them to <a href="${smsHref}">${site.phone}</a> anytime.</p>
       </div>
     </div></section>
