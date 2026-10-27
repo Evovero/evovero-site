@@ -429,8 +429,8 @@ function servicesHub() {
       <div class="grid grid-3">${site.services.map((s,i) => serviceCard(s.slug, (i%3)+1)).join('')}</div>
     </div></section>${ctaBand()}</div>`;
   return page({
-    title: "Services | EvoVero Digital Marketing", path: "/services",
-    desc: "SEO, Google Ads, Meta Ads, websites, AI lead capture, and reputation, the full marketing platform for local service businesses, built so you own it.",
+    title: "Marketing Services for Local Service Businesses | EvoVero", path: "/services",
+    desc: "SEO, Google Ads, Meta Ads, websites, AI lead capture, and reputation: the full marketing platform for local service businesses, built so you own all of it.",
     schema: [breadcrumbSchema([["Home","/"],["Services","/services/"]])],
     body,
   });
@@ -487,8 +487,8 @@ function industriesHub() {
       <p class="center reveal" style="margin-top:30px;color:var(--ink-soft)">Also working with: ${site.industriesSoon.join(' &middot; ')}</p>
     </div></section>${ctaBand()}</div>`;
   return page({
-    title: "Industries I Serve | EvoVero", path: "/industries",
-    desc: "Marketing for concrete, tree service, towing, masonry, insulation, home cleaning, and any local service business that runs on the phone.",
+    title: "Industries I Serve | Local Service Pro Marketing | EvoVero", path: "/industries",
+    desc: "Marketing for concrete, tree service, towing, masonry, insulation, home cleaning, and any other local service business that runs on the phone. See how it works.",
     schema: [breadcrumbSchema([["Home","/"],["Industries","/industries/"]])],
     body,
   });
@@ -550,7 +550,7 @@ function about() {
     </div></div></section>
     ${ctaBand()}</div>`;
   return page({
-    title: "About EvoVero | Spencer Hagen", path: "/about",
+    title: "About EvoVero | Spencer Hagen, Local Business Marketing", path: "/about",
     desc: "EvoVero is Spencer Hagen, a founder-led marketing partner for local service businesses. You own the platform; I build, run, and grow it, backed by a guarantee.",
     schema: [breadcrumbSchema([["Home","/"],["About","/about/"]])],
     body,
@@ -575,8 +575,8 @@ function reviewsPage() {
     </div></section>
   </div>`;
   return page({
-    title: "EvoVero Reviews | What Clients Say About Spencer Hagen", path: "/reviews",
-    desc: "Read reviews of EvoVero from local business owners Spencer Hagen works with, or leave your own review. It takes about a minute.",
+    title: "EvoVero Reviews | What Local Clients Say About Spencer Hagen", path: "/reviews",
+    desc: "Read reviews of EvoVero from local business owners Spencer Hagen works with, or leave your own review of his work. It only takes about a minute of your time.",
     schema: [breadcrumbSchema([["Home","/"],["Reviews","/reviews/"]])],
     body,
   });
@@ -611,8 +611,8 @@ function results() {
     </div></div></section>
     ${ctaBand()}</div>`;
   return page({
-    title: "Results | EvoVero", path: "/results",
-    desc: "How EvoVero produces results for local service businesses: a converting foundation, 24/7 AI lead capture, ads that work, and compounding reputation.",
+    title: "Results for Local Service Businesses | EvoVero Marketing", path: "/results",
+    desc: "How EvoVero gets results for local service businesses: a website that converts, AI lead capture around the clock, ads that work, and a reputation that builds.",
     schema: [breadcrumbSchema([["Home","/"],["Results","/results/"]])],
     body,
   });
@@ -661,8 +661,8 @@ function contact() {
       </div>
     </div></section>${ctaBand()}</div>`;
   return page({
-    title: "Contact & Book a Call | EvoVero", path: "/contact",
-    desc: "Book a call with EvoVero or send a message. Let's map out a marketing platform your local service business owns.",
+    title: "Contact & Book a Call | EvoVero Local Service Marketing", path: "/contact",
+    desc: "Book a call with EvoVero or send a message. Let's map out a marketing platform your local service business owns, from the website to the ads and the reviews.",
     schema: [breadcrumbSchema([["Home","/"],["Contact","/contact/"]])],
     body,
   });
@@ -843,7 +843,7 @@ function blogIndex(posts) {
     cta: false,
   }) + `<div class="page-body"><section class="section"><div class="wrap">${grid}</div></section>${ctaBand()}</div>`;
   return page({
-    title: "Blog | EvoVero", desc: "Practical marketing guidance for local service businesses: SEO, ads, AI lead capture, and reputation.",
+    title: "Blog | Marketing Tips for Local Service Businesses | EvoVero", desc: "Practical marketing guidance for local service businesses: local SEO, Google and Meta ads, AI lead capture, reviews, and websites that turn visitors into calls.",
     path: "/blog", schema: [breadcrumbSchema([["Home","/"],["Blog","/blog/"]])], body,
   });
 }
