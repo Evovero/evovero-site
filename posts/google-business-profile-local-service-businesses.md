@@ -14,7 +14,7 @@ hero: "/assets/og-default.png"
 
 <p>Getting into that map pack consistently is a function of three things: relevance (does your profile match what someone is searching for), proximity (how close you are to the searcher), and prominence (how strong your profile looks to Google’s algorithm). Of those three, prominence is the one you have the most control over, and it’s where optimizing your GBP makes the biggest difference.</p>
 
-<p>I work with <a href="https://www.evovero.com/industries/">local service businesses</a> across a range of trades, and the businesses showing up most consistently in map pack results share a common pattern: complete profiles, active review management, and regular posting. It’s not complicated, but it requires consistent attention.</p>
+<p>I work with <a href="https://evovero.com/industries/">local service businesses</a> across a range of trades, and the businesses showing up most consistently in map pack results share a common pattern: complete profiles, active review management, and regular posting. It’s not complicated, but it requires consistent attention.</p>
 
 <h2>Getting the Fundamentals Right</h2>
 
@@ -48,7 +48,7 @@ hero: "/assets/og-default.png"
 
 <p>The core optimization practices haven’t changed, but the stakes for getting them right have increased. A complete, active, well-reviewed profile now shows up in more places than just the map pack.</p>
 
-<p>If local SEO is something you want handled as part of a broader marketing system, the <a href="https://www.evovero.com/services/seo/">local SEO work I do</a> for service businesses starts with the GBP and builds from there: citations, on-site optimization, and the other signals that make the map pack placement stick. I also connect that with <a href="https://www.evovero.com/services/ai-automation/">AI lead capture</a> so the traffic your GBP generates actually converts into booked jobs instead of missed calls.</p>
+<p>If local SEO is something you want handled as part of a broader marketing system, the <a href="https://evovero.com/services/seo/">local SEO work I do</a> for service businesses starts with the GBP and builds from there: citations, on-site optimization, and the other signals that make the map pack placement stick. I also connect that with <a href="https://evovero.com/services/ai-automation/">AI lead capture</a> so the traffic your GBP generates actually converts into booked jobs instead of missed calls.</p>
 
 <h2>Frequently Asked Questions</h2>
 
@@ -67,4 +67,4 @@ hero: "/assets/og-default.png"
 <h3>How does my GBP affect my regular Google search rankings?</h3>
 <p>GBP activity and signals influence your local pack rankings but have limited direct impact on organic search rankings in the traditional blue-link results. However, a strong GBP supports local SEO broadly: consistent NAP signals, citation quality, and review activity all factor into how Google evaluates your business’s local authority, which feeds into both map pack and organic visibility over time.</p>
 
-<p>If you want to talk through how your current GBP is performing or what it would take to build a complete local marketing system around it, <a href="https://www.evovero.com/contact/">reach out here</a>. I work with local service businesses across the country and can give you a clear picture of where you stand and what’s worth doing first.</p>
+<p>If you want to talk through how your current GBP is performing or what it would take to build a complete local marketing system around it, <a href="https://evovero.com/contact/">reach out here</a>. I work with local service businesses across the country and can give you a clear picture of where you stand and what’s worth doing first.</p>

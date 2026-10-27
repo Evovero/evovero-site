@@ -12,7 +12,7 @@ hero: "/assets/og-default.png"
 
 <h2>Meta Creates Demand, Google Captures It</h2>
 
-<p>Somebody typing "driveway replacement near me" into Google has already decided they have a problem. Your job is to be there and be credible. That is why <a href="https://www.evovero.com/services/google-ads/">Google Ads for service businesses</a> tend to produce leads that convert quickly.</p>
+<p>Somebody typing "driveway replacement near me" into Google has already decided they have a problem. Your job is to be there and be credible. That is why <a href="https://evovero.com/services/google-ads/">Google Ads for service businesses</a> tend to produce leads that convert quickly.</p>
 
 <p>Nobody opens Instagram looking for a mason. They see a stamped patio, a repaired chimney, a cleaned-up yard, and they think about the thing they have been putting off for two years. That lead is real, but it is earlier. They have not gotten other bids. They may not have a budget yet. Some of them are six months out.</p>
 
@@ -73,7 +73,7 @@ hero: "/assets/og-default.png"
 
 <p>A Meta lead was scrolling thirty seconds ago and was not shopping for you. Their interest has a short shelf life. Call in five minutes and it is a conversation. Call the next morning and they have forgotten filling out the form. This is the single biggest difference between owners who say Meta works and owners who say it does not.</p>
 
-<p>That means the leads have to reach you instantly, not sit in a Facebook dashboard nobody logs into. Meta connects directly to most CRM platforms now, so the lead can be in your pipeline and triggering a text within seconds. If you cannot answer the phone during the day because you are on a jobsite, that is exactly the gap <a href="https://www.evovero.com/services/ai-automation/">AI lead capture and automation</a> is built to close.</p>
+<p>That means the leads have to reach you instantly, not sit in a Facebook dashboard nobody logs into. Meta connects directly to most CRM platforms now, so the lead can be in your pipeline and triggering a text within seconds. If you cannot answer the phone during the day because you are on a jobsite, that is exactly the gap <a href="https://evovero.com/services/ai-automation/">AI lead capture and automation</a> is built to close.</p>
 
 <p>Set up your follow-up before you turn the ads on. Not after.</p>
 
@@ -93,10 +93,10 @@ hero: "/assets/og-default.png"
 
 <h3>Do I need a website if I use instant forms?</h3>
 
-<p>Yes. People who see your ad will look you up before they answer the phone, and a profile with no site behind it costs you credibility at exactly the wrong moment. Your <a href="https://www.evovero.com/services/web-design/">website is the asset you own</a>, while ad platforms are rented attention that stops the day you stop paying.</p>
+<p>Yes. People who see your ad will look you up before they answer the phone, and a profile with no site behind it costs you credibility at exactly the wrong moment. Your <a href="https://evovero.com/services/web-design/">website is the asset you own</a>, while ad platforms are rented attention that stops the day you stop paying.</p>
 
 <h3>Can I run Meta ads myself?</h3>
 
 <p>You can, and plenty of owners do. The setup is not the hard part. The hard part is having enough campaigns running to know what normal looks like, and having the discipline to leave a campaign alone while it learns. That perspective is most of what you pay someone else for.</p>
 
-<p>If you want Facebook and Instagram ads running alongside a site, a Google Business Profile, and a follow-up system that all point the same direction, that is what I build for local service businesses. Tell me what you run and where you work through my <a href="https://www.evovero.com/contact/">contact page</a>, and I will tell you honestly whether Meta is the right next move or whether your money belongs somewhere else first.</p>
+<p>If you want Facebook and Instagram ads running alongside a site, a Google Business Profile, and a follow-up system that all point the same direction, that is what I build for local service businesses. Tell me what you run and where you work through my <a href="https://evovero.com/contact/">contact page</a>, and I will tell you honestly whether Meta is the right next move or whether your money belongs somewhere else first.</p>

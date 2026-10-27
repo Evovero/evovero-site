@@ -38,7 +38,7 @@ hero: "/assets/og-default.png"
 
 <h3>List where you want jobs, not everywhere</h3>
 
-<p>A short list of towns you actively want beats a long list you will never answer calls from. Start with your home base and the neighboring towns you already serve, then add the next ring only if you are ready to take work there. Then back it up on your website with a real page for each major town, which is the part that helps you rank for searches that include a place name. That is the foundation I build in my <a href="https://www.evovero.com/services/seo/">local SEO work</a>.</p>
+<p>A short list of towns you actively want beats a long list you will never answer calls from. Start with your home base and the neighboring towns you already serve, then add the next ring only if you are ready to take work there. Then back it up on your website with a real page for each major town, which is the part that helps you rank for searches that include a place name. That is the foundation I build in my <a href="https://evovero.com/services/seo/">local SEO work</a>.</p>
 
 <h2>The Mistakes That Cost Owners Rankings</h2>
 
@@ -56,7 +56,7 @@ hero: "/assets/og-default.png"
 
 <h3>Ignoring the rest of the profile</h3>
 
-<p>A perfect service area does not carry a weak profile. Your categories, services, photos, and reviews still do most of the ranking work. If you have not covered those yet, start with my guide to the <a href="https://www.evovero.com/blog/google-business-profile-local-service-businesses/">Google Business Profile fundamentals</a>, and keep an eye on how you handle feedback, including <a href="https://www.evovero.com/blog/respond-to-bad-google-review/">a bad Google review</a>.</p>
+<p>A perfect service area does not carry a weak profile. Your categories, services, photos, and reviews still do most of the ranking work. If you have not covered those yet, start with my guide to the <a href="https://evovero.com/blog/google-business-profile-local-service-businesses/">Google Business Profile fundamentals</a>, and keep an eye on how you handle feedback, including <a href="https://evovero.com/blog/respond-to-bad-google-review/">a bad Google review</a>.</p>
 
 <h2>Check Your Work</h2>
 
@@ -84,4 +84,4 @@ hero: "/assets/og-default.png"
 
 <p>Hiding the address is the correct setup for a service area business, so it should not be treated as a penalty. Proximity still matters in local search, so you may rank best near your base. Strong reviews, complete services, and consistent business details help you rank across the rest of your area.</p>
 
-<p>If you want your profile, website, and service pages set up so they all point at the same towns, I handle that for local service businesses. Tell me where you work through my <a href="https://www.evovero.com/contact/">contact page</a> and I will tell you what I would fix first.</p>
+<p>If you want your profile, website, and service pages set up so they all point at the same towns, I handle that for local service businesses. Tell me where you work through my <a href="https://evovero.com/contact/">contact page</a> and I will tell you what I would fix first.</p>

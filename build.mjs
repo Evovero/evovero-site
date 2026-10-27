@@ -168,8 +168,8 @@ function footer() {
     </div>
     <div class="footer__bottom">
       <span>&copy; ${new Date().getFullYear()} EvoVero. ${site.city}.</span>
-      <span style="display:flex;gap:18px">
-        <a href="${site.phoneHref}">${site.phone}</a>
+      <span style="display:flex;flex-wrap:wrap;gap:10px 18px">
+        <a href="${site.phoneHref}" style="white-space:nowrap">${site.phone}</a>
         <a href="mailto:${site.email}">${site.email}</a>
         <a href="/privacy-policy/">Privacy</a>
         <a href="/terms/">Terms</a>
@@ -253,8 +253,8 @@ function home() {
             <span>${icon('cal')} Booked jobs</span>
             <span>${icon('star')} 5-star reviews</span>
           </div>
-          <div class="lead-pill"><span class="av">AI</span><span class="tx"><b>New lead booked</b> &mdash; estimate request, Tue 9:00a</span><span class="badge">Qualified</span></div>
-          <div class="lead-pill"><span class="av">AI</span><span class="tx"><b>Missed call answered</b> &mdash; replied in 4 seconds</span><span class="badge">Captured</span></div>
+          <div class="lead-pill"><span class="av">AI</span><span class="tx"><b>New lead booked:</b> estimate request, Tue 9:00a</span><span class="badge">Qualified</span></div>
+          <div class="lead-pill"><span class="av">AI</span><span class="tx"><b>Missed call answered:</b> replied in 4 seconds</span><span class="badge">Captured</span></div>
         </div>
       </div>
     </div>
@@ -429,8 +429,8 @@ function servicesHub() {
       <div class="grid grid-3">${site.services.map((s,i) => serviceCard(s.slug, (i%3)+1)).join('')}</div>
     </div></section>${ctaBand()}</div>`;
   return page({
-    title: "Services | EvoVero Digital Marketing", path: "/services",
-    desc: "SEO, Google Ads, Meta Ads, websites, AI lead capture, and reputation, the full marketing platform for local service businesses, built so you own it.",
+    title: "Marketing Services for Local Service Businesses | EvoVero", path: "/services",
+    desc: "SEO, Google Ads, Meta Ads, websites, AI lead capture, and reputation: the full marketing platform for local service businesses, built so you own all of it.",
     schema: [breadcrumbSchema([["Home","/"],["Services","/services/"]])],
     body,
   });
@@ -487,8 +487,8 @@ function industriesHub() {
       <p class="center reveal" style="margin-top:30px;color:var(--ink-soft)">Also working with: ${site.industriesSoon.join(' &middot; ')}</p>
     </div></section>${ctaBand()}</div>`;
   return page({
-    title: "Industries I Serve | EvoVero", path: "/industries",
-    desc: "Marketing for concrete, tree service, towing, masonry, insulation, home cleaning, and any local service business that runs on the phone.",
+    title: "Industries I Serve | Local Service Pro Marketing | EvoVero", path: "/industries",
+    desc: "Marketing for concrete, tree service, towing, masonry, insulation, home cleaning, and any other local service business that runs on the phone. See how it works.",
     schema: [breadcrumbSchema([["Home","/"],["Industries","/industries/"]])],
     body,
   });
@@ -550,7 +550,7 @@ function about() {
     </div></div></section>
     ${ctaBand()}</div>`;
   return page({
-    title: "About EvoVero | Spencer Hagen", path: "/about",
+    title: "About EvoVero | Spencer Hagen, Local Business Marketing", path: "/about",
     desc: "EvoVero is Spencer Hagen, a founder-led marketing partner for local service businesses. You own the platform; I build, run, and grow it, backed by a guarantee.",
     schema: [breadcrumbSchema([["Home","/"],["About","/about/"]])],
     body,
@@ -575,8 +575,8 @@ function reviewsPage() {
     </div></section>
   </div>`;
   return page({
-    title: "EvoVero Reviews | What Clients Say About Spencer Hagen", path: "/reviews",
-    desc: "Read reviews of EvoVero from local business owners Spencer Hagen works with, or leave your own review. It takes about a minute.",
+    title: "EvoVero Reviews | What Local Clients Say About Spencer Hagen", path: "/reviews",
+    desc: "Read reviews of EvoVero from local business owners Spencer Hagen works with, or leave your own review of his work. It only takes about a minute of your time.",
     schema: [breadcrumbSchema([["Home","/"],["Reviews","/reviews/"]])],
     body,
   });
@@ -611,8 +611,8 @@ function results() {
     </div></div></section>
     ${ctaBand()}</div>`;
   return page({
-    title: "Results | EvoVero", path: "/results",
-    desc: "How EvoVero produces results for local service businesses: a converting foundation, 24/7 AI lead capture, ads that work, and compounding reputation.",
+    title: "Results for Local Service Businesses | EvoVero Marketing", path: "/results",
+    desc: "How EvoVero gets results for local service businesses: a website that converts, AI lead capture around the clock, ads that work, and a reputation that builds.",
     schema: [breadcrumbSchema([["Home","/"],["Results","/results/"]])],
     body,
   });
@@ -661,11 +661,29 @@ function contact() {
       </div>
     </div></section>${ctaBand()}</div>`;
   return page({
-    title: "Contact & Book a Call | EvoVero", path: "/contact",
-    desc: "Book a call with EvoVero or send a message. Let's map out a marketing platform your local service business owns.",
+    title: "Contact & Book a Call | EvoVero Local Service Marketing", path: "/contact",
+    desc: "Book a call with EvoVero or send a message. Let's map out a marketing platform your local service business owns, from the website to the ads and the reviews.",
     schema: [breadcrumbSchema([["Home","/"],["Contact","/contact/"]])],
     body,
   });
+}
+
+function notFound() {
+  const body = pageHero({
+    eyebrow:"Page not found", crumb: crumbNav(["Home","/"],["Not found"]),
+    h1: `This page <span class="grad">isn't here.</span>`,
+    sub: "The link may be old or mistyped. Everything else is right where you left it. Head home, look at what I do, or reach out and I'll point you the right way.",
+    cta: false,
+  }) + `<div class="page-body"><section class="section"><div class="wrap center reveal">
+      <a class="btn btn--primary btn--lg" href="/">Back to home ${icon('arrow')}</a>
+      <p style="margin-top:22px;display:flex;gap:22px;justify-content:center;flex-wrap:wrap">
+        <a class="link-arrow" href="/services/">Services ${icon('arrow')}</a>
+        <a class="link-arrow" href="/blog/">Blog ${icon('arrow')}</a>
+        <a class="link-arrow" href="/contact/">Contact ${icon('arrow')}</a>
+      </p>
+      <p style="margin-top:22px">Or call or text <a href="${site.phoneHref}">${site.phone}</a>.</p>
+    </div></section></div>`;
+  return page({ title: "Page Not Found | EvoVero", desc: "This page could not be found on evovero.com.", path: "/404", noindex: true, schema: [], body });
 }
 
 function thankYou() {
@@ -678,7 +696,7 @@ function thankYou() {
       <a class="btn btn--primary btn--lg" href="${site.booking}">Book a time now ${icon('arrow')}</a>
       <p style="margin-top:18px"><a class="link-arrow" href="/">Back to home ${icon('arrow')}</a></p>
     </div></section></div>`;
-  return page({ title: "Thank You | EvoVero", desc: "Thanks for reaching out to EvoVero.", path: "/thank-you", schema: [], body });
+  return page({ title: "Thank You | EvoVero", desc: "Thanks for reaching out to EvoVero.", path: "/thank-you", noindex: true, schema: [], body });
 }
 
 /* ----------------------------------------------------------------
@@ -722,14 +740,14 @@ function startThanks() {
 // time, which silently bumped "Last updated" on every autoblog rebuild. A legal page whose
 // revision date moves on its own is worthless as a record of what it said and when.
 // Change it BY HAND, and only when the text below actually changes.
-function legalPage(slug, title, intro, sections, updated) {
+function legalPage(slug, title, intro, sections, updated, seo = {}) {
   const body = pageHero({ eyebrow:"Legal", crumb: crumbNav(["Home","/"],[title]), h1:title, sub:intro, cta:false })
     + `<div class="page-body"><section class="section"><div class="wrap"><div class="prose reveal">
       <p style="color:var(--ink-soft)">Last updated: ${updated}</p>
       ${sections.map(s => `<h2>${s[0]}</h2>${s[1]}`).join('')}
       <h2>Contact</h2><p>Questions about this page? Reach me at <a href="mailto:${site.email}">${site.email}</a> or ${site.phone}.</p>
     </div></div></section></div>`;
-  return page({ title: `${title} | EvoVero`, desc: intro, path: "/" + slug, schema: [], body });
+  return page({ title: seo.title || `${title} | EvoVero`, desc: seo.desc || intro, path: "/" + slug, schema: [], body });
 }
 function privacy() {
   return legalPage("privacy-policy", "Privacy Policy",
@@ -757,7 +775,7 @@ function privacy() {
 
       ["Changes to this policy", "<p>I may update this policy as the business or the law changes. The revision date at the top reflects the last substantive change. Material changes to how I handle your mobile number or your consent will be posted here before they take effect.</p>"],
     ],
-    "August 3, 2026");
+    "August 3, 2026", { title: "Privacy Policy | How EvoVero Collects and Protects Your Info", desc: "How EvoVero collects, uses, and protects what you share. I collect only what I need, never sell it, and never share your mobile number for others' marketing." });
 }
 function terms() {
   return legalPage("terms", "Terms of Service",
@@ -782,7 +800,7 @@ function terms() {
 
       ["Governing law", "<p>These terms are governed by the laws of the State of Nebraska, without regard to its conflict of law rules. Any dispute arising from this website or these terms will be brought in the state or federal courts located in Douglas County, Nebraska. Nothing here waives any right you have under the consumer protection law of the state where you live.</p>"],
     ],
-    "October 18, 2026");
+    "October 18, 2026", { title: "Terms of Service | EvoVero Website and Marketing Services", desc: "The terms for using evovero.com and working with EvoVero: month to month service, website plans, billing, refunds, cancelling anytime, and who owns the site." });
 }
 
 /* ----------------------------------------------------------------
@@ -843,7 +861,7 @@ function blogIndex(posts) {
     cta: false,
   }) + `<div class="page-body"><section class="section"><div class="wrap">${grid}</div></section>${ctaBand()}</div>`;
   return page({
-    title: "Blog | EvoVero", desc: "Practical marketing guidance for local service businesses: SEO, ads, AI lead capture, and reputation.",
+    title: "Blog | Marketing Tips for Local Service Businesses | EvoVero", desc: "Practical marketing guidance for local service businesses: local SEO, Google and Meta ads, AI lead capture, reviews, and websites that turn visitors into calls.",
     path: "/blog", schema: [breadcrumbSchema([["Home","/"],["Blog","/blog/"]])], body,
   });
 }
@@ -973,10 +991,12 @@ for (const [path, html] of clientPages) writePage(path, html);
 const demoCount = buildDemos(OUT);
 
 for (const [path, html] of pages) writePage(path, html);
+// Netlify serves dist/404.html for any URL that does not exist. noindex, kept out of the sitemap.
+writeFileSync(join(OUT, '404.html'), notFound());
 
 // Sitemap: exclude the thank-you page (utility, noindex-style)
 writeFileSync(join(OUT, 'sitemap.xml'), sitemap(pages.map(p => p[0]).filter(p => p !== '/thank-you' && !p.startsWith('/start'))));
-writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /thank-you/\nSitemap: ${site.domain}/sitemap.xml\n`);
+writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site.domain}/sitemap.xml\n`);
 writeFileSync(join(OUT, 'llms.txt'), llmsTxt(posts));
 
 console.log(`Built ${pages.length} pages (${posts.length} blog post(s)) to dist/, plus ${offerPages.length} offer pages and ${demoCount} demo pages`);

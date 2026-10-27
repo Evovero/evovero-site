@@ -11,7 +11,7 @@ hero: "/assets/og-default.png"
 <h2>Start With Search, Not the Shiny Stuff</h2>
 <p>Google will happily push you toward its newest AI-driven campaign types the moment you open an account. Resist that for now. For a concrete contractor, tree service, or towing company, the highest-intent moment on the internet is still someone typing "foundation repair near me" or "tow truck [city]" into Google. A standard Search campaign lets you control exactly which searches trigger your ad, which cities you show in, and what your ad says.</p>
 <p>Start narrow: your core service, your real service area, and phrase or exact match keywords. Add negative keywords aggressively from day one, terms like "jobs," "DIY," "how to," and "free" filter out searchers who will never hire you. A small, clean campaign that only shows for buyer-intent searches will outperform a broad one on any budget.</p>
-<p>This is the same foundation-first logic I apply to <a href="https://www.evovero.com/services/google-ads/">Google Ads management</a> for every client: prove the search demand converts before spending on anything fancier.</p>
+<p>This is the same foundation-first logic I apply to <a href="https://evovero.com/services/google-ads/">Google Ads management</a> for every client: prove the search demand converts before spending on anything fancier.</p>
 
 <h2>The Call-Only Ad Deadline Is Here</h2>
 <p>If your campaigns still lean on call-only ads, this is the year to act. Google stopped allowing new call-only ads in February 2026, and existing ones stop serving in February 2027. The official replacement is a responsive search ad with a call asset attached.</p>
@@ -20,7 +20,7 @@ hero: "/assets/og-default.png"
 <h2>Conversion Tracking Is the Whole Game</h2>
 <p>The single biggest difference between accounts that print money and accounts that burn it is what they count as a conversion. Google optimizes toward whatever you tell it success looks like. Tell it wrong, and it gets very efficient at delivering the wrong thing.</p>
 <p>For a service business, the conversions that matter are phone calls of real length, form submissions, and booked estimates. Not pageviews, not time on site, not clicks on a button. Set up call tracking that counts calls over a minimum duration, import which leads actually became jobs when you can, and check weekly that the numbers in Google Ads match what your phone and inbox say. When the platform's smart bidding has clean data about which clicks become customers, it genuinely gets smarter. When it has junk data, it confidently spends your budget on junk.</p>
-<p>Speed matters on the follow-through too. A lead that calls and hits voicemail often just calls the next contractor on the page. Pairing paid traffic with an <a href="https://www.evovero.com/services/ai-automation/">AI receptionist that answers instantly</a> protects the money you spent generating the call in the first place.</p>
+<p>Speed matters on the follow-through too. A lead that calls and hits voicemail often just calls the next contractor on the page. Pairing paid traffic with an <a href="https://evovero.com/services/ai-automation/">AI receptionist that answers instantly</a> protects the money you spent generating the call in the first place.</p>
 
 <h2>Local Services Ads: The Other Google Channel</h2>
 <p>Local Services Ads, the "Google Guaranteed" listings that appear above regular search ads, remain one of the best-value channels for eligible trades. You pay per lead rather than per click, and the setup rewards fundamentals: verified licensing and insurance, complete job-type selection, broad service-area settings, and above all, reviews.</p>
@@ -40,7 +40,7 @@ hero: "/assets/og-default.png"
 <li><strong>Set-and-forget.</strong> Search terms drift. A twenty-minute weekly review of what you actually paid for beats any one-time setup.</li>
 <li><strong>Judging results by clicks.</strong> The only numbers that matter are cost per lead and, ultimately, cost per booked job.</li>
 </ul>
-<p>These fundamentals apply across every trade I work with, from <a href="https://www.evovero.com/industries/concrete-contractors/">concrete contractors</a> to tree services and towing companies. The platform changes; the discipline does not.</p>
+<p>These fundamentals apply across every trade I work with, from <a href="https://evovero.com/industries/concrete-contractors/">concrete contractors</a> to tree services and towing companies. The platform changes; the discipline does not.</p>
 
 <h2>Frequently Asked Questions</h2>
 <h3>How much should a local service business budget for Google Ads?</h3>
@@ -52,4 +52,4 @@ hero: "/assets/og-default.png"
 <h3>Is Performance Max worth it for a small local business?</h3>
 <p>Only after your Search campaign is producing steady, well-tracked conversions, commonly cited as around 30 per month. Below that volume, the automation does not have enough data to learn from, and a focused Search campaign will almost always deliver a better cost per lead.</p>
 
-<p>If you want Google Ads that get judged on booked jobs instead of clicks, I build and run campaigns for local service businesses on a flat monthly fee, on an account you own. <a href="https://www.evovero.com/contact/">Reach out here</a> and I will take a look at your market.</p>
+<p>If you want Google Ads that get judged on booked jobs instead of clicks, I build and run campaigns for local service businesses on a flat monthly fee, on an account you own. <a href="https://evovero.com/contact/">Reach out here</a> and I will take a look at your market.</p>

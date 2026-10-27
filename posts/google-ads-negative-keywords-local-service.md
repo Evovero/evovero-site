@@ -67,11 +67,11 @@ hero: "/assets/og-default.png"
 <li>Leave borderline searches alone until they have had a few weeks to prove themselves.</li>
 <li>Check that your calls and form leads are still tracked, so you are judging searches by real results.</li>
 </ol>
-<p>That last step ties back to measurement. Negatives only work if you can see which searches lead to leads. If you are not tracking calls, my post on <a href="https://www.evovero.com/blog/call-tracking-local-service-business/">call tracking for local service businesses</a> covers how to know which marketing rings the phone, and my broader <a href="https://www.evovero.com/blog/google-ads-local-service-businesses/">Google Ads guide for service businesses</a> covers the rest of the account setup.</p>
+<p>That last step ties back to measurement. Negatives only work if you can see which searches lead to leads. If you are not tracking calls, my post on <a href="https://evovero.com/blog/call-tracking-local-service-business/">call tracking for local service businesses</a> covers how to know which marketing rings the phone, and my broader <a href="https://evovero.com/blog/google-ads-local-service-businesses/">Google Ads guide for service businesses</a> covers the rest of the account setup.</p>
 
 <h2>How This Plays Out by Trade</h2>
-<p>The principle is the same everywhere, but the junk searches differ. Owners in <a href="https://www.evovero.com/industries/concrete-contractors/">concrete contracting</a> tend to attract do-it-yourself and supply searches, while <a href="https://www.evovero.com/industries/tree-service/">tree service companies</a> often see job seekers and equipment shoppers. Reading your own search terms report is the only way to find out which pattern is draining your account.</p>
-<p>If you would rather have someone run this routine for you, that is part of how I handle <a href="https://www.evovero.com/services/google-ads/">Google Ads management</a> for local service businesses.</p>
+<p>The principle is the same everywhere, but the junk searches differ. Owners in <a href="https://evovero.com/industries/concrete-contractors/">concrete contracting</a> tend to attract do-it-yourself and supply searches, while <a href="https://evovero.com/industries/tree-service/">tree service companies</a> often see job seekers and equipment shoppers. Reading your own search terms report is the only way to find out which pattern is draining your account.</p>
+<p>If you would rather have someone run this routine for you, that is part of how I handle <a href="https://evovero.com/services/google-ads/">Google Ads management</a> for local service businesses.</p>
 
 <h2>Frequently Asked Questions</h2>
 
@@ -90,4 +90,4 @@ hero: "/assets/og-default.png"
 <h3>Do I need a shared negative keyword list?</h3>
 <p>It saves time. Google applies account-level negative lists automatically to eligible Search and Shopping inventory in relevant campaign types, so you build your job-seeker, training, and do-it-yourself terms once. Trade-specific negatives stay in the campaign they protect so they do not block other services.</p>
 
-<p>If your ad account keeps spending on searches that never call, I can look at it with you. <a href="https://www.evovero.com/contact/">Get in touch here</a> and I will go through your search terms with you.</p>
+<p>If your ad account keeps spending on searches that never call, I can look at it with you. <a href="https://evovero.com/contact/">Get in touch here</a> and I will go through your search terms with you.</p>

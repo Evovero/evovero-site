@@ -38,7 +38,7 @@ hero: "/assets/og-default.png"
 
 <p>You need a separate page for each service you want to be found for, driveways, patios, slabs, stamped and decorative work, rather than one page that lists everything. You need pages for the towns you serve, with real content about working in those towns instead of the same paragraph with the city name swapped out. And you need your phone number visible without scrolling, tappable on a phone, on every single page.</p>
 
-<p>One more thing that matters now more than it used to: AI assistants and search summaries pull from the same signals as local search, so the answers they give about "who does stamped concrete in my area" lean on your profile, your reviews, and whether your site clearly states what you do and where you do it. Vague site copy costs you in more places than it used to. I go deeper on this in <a href="https://www.evovero.com/services/seo/">how I approach local SEO</a>.</p>
+<p>One more thing that matters now more than it used to: AI assistants and search summaries pull from the same signals as local search, so the answers they give about "who does stamped concrete in my area" lean on your profile, your reviews, and whether your site clearly states what you do and where you do it. Vague site copy costs you in more places than it used to. I go deeper on this in <a href="https://evovero.com/services/seo/">how I approach local SEO</a>.</p>
 
 <h2>Speed to Lead Is Where Most Concrete Jobs Are Lost</h2>
 
@@ -50,7 +50,7 @@ hero: "/assets/og-default.png"
 
 <p>Missed call text back is the cheapest version: the moment you miss a call, the caller automatically gets a text saying you are on a job and asking what they need. That alone recovers a meaningful share of calls that would otherwise go to the next name on the list.</p>
 
-<p>The fuller version is an <a href="https://www.evovero.com/services/ai-automation/">AI receptionist that answers every call</a>, asks what kind of work they need, gets the address and the timeline, and drops a qualified lead in your phone. You call back with the details already in hand instead of starting cold.</p>
+<p>The fuller version is an <a href="https://evovero.com/services/ai-automation/">AI receptionist that answers every call</a>, asks what kind of work they need, gets the address and the timeline, and drops a qualified lead in your phone. You call back with the details already in hand instead of starting cold.</p>
 
 <h3>Respond to Form Fills Immediately</h3>
 
@@ -62,13 +62,13 @@ hero: "/assets/og-default.png"
 
 <h3>Google Ads Catches Existing Demand</h3>
 
-<p>Someone typing "concrete patio contractor" plus a town name is ready to buy. That is the highest intent traffic available to you, and it is worth paying for. The mistakes I see most often are running one broad campaign for every service instead of separating driveways from patios, ignoring negative keywords so budget bleeds into people searching for jobs or DIY instructions, and pointing every ad at the homepage instead of the matching service page. My take on <a href="https://www.evovero.com/services/google-ads/">running Google Ads for service businesses</a> covers the setup.</p>
+<p>Someone typing "concrete patio contractor" plus a town name is ready to buy. That is the highest intent traffic available to you, and it is worth paying for. The mistakes I see most often are running one broad campaign for every service instead of separating driveways from patios, ignoring negative keywords so budget bleeds into people searching for jobs or DIY instructions, and pointing every ad at the homepage instead of the matching service page. My take on <a href="https://evovero.com/services/google-ads/">running Google Ads for service businesses</a> covers the setup.</p>
 
 <p>Local Services Ads are worth checking as well, though availability varies by trade and by market and the category list keeps changing. Check what is available for your ZIP code before you plan around them.</p>
 
 <h3>Meta Ads Create Demand That Was Not There Yet</h3>
 
-<p>Facebook and Instagram work differently. Nobody scrolling is searching for a driveway. But a homeowner who sees a genuinely good before and after from a house two neighborhoods over starts thinking about their own cracked driveway. That is <a href="https://www.evovero.com/services/meta-ads/">what Meta ads do well for contractors</a>: they generate interest in the off season and fill the pipeline for spring.</p>
+<p>Facebook and Instagram work differently. Nobody scrolling is searching for a driveway. But a homeowner who sees a genuinely good before and after from a house two neighborhoods over starts thinking about their own cracked driveway. That is <a href="https://evovero.com/services/meta-ads/">what Meta ads do well for contractors</a>: they generate interest in the off season and fill the pipeline for spring.</p>
 
 <h2>Put It in Order</h2>
 
@@ -92,4 +92,4 @@ hero: "/assets/og-default.png"
 
 <p>Not responding fast enough. Ranking well and then taking two days to return a call hands the job to someone else. Fixing response time usually produces more revenue than any change to advertising, and it costs less.</p>
 
-<p>If you pour concrete and you are tired of watching jobs go to the contractor who called back first, that is a fixable problem and it does not start with spending more. <a href="https://www.evovero.com/contact/">Get in touch</a> and I will take a look at where you actually stand in your service area and tell you straight what is worth doing first.</p>
+<p>If you pour concrete and you are tired of watching jobs go to the contractor who called back first, that is a fixable problem and it does not start with spending more. <a href="https://evovero.com/contact/">Get in touch</a> and I will take a look at where you actually stand in your service area and tell you straight what is worth doing first.</p>

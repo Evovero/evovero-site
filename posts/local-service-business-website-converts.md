@@ -38,7 +38,7 @@ hero: "/assets/og-default.png"
 
 <p>Most people calling a service business are calling from the same phone they are browsing on. If your number is set as an image, or as text they have to copy, you have added friction to the highest-intent action on your site.</p>
 
-<p>Make it a tap-to-call link, put it in the header where it stays visible, and repeat it at the end of every service page. Then answer it. I am not being glib. Speed of response is the most underrated part of this whole subject, and I have written before about what happens to the calls that come in <a href="https://www.evovero.com/blog/">outside business hours</a>. A site that generates calls you do not answer is not a conversion problem anymore, it is an operations one, and it is worth fixing with an <a href="https://www.evovero.com/services/ai-automation/">automated answering setup</a> if you cannot pick up every time.</p>
+<p>Make it a tap-to-call link, put it in the header where it stays visible, and repeat it at the end of every service page. Then answer it. I am not being glib. Speed of response is the most underrated part of this whole subject, and I have written before about what happens to the calls that come in <a href="https://evovero.com/blog/">outside business hours</a>. A site that generates calls you do not answer is not a conversion problem anymore, it is an operations one, and it is worth fixing with an <a href="https://evovero.com/services/ai-automation/">automated answering setup</a> if you cannot pick up every time.</p>
 
 <h2>Service Pages Beat a Services List</h2>
 
@@ -46,7 +46,7 @@ hero: "/assets/og-default.png"
 
 <p>This does double duty. It gives search engines something specific to match against a specific query, and it gives a visitor enough substance to trust you before they call. That second part is what people miss. Depth reads as competence. A thin page reads as a business that might not know much more about the job than you do.</p>
 
-<p>The same logic applies to where you work. A page for each town you serve, with real local detail rather than the same paragraph with the town name swapped, is how you show up for searches that include a place name. This is the foundation-first part of how I approach <a href="https://www.evovero.com/services/seo/">local search work</a>, and it is unglamorous, but it compounds.</p>
+<p>The same logic applies to where you work. A page for each town you serve, with real local detail rather than the same paragraph with the town name swapped, is how you show up for searches that include a place name. This is the foundation-first part of how I approach <a href="https://evovero.com/services/seo/">local search work</a>, and it is unglamorous, but it compounds.</p>
 
 <h2>Proof Where the Decision Happens</h2>
 
@@ -58,7 +58,7 @@ hero: "/assets/og-default.png"
 
 <p>One more point, because it determines whether any of this work is an asset or a rental. If your website lives on a platform you cannot export from, or an agency holds the domain and the account, you are improving something you do not own. Every lead you generate and every ranking you earn stays with whoever controls the login the day you leave.</p>
 
-<p>I build sites clients own outright. That is a structural choice, not a feature, and it is worth asking about with anyone you hire. You can see how I think about the <a href="https://www.evovero.com/services/web-design/">website side of that</a> if you want the longer version.</p>
+<p>I build sites clients own outright. That is a structural choice, not a feature, and it is worth asking about with anyone you hire. You can see how I think about the <a href="https://evovero.com/services/web-design/">website side of that</a> if you want the longer version.</p>
 
 <h2>Frequently Asked Questions</h2>
 
@@ -74,4 +74,4 @@ hero: "/assets/og-default.png"
 <h3>Does any of this matter if I get most work from referrals?</h3>
 <p>It matters more. Referred customers look you up before they call, and your site is where they decide whether the referral was right. A slow, dated site with no proof on it costs you work you had already earned.</p>
 
-<p>If you want a straight assessment of where your site is losing people, I am happy to look at it and tell you what I would change and in what order, whether or not you hire me for it. <a href="https://www.evovero.com/contact/">Get in touch</a> and we can talk through it.</p>
+<p>If you want a straight assessment of where your site is losing people, I am happy to look at it and tell you what I would change and in what order, whether or not you hire me for it. <a href="https://evovero.com/contact/">Get in touch</a> and we can talk through it.</p>

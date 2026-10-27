@@ -2,8 +2,8 @@
 
 export const serviceDetail = {
   "seo": {
-    metaTitle: "Local SEO & Google Business Profile | EvoVero",
-    metaDesc: "Local SEO and Google Business Profile management that gets local service businesses ranking in the map pack and earning organic calls you own.",
+    metaTitle: "Local SEO & Google Business Profile Management | EvoVero",
+    metaDesc: "Local SEO and Google Business Profile management that gets local service businesses into the map pack and earning organic calls you own, month after month.",
     h1: "Local SEO & Google Business Profile",
     sub: "Show up first when someone nearby searches for what you do. I get your Google Business Profile and your website ranking in the map pack, so calls come in without paying for every click.",
     included: [
@@ -30,8 +30,8 @@ export const serviceDetail = {
   },
 
   "google-ads": {
-    metaTitle: "Google Ads Management for Local Service Pros | EvoVero",
-    metaDesc: "Google Ads management built for local service businesses. High-intent search campaigns, call tracking, and an ad account you own.",
+    metaTitle: "Google Ads Management for Local Service Businesses | EvoVero",
+    metaDesc: "Google Ads management built for local service businesses: high intent search campaigns, call tracking, and an ad account you own outright, so the data is yours.",
     h1: "Google Ads Management",
     sub: "Get in front of people who are searching for your service right now, ready to call. I build and manage search campaigns that turn budget into booked jobs, on an account that stays yours.",
     included: [
@@ -58,8 +58,8 @@ export const serviceDetail = {
   },
 
   "meta-ads": {
-    metaTitle: "Meta Ads (Facebook & Instagram) Management | EvoVero",
-    metaDesc: "Facebook and Instagram ad management for local service businesses. Scroll-stopping creative, tight targeting, and lead capture you own.",
+    metaTitle: "Facebook & Instagram Ads for Local Service Pros | EvoVero",
+    metaDesc: "Facebook and Instagram ad management for local service businesses: scroll stopping creative, tight local targeting, and lead capture you own and fully control.",
     h1: "Meta Ads (Facebook & Instagram)",
     sub: "Create demand instead of waiting for it. I run Facebook and Instagram campaigns with creative that stops the scroll and targeting that fills your pipeline from the feed.",
     included: [
@@ -86,8 +86,8 @@ export const serviceDetail = {
   },
 
   "web-design": {
-    metaTitle: "Website Design & Development You Own | EvoVero",
-    metaDesc: "Fast, modern, conversion-built websites for local service businesses, on infrastructure you own. No rented platforms, no lock-in.",
+    metaTitle: "Website Design & Development for Local Businesses | EvoVero",
+    metaDesc: "Fast, modern websites built to convert for local service businesses, on infrastructure you own. No rented platforms and no lock in, so your site stays yours.",
     h1: "Website Design & Development",
     sub: "A fast, modern website built to turn visitors into calls, on infrastructure you actually own. No rented platform, no monthly hostage situation.",
     included: [
@@ -115,7 +115,7 @@ export const serviceDetail = {
 
   "ai-automation": {
     metaTitle: "AI Receptionist & Automation for Local Business | EvoVero",
-    metaDesc: "An AI agent that answers, qualifies, and books every lead 24/7 across your website, SMS, and social, so you stop losing the leads you already earn.",
+    metaDesc: "An AI agent that answers, qualifies, and books every lead around the clock across your website, SMS, and social, so you stop losing the leads you already earn.",
     h1: "AI Receptionist & Automation",
     sub: "An AI agent that answers, qualifies, and books every lead in seconds, 24/7, even at 10pm when you're done for the day. You stop losing the leads you're already paying to earn.",
     included: [
@@ -142,8 +142,8 @@ export const serviceDetail = {
   },
 
   "reputation": {
-    metaTitle: "Reviews & Reputation Management | EvoVero",
-    metaDesc: "Automated review requests and AI-assisted responses that build the 5-star reputation that wins local jobs.",
+    metaTitle: "Reviews & Reputation Management for Local Pros | EvoVero",
+    metaDesc: "Automated review requests and AI assisted responses that build the 5 star reputation that wins local jobs, so more people who find you decide to call you first.",
     h1: "Reviews & Reputation",
     sub: "Your reputation closes jobs before you ever pick up the phone. I automate the review requests and the responses, so your 5-star presence grows on its own.",
     included: [
@@ -171,8 +171,8 @@ export const serviceDetail = {
 
 export const industryDetail = {
   "concrete-contractors": {
-    metaTitle: "Marketing for Concrete Contractors | EvoVero",
-    metaDesc: "Marketing built for concrete contractors: websites, local SEO, Google & Meta ads, and AI lead capture that turn searches into booked driveways, patios, and slabs.",
+    metaTitle: "Marketing for Concrete Contractors | Local Leads | EvoVero",
+    metaDesc: "Marketing for concrete contractors: websites, local SEO, Google and Meta ads, and AI lead capture that turn searches into booked driveways, patios, and slabs.",
     h1: "Marketing for Concrete Contractors",
     sub: "Driveways, patios, foundations, flatwork. I build concrete pros a steady stream of booked jobs without chasing referrals or renting leads.",
     pains: [
@@ -192,8 +192,8 @@ export const industryDetail = {
     ],
   },
   "tree-service": {
-    metaTitle: "Marketing for Tree Service Companies | EvoVero",
-    metaDesc: "Marketing for tree service pros: be the first call for removal, trimming, storm work, and stump grinding with SEO, ads, and 24/7 AI lead capture.",
+    metaTitle: "Marketing for Tree Service Companies | Local Leads | EvoVero",
+    metaDesc: "Marketing for tree service pros: be the first call for removal, trimming, storm work, and stump grinding with local SEO, ads, and AI lead capture day and night.",
     h1: "Marketing for Tree Service Companies",
     sub: "Removal, trimming, storm damage, stump grinding. When a limb comes down, I make sure you're the first call, day or night.",
     pains: [
@@ -213,8 +213,8 @@ export const industryDetail = {
     ],
   },
   "towing": {
-    metaTitle: "Marketing for Towing & Recovery Companies | EvoVero",
-    metaDesc: "Marketing for towing companies: win the 24/7 dispatch race with fast local SEO, Google Ads, and AI that answers stranded customers instantly.",
+    metaTitle: "Towing & Recovery Company Marketing | Local Leads | EvoVero",
+    metaDesc: "Marketing for towing companies: win the dispatch race day and night with local SEO, Google Ads, and AI that answers stranded customers the moment they call.",
     h1: "Marketing for Towing & Recovery",
     sub: "Stranded customers call the first tow truck they can reach. I make sure that's you, every hour of every day.",
     pains: [
@@ -234,8 +234,8 @@ export const industryDetail = {
     ],
   },
   "masonry": {
-    metaTitle: "Marketing for Masonry Contractors | EvoVero",
-    metaDesc: "Marketing for masonry pros: win high-value brick, block, stone, and repair work with a strong local presence, SEO, ads, and AI lead capture.",
+    metaTitle: "Marketing for Masonry Contractors | Local Leads | EvoVero",
+    metaDesc: "Marketing for masonry contractors: win high value brick, block, stone, and repair jobs with a strong local presence, local SEO, paid ads, and AI lead capture.",
     h1: "Marketing for Masonry Contractors",
     sub: "Brick, block, stone, repair, and restoration. I help masonry pros win the high-value custom work in their area instead of waiting on referrals.",
     pains: [
@@ -255,8 +255,8 @@ export const industryDetail = {
     ],
   },
   "insulation": {
-    metaTitle: "Marketing for Insulation Contractors | EvoVero",
-    metaDesc: "Marketing for insulation pros: reach homeowners shopping efficiency with local SEO, Google & Meta ads, and AI lead capture that books estimates.",
+    metaTitle: "Marketing for Insulation Contractors | Local Leads | EvoVero",
+    metaDesc: "Marketing for insulation pros: reach homeowners shopping for efficiency with local SEO, Google and Meta ads, and AI lead capture that books estimates for you.",
     h1: "Marketing for Insulation Contractors",
     sub: "Spray foam, blown-in, batt, and removal. I put you in front of homeowners the moment they start shopping for a warmer, cheaper-to-run home.",
     pains: [
@@ -276,8 +276,8 @@ export const industryDetail = {
     ],
   },
   "home-cleaning": {
-    metaTitle: "Marketing for Home Cleaning Services | EvoVero",
-    metaDesc: "Marketing for home cleaning businesses: fill your calendar with recurring and move-out cleans through local SEO, ads, and AI booking.",
+    metaTitle: "Marketing for Home Cleaning Services | Local Leads | EvoVero",
+    metaDesc: "Marketing for home cleaning businesses: fill your calendar with recurring and move out cleans through local SEO, ads, and AI booking that answers every inquiry.",
     h1: "Marketing for Home Cleaning Services",
     sub: "Recurring cleans, deep cleans, and move-outs. I help cleaning businesses fill the calendar with the repeat customers that make the work predictable.",
     pains: [
