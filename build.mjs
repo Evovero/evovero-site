@@ -168,8 +168,8 @@ function footer() {
     </div>
     <div class="footer__bottom">
       <span>&copy; ${new Date().getFullYear()} EvoVero. ${site.city}.</span>
-      <span style="display:flex;gap:18px">
-        <a href="${site.phoneHref}">${site.phone}</a>
+      <span style="display:flex;flex-wrap:wrap;gap:10px 18px">
+        <a href="${site.phoneHref}" style="white-space:nowrap">${site.phone}</a>
         <a href="mailto:${site.email}">${site.email}</a>
         <a href="/privacy-policy/">Privacy</a>
         <a href="/terms/">Terms</a>
@@ -668,6 +668,24 @@ function contact() {
   });
 }
 
+function notFound() {
+  const body = pageHero({
+    eyebrow:"Page not found", crumb: crumbNav(["Home","/"],["Not found"]),
+    h1: `This page <span class="grad">isn't here.</span>`,
+    sub: "The link may be old or mistyped. Everything else is right where you left it. Head home, look at what I do, or reach out and I'll point you the right way.",
+    cta: false,
+  }) + `<div class="page-body"><section class="section"><div class="wrap center reveal">
+      <a class="btn btn--primary btn--lg" href="/">Back to home ${icon('arrow')}</a>
+      <p style="margin-top:22px;display:flex;gap:22px;justify-content:center;flex-wrap:wrap">
+        <a class="link-arrow" href="/services/">Services ${icon('arrow')}</a>
+        <a class="link-arrow" href="/blog/">Blog ${icon('arrow')}</a>
+        <a class="link-arrow" href="/contact/">Contact ${icon('arrow')}</a>
+      </p>
+      <p style="margin-top:22px">Or call or text <a href="${site.phoneHref}">${site.phone}</a>.</p>
+    </div></section></div>`;
+  return page({ title: "Page Not Found | EvoVero", desc: "This page could not be found on evovero.com.", path: "/404", noindex: true, schema: [], body });
+}
+
 function thankYou() {
   const body = pageHero({
     eyebrow:"Thank you", crumb: crumbNav(["Home","/"],["Contact","/contact/"],["Thanks"]),
@@ -973,10 +991,12 @@ for (const [path, html] of clientPages) writePage(path, html);
 const demoCount = buildDemos(OUT);
 
 for (const [path, html] of pages) writePage(path, html);
+// Netlify serves dist/404.html for any URL that does not exist. noindex, kept out of the sitemap.
+writeFileSync(join(OUT, '404.html'), notFound());
 
 // Sitemap: exclude the thank-you page (utility, noindex-style)
 writeFileSync(join(OUT, 'sitemap.xml'), sitemap(pages.map(p => p[0]).filter(p => p !== '/thank-you' && !p.startsWith('/start'))));
-writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /thank-you/\nSitemap: ${site.domain}/sitemap.xml\n`);
+writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site.domain}/sitemap.xml\n`);
 writeFileSync(join(OUT, 'llms.txt'), llmsTxt(posts));
 
 console.log(`Built ${pages.length} pages (${posts.length} blog post(s)) to dist/, plus ${offerPages.length} offer pages and ${demoCount} demo pages`);
