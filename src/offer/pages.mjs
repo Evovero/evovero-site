@@ -706,7 +706,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
       ['Try it for 2 weeks', 'Send me every change you want. Keep it for $100 a month, or owe nothing.'],
     ];
     const body = `<style>.ft-steps3{grid-template-columns:repeat(3,1fr)}@media (max-width:900px){.ft-steps3{grid-template-columns:1fr}}.of-step.is-done b{background:#15803d}.ft-up{max-width:600px;margin:0 auto}.ft-skip{margin-top:14px;text-align:center;color:var(--ink-soft);font-size:.95rem}
-.ft-done{display:inline-grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#15803d;color:#fff;font-size:2rem;font-weight:700;box-shadow:0 0 0 8px rgba(21,128,61,.18)}
+.ft-done{display:inline-grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#15803d;color:#fff;font-size:2rem;font-weight:700;box-shadow:0 0 0 8px rgba(21,128,61,.18)}</style><main><section class="of-hero"><div class="wrap wrap--wide reveal">
       <span class="ft-done" aria-hidden="true">&#10003;</span>
       <h1 style="margin-top:20px">You're all set. <span class="grad">Your preview is next.</span></h1>
       <p class="lead">I'll text and email you the link within 48 hours.</p>
