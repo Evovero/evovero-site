@@ -253,8 +253,8 @@ function home() {
             <span>${icon('cal')} Booked jobs</span>
             <span>${icon('star')} 5-star reviews</span>
           </div>
-          <div class="lead-pill"><span class="av">AI</span><span class="tx"><b>New lead booked</b> &mdash; estimate request, Tue 9:00a</span><span class="badge">Qualified</span></div>
-          <div class="lead-pill"><span class="av">AI</span><span class="tx"><b>Missed call answered</b> &mdash; replied in 4 seconds</span><span class="badge">Captured</span></div>
+          <div class="lead-pill"><span class="av">AI</span><span class="tx"><b>New lead booked:</b> estimate request, Tue 9:00a</span><span class="badge">Qualified</span></div>
+          <div class="lead-pill"><span class="av">AI</span><span class="tx"><b>Missed call answered:</b> replied in 4 seconds</span><span class="badge">Captured</span></div>
         </div>
       </div>
     </div>
@@ -740,14 +740,14 @@ function startThanks() {
 // time, which silently bumped "Last updated" on every autoblog rebuild. A legal page whose
 // revision date moves on its own is worthless as a record of what it said and when.
 // Change it BY HAND, and only when the text below actually changes.
-function legalPage(slug, title, intro, sections, updated) {
+function legalPage(slug, title, intro, sections, updated, seo = {}) {
   const body = pageHero({ eyebrow:"Legal", crumb: crumbNav(["Home","/"],[title]), h1:title, sub:intro, cta:false })
     + `<div class="page-body"><section class="section"><div class="wrap"><div class="prose reveal">
       <p style="color:var(--ink-soft)">Last updated: ${updated}</p>
       ${sections.map(s => `<h2>${s[0]}</h2>${s[1]}`).join('')}
       <h2>Contact</h2><p>Questions about this page? Reach me at <a href="mailto:${site.email}">${site.email}</a> or ${site.phone}.</p>
     </div></div></section></div>`;
-  return page({ title: `${title} | EvoVero`, desc: intro, path: "/" + slug, schema: [], body });
+  return page({ title: seo.title || `${title} | EvoVero`, desc: seo.desc || intro, path: "/" + slug, schema: [], body });
 }
 function privacy() {
   return legalPage("privacy-policy", "Privacy Policy",
@@ -775,7 +775,7 @@ function privacy() {
 
       ["Changes to this policy", "<p>I may update this policy as the business or the law changes. The revision date at the top reflects the last substantive change. Material changes to how I handle your mobile number or your consent will be posted here before they take effect.</p>"],
     ],
-    "August 3, 2026");
+    "August 3, 2026", { title: "Privacy Policy | How EvoVero Collects and Protects Your Info", desc: "How EvoVero collects, uses, and protects what you share. I collect only what I need, never sell it, and never share your mobile number for others' marketing." });
 }
 function terms() {
   return legalPage("terms", "Terms of Service",
@@ -800,7 +800,7 @@ function terms() {
 
       ["Governing law", "<p>These terms are governed by the laws of the State of Nebraska, without regard to its conflict of law rules. Any dispute arising from this website or these terms will be brought in the state or federal courts located in Douglas County, Nebraska. Nothing here waives any right you have under the consumer protection law of the state where you live.</p>"],
     ],
-    "October 18, 2026");
+    "October 18, 2026", { title: "Terms of Service | EvoVero Website and Marketing Services", desc: "The terms for using evovero.com and working with EvoVero: month to month service, website plans, billing, refunds, cancelling anytime, and who owns the site." });
 }
 
 /* ----------------------------------------------------------------
