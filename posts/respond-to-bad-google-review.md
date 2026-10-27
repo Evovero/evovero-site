@@ -90,4 +90,4 @@ hero: "/assets/og-default.png"
 <h3>Do review replies help my Google ranking?</h3>
 <p>Google's own guidance encourages businesses to reply to reviews, and an active, well managed profile looks more trustworthy to the people comparing you. What matters more over time is a steady flow of genuine reviews, so pair good replies with a consistent habit of asking every happy customer.</p>
 
-<p>If keeping up with reviews keeps slipping down your list, I can set up a system that asks every customer for you and keeps your replies current. <a href="https://www.evovero.com/contact/">Reach out here</a> or call me at 402-698-4902 and I will walk you through how it works.</p>
+<p>If keeping up with reviews keeps slipping down your list, I can set up a system that asks every customer for you and keeps your replies current. <a href="https://evovero.com/contact/">Reach out here</a> or call me at 402-698-4902 and I will walk you through how it works.</p>
