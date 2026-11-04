@@ -1,9 +1,10 @@
 // Photo Dropbox: one shared upload link for every client, plus the same uploader in a popup.
-// Files go to ONE Uploadcare project with NO webhook (so no Zap ever fires). After each batch
-// the page posts the Netlify form "photo-dropbox", so Spencer gets one email per batch with the
-// subject "Photos: <name>" and every file as "original name : Uploadcare file id".
+// Since 2026-11-04 files go straight from the sender's phone into Spencer's Google Drive "Photo Inbox"
+// (one dated subfolder per sender per day) through the /photo-upload function. Uploadcare stays only
+// as an automatic backup: it is used when Drive is not connected yet or a file fails on Drive.
+// After each batch the page posts the Netlify form "photo-dropbox", so Spencer gets one email per batch
+// with the subject "Photos: <name>", the Drive folder link, and every file name.
 // The name a person types (or that the link prefills with ?b=) is what keeps batches apart.
-// Each file also carries Uploadcare metadata (business, source) so it is findable in the project.
 
 // Public key of the Uploadcare project "Universal" (no webhook, created 2026-10-17). Public by design.
 // Empty means not set up yet: the uploader shows a text-me fallback instead of failing silently.
@@ -52,14 +53,14 @@ export function uploader(id, source, { site, nameLabel = 'Your name or business 
     <div class="pd__done" data-done role="status" aria-live="polite"></div>
     <ul class="pd__q" data-q></ul>
     <div class="pd__zone" data-zone role="button" tabindex="0">${cloud}<h3>Tap to choose photos</h3><p>Photos, your logo, anything you want on the site. Pick as many as you want.</p></div>
-    <input type="file" data-file accept="image/*,.heic,.pdf,.svg,.ai,.eps" multiple hidden>
+    <input type="file" data-file accept="image/*,video/*,.heic,.mov,.mp4,.pdf,.svg,.ai,.eps" multiple hidden>
     <button type="button" class="btn btn--primary btn--lg pd__btn" data-pick>Choose photos</button>
     <p class="pd__hint">Full quality, straight to Spencer. No login.</p>
   </div>`;
 }
 
 // Hidden copy of the Netlify form so it is detected at deploy. Every field the script posts must be here.
-export const dropboxForm = `<form name="photo-dropbox" data-netlify="true" netlify-honeypot="bot-field" hidden><input name="bot-field"><input name="subject"><input name="name"><input name="source"><input name="count"><textarea name="files"></textarea></form>`;
+export const dropboxForm = `<form name="photo-dropbox" data-netlify="true" netlify-honeypot="bot-field" hidden><input name="bot-field"><input name="subject"><input name="name"><input name="source"><input name="count"><input name="folder"><textarea name="files"></textarea></form>`;
 
 // One script drives every uploader on the page.
 export const dropboxScript = `<script>(function(){
@@ -93,28 +94,48 @@ export const dropboxScript = `<script>(function(){
       m.appendChild(n);m.appendChild(s);m.appendChild(b);li.appendChild(th);li.appendChild(m);q.appendChild(li);
       return {li:li,s:s,b:b,i:i};
     }
-    function send(f){
-      var r=row(f),who=nm.value.trim();pending++;
+    // Drive first (evovero.com/photo-upload hands out a one time Google Drive link per file, the file goes
+    // phone to Drive directly). If Drive is not connected or a file fails on Drive, that file goes to Uploadcare
+    // instead, so an upload is never lost. At most 3 files move at once so a big camera roll does not choke a phone.
+    var queue=[],active=0,batchP=null,folder='';
+    function send(f){var r=row(f),who=nm.value.trim();pending++;queue.push(function(){go(f,r,who);});pump();}
+    function pump(){while(active<3&&queue.length){active++;queue.shift()();}}
+    function post(o){return fetch('/photo-upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)});}
+    function ensure(who){if(!batchP)batchP=post({action:'batch',name:who,source:src}).then(function(x){return x.ok?x.json():null;}).then(function(j){if(j&&j.folderId){folder=j.folderUrl;return j;}return null;}).catch(function(){return null;});return batchP;}
+    function go(f,r,who){ensure(who).then(function(b){try{if(b)drv(f,r,b,who);else uc(f,r,who);}catch(e){bad(f,r);}});}
+    function prog(x,r){x.upload.onprogress=function(e){if(e.lengthComputable)r.i.style.width=Math.round(e.loaded/e.total*100)+'%';};}
+    function good(f,r,tag){ok++;batch.push(f.name+' : '+tag);r.s.className='pd__st ok';r.s.textContent='Uploaded';r.b.style.display='none';fin(r);}
+    function bad(f,r){r.s.className='pd__st bad';r.s.textContent='Did not upload. Tap to try again.';r.li.style.cursor='pointer';r.li.onclick=function(){r.li.remove();send(f);};fin(r);}
+    function fin(r){active--;pending--;label();pump();if(!pending){notify(r.who);batchP=null;setTimeout(function(){see(done.classList.contains('on')?done:q);},60);}}
+    function drv(f,r,b,who){
+      r.who=who;
+      post({action:'file',folderId:b.folderId,name:f.name,type:f.type,size:f.size}).then(function(x){return x.ok?x.json():null;}).catch(function(){return null;}).then(function(j){try{
+        if(!j||!j.uploadUrl){uc(f,r,who);return;}
+        var x=new XMLHttpRequest();x.open('PUT',j.uploadUrl);if(f.type)x.setRequestHeader('Content-Type',f.type);prog(x,r);
+        x.onload=function(){var id=null;try{id=JSON.parse(x.responseText).id;}catch(e){}if(x.status>=200&&x.status<300&&id)good(f,r,'Drive');else{r.i.style.width='0';uc(f,r,who);}};
+        x.onerror=function(){r.i.style.width='0';uc(f,r,who);};
+        x.send(f);
+      }catch(e){uc(f,r,who);}});
+    }
+    function uc(f,r,who){
+      r.who=who;
+      if(!key){bad(f,r);return;}
       var fd=new FormData();
       fd.append('UPLOADCARE_PUB_KEY',key);fd.append('UPLOADCARE_STORE','1');
       fd.append('metadata[business]',slug(who));fd.append('metadata[source]',src);
       fd.append('file',f,f.name);
-      var x=new XMLHttpRequest();x.open('POST','https://upload.uploadcare.com/base/');
-      x.upload.onprogress=function(e){if(e.lengthComputable)r.i.style.width=Math.round(e.loaded/e.total*100)+'%';};
+      var x=new XMLHttpRequest();x.open('POST','https://upload.uploadcare.com/base/');prog(x,r);
       x.onload=function(){var id=null;try{id=JSON.parse(x.responseText).file;}catch(e){}
-        if(x.status>=200&&x.status<300&&id){ok++;batch.push(f.name+' : '+id);r.s.className='pd__st ok';r.s.textContent='Uploaded';r.b.style.display='none';}
-        else fail();fin();};
-      x.onerror=function(){fail();fin();};
-      function fail(){r.s.className='pd__st bad';r.s.textContent='Did not upload. Tap to try again.';r.li.style.cursor='pointer';r.li.onclick=function(){r.li.remove();send(f);};}
-      function fin(){pending--;label();if(!pending){notify(who);if(batch.length===0)setTimeout(function(){see(done.classList.contains('on')?done:q);},60);}}
+        if(x.status>=200&&x.status<300&&id)good(f,r,'Uploadcare '+id);else bad(f,r);};
+      x.onerror=function(){bad(f,r);};
       x.send(fd);
     }
     function notify(who){
-      if(!batch.length)return;var files=batch.splice(0);done.textContent=(files.length===1?'1 photo':files.length+' photos')+' sent. Thanks! Add more anytime.';done.classList.add('on');
-      var body=new URLSearchParams({'form-name':'photo-dropbox','subject':'Photos: '+who,'name':who,'source':src,'count':String(files.length),'files':files.join('\\n')});
+      if(!batch.length)return;var files=batch.splice(0),fl=(folder&&files.join(' ').indexOf(' : Drive')>-1)?folder:'';done.textContent=(files.length===1?'1 photo':files.length+' photos')+' sent. Thanks! Add more anytime.';done.classList.add('on');
+      var body=new URLSearchParams({'form-name':'photo-dropbox','subject':'Photos: '+who,'name':who,'source':src,'count':String(files.length),'folder':fl||'Uploadcare backup was used','files':files.join('\\n')});folder='';
       fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()}).catch(function(){});
       if(window.gtag)gtag('event','photos_uploaded',{source:src,count:files.length});
-      root.dispatchEvent(new CustomEvent('pd:uploaded',{bubbles:true,detail:{name:who,files:files}}));
+      root.dispatchEvent(new CustomEvent('pd:uploaded',{bubbles:true,detail:{name:who,files:fl?files.concat(['Drive folder: '+fl]):files}}));
     }
     root.pdSetName=function(v){if(v&&!nm.value)nm.value=v;};
   }
