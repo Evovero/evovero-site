@@ -1,5 +1,6 @@
 // Demo: Service business (concrete contractor). Made up business, 555 number, placeholder email.
 // Photos: public/demos/concrete/ (from Claude OS/00_Resources/Stock Photos/concrete and masonry).
+// Hero loop: Evovero/evovero-stock-photos concrete/video/hero-loop, recompressed for this page (1280x720 and 720x1280, 24fps, crf 34, yuv420p, about 2 MB each).
 const P = n => `/demos/concrete/stock-${n}.jpg`;
 
 export default {
@@ -30,6 +31,7 @@ export default {
       slug: '', nav: 'Home', title: 'Concrete Contractor',
       sections: [
         { type: 'hero', image: P('hero'), alt: 'Crew raking a fresh concrete pour',
+          video: { wide: '/demos/concrete/hero-w.mp4', tall: '/demos/concrete/hero-t.mp4' },
           kicker: 'Residential and commercial concrete', h1: 'Concrete done right the first time.',
           sub: 'Driveways, patios, foundations and commercial flatwork. Clear pricing, a crew that shows up when we say, and a slab built to last.',
           chips: ['Free estimates', 'Residential and commercial', 'Written quotes'] },
