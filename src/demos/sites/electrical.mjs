@@ -1,7 +1,6 @@
 // Demo: Electrical contractor. Made up business, 555 number, placeholder email and domain.
-// Photos: public/demos/electrical/. No electrical stock folder exists yet, so these are frames from Pexels clips already in Evovero/evovero-stock-photos home-repair-handyman
-// (18780266 outlet test, 7641511 light fixture, cropped to the fixture and hands so no face shows) plus the bermix-studio Unsplash photo.
-// Swap in real electrical stock when an electrical/ folder is added.
+// Photos: public/demos/electrical/. breaker, panel and testing are Unsplash or Pexels stock, now in Evovero/evovero-stock-photos electrical/.
+// outlet and fixture are frames from Pexels clips in home-repair-handyman (18780266, 7641511, cropped so no face shows); kit is bermix-studio (Unsplash).
 const P = n => `/demos/electrical/stock-${n}.jpg`;
 
 export default {
@@ -31,7 +30,7 @@ export default {
     {
       slug: '', nav: 'Home', title: 'Electrical Contractor',
       sections: [
-        { type: 'hero', image: P('hero'), alt: 'Electrician testing an outlet with a meter',
+        { type: 'hero', image: P('breaker'), alt: 'Industrial circuit breaker in an open panel',
           kicker: 'Residential and commercial electrical', h1: 'Power you never have to think about.',
           sub: 'Repairs, panel upgrades, lighting, EV chargers and new circuits. Clear prices and work that is done right the first time.',
           chips: ['Written quotes', 'Homes and businesses', 'Clean job sites'] },
@@ -39,9 +38,9 @@ export default {
           items: [
             { image: P('outlet'), title: 'Repairs and troubleshooting', text: 'Dead outlets, tripping breakers and flickering lights tracked down and fixed.', href: 'services/', more: 'See services' },
             { image: P('fixture'), title: 'Lighting', text: 'New fixtures, recessed lights and outdoor lighting, placed where you need them.', href: 'services/', more: 'See services' },
-            { image: P('kit'), title: 'Panels and upgrades', text: 'Panel and service upgrades for new appliances, additions and EV chargers.', href: 'services/', more: 'See services' },
+            { image: P('panel'), title: 'Panels and upgrades', text: 'Panel and service upgrades for new appliances, additions and EV chargers.', href: 'services/', more: 'See services' },
           ] },
-        { type: 'split', image: P('outlet'), alt: 'Testing an outlet before work starts', kicker: 'Why Brightwire',
+        { type: 'split', image: P('testing'), alt: 'Testing a control panel with meter leads', kicker: 'Why Brightwire',
           title: 'We find the cause, not just the symptom.',
           paras: ['A breaker that keeps tripping is telling you something. We test before we touch anything, fix the real problem and explain what we found in plain words.'],
           ticks: ['Tested before and after', 'Price agreed before work begins', 'Walls patched and site cleaned'],
@@ -51,6 +50,14 @@ export default {
           { title: 'Get a written quote', text: 'Small repairs are priced on the spot. Bigger jobs get a written quote.' },
           { title: 'Pick a time', text: 'We schedule around you and text when we are on the way.' },
           { title: 'Done and tested', text: 'Everything is tested before we leave, and we walk you through it.' },
+        ] },
+        { type: 'gallery', title: 'On the job', kicker: 'Gallery', items: [
+          { image: P('testing'), alt: 'Testing a control panel with meter leads' },
+          { image: P('panel'), alt: 'Breakers and terminals in a control panel' },
+          { image: P('breaker'), alt: 'Industrial circuit breaker' },
+          { image: P('outlet'), alt: 'Testing an outlet with a meter' },
+          { image: P('fixture'), alt: 'Hanging a new light fixture' },
+          { image: P('kit'), alt: 'Tools laid out on concrete' },
         ] },
         { type: 'reviews', tone: 'alt', title: 'What customers say', kicker: 'Reviews' },
         { type: 'faq', title: 'Questions we hear a lot', kicker: 'FAQ', items: [
@@ -65,14 +72,14 @@ export default {
     {
       slug: 'services', nav: 'Services', title: 'Services',
       sections: [
-        { type: 'pagehead', image: P('kit'), alt: 'Tools laid out on concrete', kicker: 'Services', h1: 'Electrical work, done right', sub: 'Every job gets a clear price, careful work and a test before we leave.' },
+        { type: 'pagehead', image: P('panel'), alt: 'Breakers in a control panel', kicker: 'Services', h1: 'Electrical work, done right', sub: 'Every job gets a clear price, careful work and a test before we leave.' },
         { type: 'cards', items: [
           { image: P('outlet'), title: 'Repairs and troubleshooting', text: 'Outlets, switches, breakers and wiring problems.' },
           { image: P('fixture'), title: 'Lighting', text: 'Fixtures, recessed lights, fans and outdoor lighting.' },
-          { image: P('kit'), title: 'Panel and service upgrades', text: 'More capacity for a growing home or business.' },
-          { title: 'EV charger installation', text: 'Home and workplace chargers, with a load check first.' },
-          { title: 'New circuits', text: 'Dedicated circuits for kitchens, shops and appliances.' },
-          { title: 'Commercial service', text: 'Tenant spaces, offices and maintenance visits.' },
+          { image: P('panel'), title: 'Panel and service upgrades', text: 'More capacity for a growing home or business.' },
+          { image: P('kit'), title: 'EV charger installation', text: 'Home and workplace chargers, with a load check first.' },
+          { image: P('breaker'), title: 'New circuits', text: 'Dedicated circuits for kitchens, shops and appliances.' },
+          { image: P('testing'), title: 'Commercial service', text: 'Tenant spaces, offices and maintenance visits.' },
         ] },
         { type: 'cta', image: P('hero'), title: 'Not sure what you need?', text: 'Describe the problem and we will tell you what we would check first.' },
       ],
@@ -84,7 +91,7 @@ export default {
         { type: 'split', image: P('hero'), alt: 'Testing an outlet', kicker: 'Our story', title: 'Started with one van and a meter.',
           paras: ['Brightwire Electric started with service calls for neighbors and small businesses. Builders started calling for new work, and the crew grew from there.', 'We still treat every call the same: test first, explain it clearly and leave it safe.'],
           ticks: ['Written quotes', 'Same crew start to finish', 'Text updates on the way'] },
-        { type: 'split', flip: true, tone: 'alt', image: P('kit'), alt: 'Tools on the floor', kicker: 'What we care about', title: 'Safe today and years from now.',
+        { type: 'split', flip: true, tone: 'alt', image: P('panel'), alt: 'Neatly labeled control panel', kicker: 'What we care about', title: 'Safe today and years from now.',
           paras: ['Electrical work hides behind your walls for decades. We do it neatly and label it clearly so the next person who opens that panel knows exactly what is there.'],
           cta: [{ label: 'Request service', href: 'contact/' }] },
       ],
