@@ -17,13 +17,22 @@ const EXT_MS = 24 * 60 * 60 * 1000;
 const SLUG = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/;
 // Automated browsers (audit tools, screenshot runners, link unfurlers) must never use up the one first opened email.
 // "bot" only as its own word or in a "Somethingbot/1.0" token, so Cubot phones still count as people.
-const BOT = /(?:^|[^a-z])bot\b|[a-z]bot\/\d|crawl|spider|slurp|headless|lighthouse|pagespeed|gtmetrix|pingdom|uptime|preview|facebookexternalhit|whatsapp|telegram|slack|discord|skype|embedly|curl|wget|python|node-fetch|axios|go-http|java\/|okhttp|puppeteer|playwright|selenium|phantom/i;
-const ALLOWED = [/^https:\/\/(www\.)?evovero\.com$/, /^https:\/\/[a-z0-9-]+--new-website-preview\.netlify\.app$/];
+const BOT = /(?:^|[^a-z])bot\b|[a-z]bot\/\d|crawl|spider|slurp|headless|lighthouse|pagespeed|gtmetrix|pingdom|uptime|preview|inspectiontool|facebookexternalhit|whatsapp|telegrambot|slack|discord|skype|embedly|curl|wget|python|node-fetch|axios|go-http|java\/|okhttp|puppeteer|playwright|selenium|phantom/i;
+const ALLOWED = [/^https:\/\/(www\.)?evovero\.com$/, /^https:\/\/[a-z0-9-]+--new-website-preview\.netlify\.app$/, /^https:\/\/[a-z0-9-]+--evovero\.netlify\.app$/];
 
 let storeFactory = () => getStore({ name: 'preview-state', consistency: 'strong' });
 let hookFetch = (...a) => fetch(...a);
+let existsFetch = (...a) => fetch(...a);
 // Test seam only: lets the sandbox swap in a memory store and a fake hook.
-export const __test = { setStore: (f) => { storeFactory = f; }, setFetch: (f) => { hookFetch = f; }, allowOrigin: (re) => { ALLOWED.push(re); } };
+export const __test = { setStore: (f) => { storeFactory = f; }, setFetch: (f) => { hookFetch = f; }, allowOrigin: (re) => { ALLOWED.push(re); }, setExists: (f) => { existsFetch = f; } };
+
+// A record is only ever created for a preview branch that really exists, so a script cannot fill the store or Spencer's inbox.
+async function previewExists(slug) {
+  try {
+    const r = await existsFetch(`https://${slug}--new-website-preview.netlify.app/`, { method: 'HEAD', redirect: 'manual', signal: AbortSignal.timeout(3000) });
+    return r.status >= 200 && r.status < 400;
+  } catch { return false; }
+}
 
 const originOk = (o) => !o || ALLOWED.some((re) => re.test(o));
 
@@ -50,6 +59,7 @@ async function alert(event, slug, extra = {}) {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ event, slug, subject, link, at: new Date().toISOString(), ...extra }),
+      signal: AbortSignal.timeout(2500),  // a slow Zapier never makes a saved extension look failed
     });
     if (!r.ok) console.log(`preview alert hook returned ${r.status}: ${event} ${slug}`);
     return r.ok;
@@ -82,9 +92,10 @@ export default async (req) => {
   }
 
   if (req.method !== 'POST') return json({ error: 'method' }, 405, origin);
+  if (!origin) return json({ error: 'origin' }, 403, null);  // browsers always send Origin on POST
 
   let body;
-  try { body = JSON.parse(await req.text()); } catch { body = null; }
+  try { const raw = await req.text(); body = raw.length > 2048 ? null : JSON.parse(raw); } catch { body = null; }
   if (!body || typeof body !== 'object') return json({ error: 'body' }, 400, origin);
   const slug = typeof body.slug === 'string' ? body.slug : '';
   if (!SLUG.test(slug)) return json({ error: 'slug' }, 400, origin);
@@ -93,6 +104,8 @@ export default async (req) => {
   if (body.action === 'open') {
     if (!ua || BOT.test(ua)) return json({ ok: true, first: false, ignored: true }, 200, origin);
     try {
+      if (await store.get(`open/${slug}`, { type: 'json' })) return json({ ok: true, first: false }, 200, origin);
+      if (!(await previewExists(slug))) return json({ error: 'unknown preview' }, 404, origin);
       const w = await store.setJSON(`open/${slug}`, { at: new Date().toISOString() }, { onlyIfNew: true });
       if (w.modified) await alert('first_open', slug);
       return json({ ok: true, first: !!w.modified }, 200, origin);
@@ -107,6 +120,9 @@ export default async (req) => {
     const now = Date.now();
     const rec = { at: new Date(now).toISOString(), until: new Date(now + EXT_MS).toISOString() };
     try {
+      const cur0 = await store.get(`ext/${slug}`, { type: 'json' });
+      if (cur0) return json({ ok: false, already: true, ...status(cur0) }, 409, origin);
+      if (!(await previewExists(slug))) return json({ error: 'unknown preview' }, 404, origin);
       const w = await store.setJSON(`ext/${slug}`, rec, { onlyIfNew: true });
       if (!w.modified) {
         // Already used once: report what is stored, never overwrite it.
