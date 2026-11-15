@@ -6,6 +6,7 @@ import { site, nav } from './src/data/site.mjs';
 import { serviceDetail, industryDetail } from './src/data/content.mjs';
 import { intakeForm, intakeStyles, intakeScript } from './src/intake.mjs';
 import { makeOfferPages } from './src/offer/pages.mjs';
+import { makeBlackFridayPages } from './src/offer/blackfriday.mjs';
 import { makeClientPages } from './src/offer/client.mjs';
 import { reviews as clientReviews, reviewLink } from './src/data/reviews.mjs';
 import { demos, buildDemos } from './src/demos/index.mjs';
@@ -985,6 +986,9 @@ const pages = [
 // sitemap and linked from no nav or footer. Kept apart so they never touch the main site pages.
 const offerPages = makeOfferPages({ head, icon, site, demos });
 for (const [path, html] of offerPages) writePage(path, html);
+// Black Friday 2026 industry pages (/blackfriday/concrete, /blackfriday/tree): noindex, out of the sitemap.
+const bfPages = makeBlackFridayPages({ head });
+for (const [path, html] of bfPages) writePage(path, html);
 // Client pages (/client-guide, /referrals): noindex, sent by link to website clients. Own module.
 const clientPages = makeClientPages({ head, icon, site });
 for (const [path, html] of clientPages) writePage(path, html);
