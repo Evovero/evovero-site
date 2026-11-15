@@ -987,7 +987,7 @@ const pages = [
 const offerPages = makeOfferPages({ head, icon, site, demos });
 for (const [path, html] of offerPages) writePage(path, html);
 // Black Friday 2026 industry pages (/blackfriday/concrete, /blackfriday/tree): noindex, out of the sitemap.
-const bfPages = makeBlackFridayPages({ head });
+const bfPages = makeBlackFridayPages({ head, icon, site });
 for (const [path, html] of bfPages) writePage(path, html);
 // Client pages (/client-guide, /referrals): noindex, sent by link to website clients. Own module.
 const clientPages = makeClientPages({ head, icon, site });

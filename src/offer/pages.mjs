@@ -177,7 +177,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
   function getStarted() {
     const steps = [
       ['Answer a few quick questions', 'Your contact info and three short questions about your business. About two minutes.'],
-      ['Start with your first $100', 'Pay right under the form. The first month is normally $500. Through October 31 it is $100. Don\'t love it? You get your $100 back.'],
+      ['Start with your first $100', 'Pay right under the form. The first month is normally $500. Through October 31 it is $100.'],
       ['Your site is live within 48 hours', 'I build it from your answers, then reach out about photos and the general look.'],
       ['Then the edits start', 'Send me everything you want changed, even one long email, and I keep revising until it is what you want.'],
     ];
@@ -212,8 +212,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
     </form>
     <div id="pay" class="form-card of-form of-pay of-hidden" aria-live="polite">
       <h3 style="margin:0 0 8px">Your answers are in. Now start your site.</h3>
-      <p style="margin:0 0 6px">$100 today covers your first month, and that includes building and launching your site. It is live within 48 hours. After that it's $100 a month, cancel anytime.</p>
-      <p style="margin:0 0 18px"><strong>Don't love it in your first month? You get your $100 back.</strong></p>
+      <p style="margin:0 0 18px">$100 today covers your first month, and that includes building and launching your site. It is live within 48 hours. After that it's $100 a month, cancel anytime.</p>
       <div id="checkout"><p class="hint" id="checkout-loading">Loading secure checkout...</p></div>
     </div>
     <script>(function(){
@@ -253,7 +252,6 @@ export function makeOfferPages({ head, icon, site, demos }) {
       ['What do you need from me?', 'The short form below, then a few details after you start, like your logo, colors and hours. Your own photos work best, and phone photos are fine. Send them anytime. Until then your site launches with stock photos.'],
       ['I already have a website. Can you still help?', 'Yes. Add the link in the details after you start and I use what works from it.'],
       ['How do edits work?', 'Text or email what you want changed and I change it. Unlimited, for as long as you have the site. You never log into anything.'],
-      ['What if I don\'t love it?', 'Tell me in your first month and you get your first $100 back.'],
     ];
     const quote = (r, cls = '', anim = 'reveal of-rise') => r ? `<figure class="of-quote ${cls} ${anim}"><q>${r.text}</q><figcaption class="who">${r.name}<span aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></figcaption></figure>` : '';
     const demoModal = demoModalHtml();
@@ -291,7 +289,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
           <div class="was">Regular first month <s>$500</s></div>
           <div class="big">$100<small> first month</small></div>
           <p>Through October 31. Your first payment starts the build and your site is live within 48 hours. After that it is $100 a month.</p>
-          <div class="ticks"><span>${icon('check')} Cancel anytime</span><span>${icon('check')} First $100 back if you don't love it</span><span>${icon('check')} Hosting and unlimited edits included</span></div>
+          <div class="ticks"><span>${icon('check')} Cancel anytime</span><span>${icon('check')} Hosting and unlimited edits included</span></div>
         </div>
         <ol class="of-next"><li><b>1</b>Fill out the form below</li><li><b>2</b>Pay your first $100</li><li><b>3</b>I build it, live within 48 hours</li><li><b>4</b>I reach out about photos and the look</li></ol>
       </div>
@@ -334,7 +332,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
       ['Questions go your way', 'If I need anything, I reach out the way you picked on the form: text, call or email.'],
       ['Photos', 'Your site launches with stock photos where we need them. Send real photos of your work, your trucks and your team anytime and I swap them in.'],
       ['You review it', 'When it is live, I send you the link. Go through it and tell me everything you want changed. One long email is fine. I keep revising until it looks the way you want.'],
-      ['Billing', 'After today it is $100 a month and you can cancel anytime. Don\'t love it in your first month? You get your $100 back.'],
+      ['Billing', 'After today it is $100 a month and you can cancel anytime.'],
     ];
     const steps = next.map(([h, p], i) => `<li class="wl-step" style="--i:${i}"><span class="wl-num">${i + 1}</span><div><h3>${h}</h3><p>${p}</p></div></li>`).join('');
     const typeCards = [
@@ -498,6 +496,8 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <input type="hidden" name="form_version" value="${TRIAL_VERSION}">
       <input type="hidden" name="source" id="t-src">
       <input type="hidden" name="demo_pick" id="t-demo">
+      <!-- The Black Friday industry pages post to this same form; these keep its extra fields registered here too. -->
+      <input type="hidden" name="promo"><input type="hidden" name="trade"><input type="hidden" name="services"><input type="hidden" name="services_other">
       <p hidden><label>Skip this<input name="bot-field"></label></p>
       <div class="ft-top"><span class="ft-count" id="ft-count" aria-live="polite"></span><div class="ft-prog"><i id="ft-bar"></i></div></div>
       <p class="ft-note">Your answers are how I make the preview look like yours. Nothing is final.</p>
