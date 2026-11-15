@@ -130,9 +130,9 @@ const COPY = {
   tyPick: 'Pick a time for me to call',
   tyEmail: 'Email me',
   tyTextBody: 'Send my preview to this number.', // sent as "This is [business name]. Send my preview to this number."
-  tyPhotosH: 'Have a logo or photos of your work?',
-  tyPhotosP: 'Send them through this link so I get the clearest version. Text and email shrink them.',
-  tyPhotosBtn: 'Send my logo and photos',
+  // Photo line (CHANGED 11/15 10:12am): one small text link under the buttons, no button, no reason line.
+  // [[ ]] marks the words that link to /photos in a new tab.
+  tyPhotos: 'Have a logo or photos of your work? [[Send them here]] anytime.',
 };
 
 const COLORS = ['Black', 'White', 'Gray', 'Navy', 'Blue', 'Light blue', 'Green', 'Red', 'Orange', 'Yellow', 'Purple', 'Pink', 'Brown', 'Gold'];
@@ -151,7 +151,7 @@ const css = `
 .bf-btn--ink{background:var(--ink);color:#fff}.bf-btn--line{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
 .bf-btn:focus-visible,.bf-chip input:focus-visible+span,.bf-rows summary:focus-visible{outline:3px solid #2f6fe0;outline-offset:3px}
 /* first screen: carries the ad (dark, trade accent, Black Friday Deal tag) */
-.bf-hero{background:var(--ink);color:var(--cream);padding:16px 0 clamp(34px,6vw,72px)}
+.bf-hero{background:var(--ink);color:var(--cream);padding:16px 0 clamp(34px,6vw,72px);overflow:hidden}
 .bf-brand{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-head);font-weight:700;font-size:.95rem;color:var(--cream);opacity:.9}
 .bf-hero__g{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);grid-template-areas:"copy phone" "cta phone";gap:8px 56px;align-items:center;margin-top:clamp(16px,3vw,34px)}
 .bf-hero__copy{grid-area:copy;align-self:end}.bf-hero__cta{grid-area:cta;align-self:start;margin-top:18px}.bf-hero__vid{grid-area:phone}
@@ -210,8 +210,8 @@ const css = `
 .bf-sample__tap{display:none}
 @media (max-width:860px){
   .bf-sample iframe{height:min(64svh,560px);pointer-events:none}
-  .bf-sample__tap{display:flex;position:absolute;inset:0;align-items:flex-end;justify-content:center;padding:0 0 18px;border:0;background:transparent;cursor:pointer}
-  .bf-sample__tap span{padding:13px 22px;border-radius:999px;background:var(--ink);color:#fff;font:700 1.02rem var(--font-head);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+  .bf-sample__tap{display:flex;position:absolute;inset:0;align-items:flex-end;justify-content:center;padding:0 0 18px;border:0;background:linear-gradient(180deg,rgba(13,13,13,0) 55%,rgba(13,13,13,.78) 88%);cursor:pointer}
+  .bf-sample__tap span{padding:13px 22px;border-radius:999px;background:var(--cream);color:#0D0D0D;font:700 1.02rem var(--font-head);box-shadow:0 8px 24px rgba(0,0,0,.35)}
 }
 .bf-sample.full{position:fixed;inset:0;z-index:400;margin:0;border:0;border-radius:0;display:flex;flex-direction:column}
 .bf-sample.full .bf-sample__s{flex:1;min-height:0}.bf-sample.full iframe{height:100%;pointer-events:auto}
@@ -254,6 +254,7 @@ body.bf-lock{overflow:hidden}
 .bf-ty .bf-lead{max-width:44ch}.bf-ty .bf-lead+.bf-lead{margin-top:14px}
 .bf-acts{display:grid;gap:12px;margin-top:8px}
 .bf-acts .bf-btn{width:100%;justify-content:flex-start}
+.bf-photos{margin-top:26px;color:var(--soft);font-size:1rem}.bf-photos a{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px}
 .bf-ty .bf-foot{padding-bottom:calc(22px + env(safe-area-inset-bottom))}
 @media (min-width:700px){.bf-acts{grid-template-columns:1fr 1fr}}`;
 
@@ -403,8 +404,8 @@ export function makeBlackFridayPages({ head, icon, site }) {
   if(box){box.querySelector('.bf-sample__tap').addEventListener('click',openFull);box.querySelector('.bf-sample__x').addEventListener('click',function(){closeFull();});
     window.addEventListener('popstate',function(){closeFull(true);});document.addEventListener('keydown',function(e){if(e.key==='Escape')closeFull();});}
   // Phone sticky button: shows once the first screen is gone and the taps are not on screen.
-  var sb=document.getElementById('bf-sticky'),taps=document.getElementById('taps'),hero=document.querySelector('.bf-hero'),tk=0;
-  if(sb&&taps&&hero){window.addEventListener('scroll',function(){if(tk)return;tk=requestAnimationFrame(function(){tk=0;var r=taps.getBoundingClientRect();sb.classList.toggle('on',hero.getBoundingClientRect().bottom<0&&(r.top>window.innerHeight*0.7||r.bottom<0));});},{passive:true});}
+  var sb=document.getElementById('bf-sticky'),taps=document.getElementById('taps'),hero=document.querySelector('.bf-hero'),end=document.querySelector('.bf-end'),tk=0;
+  if(sb&&taps&&hero){window.addEventListener('scroll',function(){if(tk)return;tk=requestAnimationFrame(function(){tk=0;var r=taps.getBoundingClientRect();sb.classList.toggle('on',hero.getBoundingClientRect().bottom<0&&(r.top>window.innerHeight*0.7||r.bottom<0)&&!(end&&end.getBoundingClientRect().top<window.innerHeight));});},{passive:true});}
 })();</script>`;
 
     const body = `${fonts}<style>${css}${PROMO.video ? '' : scrollKeyframes(t)}</style>
@@ -483,16 +484,12 @@ ${script}
   ${brand}
   <div style="margin-top:clamp(16px,3vw,34px)">${tags(t)}</div>
   <h1>${COPY.tyH1}</h1>
-  <p class="bf-lead">${COPY.tyLead}</p>
+  <p class="bf-lead">${COPY.tyLead.replace(site.phone, `<span style="white-space:nowrap">${site.phone}</span>`)}</p>
   <p class="bf-lead">${COPY.tyWatch}</p>
 </div></section>
 <section class="bf-sec"><div class="bf-in">
   <div class="bf-acts" id="bf-acts">${acts.map(a => a[1]).join('')}</div>
-</div></section>
-<section class="bf-sec bf-sec--alt"><div class="bf-in">
-  <h2>${COPY.tyPhotosH}</h2>
-  <p class="bf-sub">${COPY.tyPhotosP}</p>
-  <p style="margin-top:22px"><a class="bf-btn bf-btn--ink" id="bf-photos" href="/photos/" target="_blank" rel="noopener">${COPY.tyPhotosBtn} ${icon('arrow')}</a></p>
+  <p class="bf-photos">${COPY.tyPhotos.replace('[[', '<a id="bf-photos" href="/photos/" target="_blank" rel="noopener">').replace(']]', '</a>')}</p>
 </div></section>
 </main>
 ${foot}
