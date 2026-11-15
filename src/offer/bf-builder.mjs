@@ -42,7 +42,7 @@ export const WORDS = {
   },
 };
 
-export const BUILDER_COLORS = [['Orange', '#E0701F'], ['Red', '#C62828'], ['Blue', '#1F5FBF'], ['Navy', '#1B2A55'], ['Green', '#2C6B3F'], ['Black', '#1c1c1c'], ['Gold', '#B8860B'], ['Purple', '#6B3FA0']];
+export const BUILDER_COLORS = [['Orange', '#BF560E'], ['Red', '#C62828'], ['Blue', '#1F5FBF'], ['Navy', '#1B2A55'], ['Green', '#2C6B3F'], ['Black', '#1c1c1c'], ['Gold', '#9A6F08'], ['Purple', '#6B3FA0']];
 
 export const builderCss = `
 .bb-sec{background:#cfcbc0;scroll-margin-top:0}
@@ -57,7 +57,7 @@ export const builderCss = `
 .bb-pv{flex:0 0 46%;min-height:0;min-width:0;position:relative;background:#cfcbc0;padding:8px 10px 0;transition:flex-basis .35s}
 .bb.end .bb-pv{flex-basis:40%}
 .bb-pv__lab{position:absolute;left:50%;top:0;transform:translate(-50%,-2px);z-index:6;background:var(--ink);color:var(--cream);font:600 .7rem var(--font-head);padding:3px 10px;border-radius:0 0 8px 8px;white-space:nowrap}
-.bs{height:100%;border-radius:12px 12px 0 0;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.18);position:relative;font-family:Inter,system-ui,sans-serif;--b:#E0701F;--bfoot:#3a2412}
+.bs{height:100%;border-radius:12px 12px 0 0;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.18);position:relative;font-family:Inter,system-ui,sans-serif;--b:#BF560E;--bfoot:#3a2412}
 .bs__scroll{height:100%;overflow-y:auto;scroll-behavior:smooth;scrollbar-width:none;overscroll-behavior:contain}.bs__scroll::-webkit-scrollbar{display:none}
 .bs-hd{position:sticky;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;background:#fff;border-bottom:1px solid #e6e3da}
 .bs-logo{display:flex;align-items:center;gap:8px;min-width:0;font:800 1rem Archivo,var(--font-head);color:#1c2228}
@@ -208,8 +208,9 @@ export function builderScript(t, ctx) {
   function $(id){return document.getElementById(id);}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function ga(n,p){try{p=p||{};p.promo=D.promo;p.trade=D.trade;if(window.gtag)gtag('event',n,p);}catch(e){}}
-  function blank(){return {name:'',tagline:D.def.tagline,services:[],showOther:false,other:'',cities:[],draft:'',color:'',phone:'',reach:[],who:'',wphone:'',wemail:''};}
-  function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.S){S=Object.assign(blank(),d.S);cur=Math.max(0,Math.min(STEPS.length-1,d.q||0));return;}}catch(e){}S=blank();}
+  function blank(){return {name:'',tagline:D.def.tagline,services:[],showOther:false,other:'',cities:[],draft:'',color:'',phone:'',reach:[],who:'',wphone:'',wtouch:false,wemail:''};}
+  var wasSent=false;
+  function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.S){S=Object.assign(blank(),d.S);cur=Math.max(0,Math.min(STEPS.length-1,d.q||0));wasSent=!!d.sent;return;}}catch(e){}S=blank();}
   function save(){try{localStorage.setItem(KEY,JSON.stringify({q:cur,S:S}));}catch(e){}}
   function norm(v){return String(v).trim().replace(/\\s+/g,' ');}
   function allCities(){var c=S.cities.slice(),d=norm(S.draft);if(d&&c.map(function(x){return x.toLowerCase();}).indexOf(d.toLowerCase())<0)c.push(d);return c;}
@@ -256,7 +257,7 @@ export function builderScript(t, ctx) {
     else if(step==='color')h+='<div class="bb-sw">'+D.colors.map(function(c){return '<button type="button" data-color="'+c[1]+'" style="background:'+c[1]+'" aria-pressed="'+(S.color===c[1])+'" aria-label="'+c[0]+'"><span>'+c[0]+'</span></button>';}).join('')+'</div>'+nav('Next');
     else if(step==='phone')h+='<input class="bb-in" id="bb-phone" aria-label="'+esc(w.q)+'" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="(402) 555-0123" value="'+esc(fmtPhone(S.phone))+'">'+nav('Next');
     else{h+='<div class="bb-chips three">'+['Text','Call','Email'].map(function(r){return '<button type="button" class="bb-chip" data-reach="'+r+'" aria-pressed="'+(S.reach.indexOf(r)>-1)+'">'+r+'</button>';}).join('')+'</div>';
-      if(!known)h+='<div class="bb-field"><label for="bb-who">Your name</label><input class="bb-in" id="bb-who" autocomplete="name" value="'+esc(S.who)+'"></div><div class="bb-field"><label for="bb-wphone">Phone</label><input class="bb-in" id="bb-wphone" type="tel" inputmode="tel" autocomplete="tel" value="'+esc(S.wphone||fmtPhone(S.phone))+'"></div><div class="bb-field"><label for="bb-wemail">Email</label><input class="bb-in" id="bb-wemail" type="email" inputmode="email" autocomplete="email" value="'+esc(S.wemail)+'"></div>';
+      if(!known)h+='<div class="bb-field"><label for="bb-who">Your name</label><input class="bb-in" id="bb-who" autocomplete="name" value="'+esc(S.who)+'"></div><div class="bb-field"><label for="bb-wphone">Phone</label><input class="bb-in" id="bb-wphone" type="tel" inputmode="tel" autocomplete="tel" value="'+esc(S.wtouch?S.wphone:fmtPhone(S.phone))+'"></div><div class="bb-field"><label for="bb-wemail">Email</label><input class="bb-in" id="bb-wemail" type="email" inputmode="email" autocomplete="email" value="'+esc(S.wemail)+'"></div>';
       h+=(ERR?'<p class="bb-err" id="bb-err" role="alert">'+esc(ERR)+'</p>':'')+nav(w.btn,true)+'<p class="bb-small">'+w.assure+'</p><p class="bb-consent">By sending this, you agree I can text and email you about your preview. Message and data rates may apply. Reply STOP to opt out. <a href="/privacy-policy/" target="_blank" rel="noopener">Privacy</a> and <a href="/terms/" target="_blank" rel="noopener">Terms</a>.</p>';}
     $('bb-step').innerHTML=h;$('bb-q').scrollTop=0;if(step==='cities')paintMine();
   }
@@ -268,7 +269,7 @@ export function builderScript(t, ctx) {
 
   // ----- send -----
   function send(btn){
-    if(!known){S.who=norm(($('bb-who')||{}).value||S.who);S.wphone=($('bb-wphone')||{}).value||S.wphone;S.wemail=norm(($('bb-wemail')||{}).value||S.wemail);}
+    if(!known){S.who=norm(($('bb-who')||{}).value||S.who);S.wphone=$('bb-wphone')?$('bb-wphone').value:(S.wtouch?S.wphone:fmtPhone(S.phone));S.wemail=norm(($('bb-wemail')||{}).value||S.wemail);}
     var miss=[];if(!known&&!S.who)miss.push('your name');if(!norm(S.name))miss.push('your business name');if(!known&&!S.wphone.replace(/\\D/g,'')&&!S.wemail)miss.push('a phone or email');
     if(miss.length){ERR='Add '+(miss.length>1?miss.slice(0,-1).join(', ')+' and '+miss[miss.length-1]:miss[0])+' so I know where to send your preview.';
       if(!norm(S.name))cur=0;paintQ();focusSite(STEPS[cur]);save();var f=$('bb-step').querySelector(cur===0?'#bb-name':(!S.who?'#bb-who':'#bb-wphone'));if(f)try{f.focus();}catch(x){}return;}
@@ -280,14 +281,14 @@ export function builderScript(t, ctx) {
       .then(function(r){if(!r.ok)throw 0;ga('trial_extras',{form_name:'website-trial'});ga('ft_submit',{src:src,builder:1});done();})
       .catch(function(){btn.disabled=false;HTMLFormElement.prototype.submit.call(form);});
   }
-  function done(){
+  function done(quiet){
     sent=true;try{localStorage.setItem(KEY,JSON.stringify({q:0,S:S,sent:1}));}catch(e){}
     $('bb-step').hidden=true;var d=$('bb-done');d.hidden=false;$('bb-count').textContent='';$('bb-prog').style.width='100%';
     var acts=$('bb-acts');S.reach.slice().reverse().forEach(function(r){var a=acts.querySelector('[data-act="'+r+'"]');if(a)acts.insertBefore(a,acts.firstChild);});
     var biz=norm(S.name);if(biz)$('bb-sms').href=D.sms+'?&body='+encodeURIComponent('This is '+biz+'. '+W.done.textBody);
-    var up=d.querySelector('.pd');if(up){if(up.pdSetName)up.pdSetName(biz||S.who||'Black Friday lead');var pb=up.querySelector('[data-pick]');if(pb)pb.textContent=W.done.optBtn;}
+    var up=d.querySelector('.pd');if(up){up.setAttribute('data-noscroll','');var fi=up.querySelector('[data-file]');if(fi)fi.setAttribute('accept','image/*,.heic,.pdf,.svg,.ai,.eps');if(up.pdSetName)up.pdSetName(biz||S.who||'Black Friday lead');var pb=up.querySelector('[data-pick]');if(pb)pb.textContent=W.done.optBtn;}
     [].slice.call(acts.querySelectorAll('a')).forEach(function(a){a.addEventListener('click',function(){ga('bf_contact_click',{kind:a.getAttribute('data-act')});});});
-    paintSite();focusSite('done');$('bb-q').scrollTop=0;align();
+    paintSite();focusSite('done');$('bb-q').scrollTop=0;if(quiet)return;align();
     if(!matchMedia('(prefers-reduced-motion: reduce)').matches){var sc=$('bs-scroll');setTimeout(function(){sc.scrollTop=sc.scrollHeight;},700);setTimeout(function(){sc.scrollTop=0;},3200);}
     try{$('bb-doneh').focus({preventScroll:true});}catch(e){}
   }
@@ -311,11 +312,12 @@ export function builderScript(t, ctx) {
     else if(t.id==='bb-other'){S.other=t.value;paintSite();var m=$('bs-menu');m.scrollTop=0;}
     else if(t.id==='bb-city'){S.draft=t.value;paintSite();var mm=$('bs-menu');mm.scrollTop=mm.scrollHeight;}
     else if(t.id==='bb-phone'){S.phone=t.value;var f=fmtPhone(t.value);if(t.value!==f)t.value=f;paintSite();}
-    else if(t.id==='bb-who')S.who=t.value;else if(t.id==='bb-wphone')S.wphone=t.value;else if(t.id==='bb-wemail')S.wemail=t.value;
+    else if(t.id==='bb-who')S.who=t.value;else if(t.id==='bb-wphone'){S.wphone=t.value;S.wtouch=true;}else if(t.id==='bb-wemail')S.wemail=t.value;
     save();});
   $('bb-step').addEventListener('keydown',function(e){if(e.key!=='Enter'||e.target.tagName!=='INPUT')return;e.preventDefault();
     if(e.target.id==='bb-city'){if(norm(e.target.value))addCity();else go(cur+1,true);}
     else if(cur<STEPS.length-1){e.target.blur();go(cur+1,true);}
+    else if(e.target.id==='bb-who'){$('bb-wphone').focus();}else if(e.target.id==='bb-wphone'){$('bb-wemail').focus();}
     else{var n=$('bb-step').querySelector('[data-next]');if(n)send(n);}});
 
   // Phone keyboard: shrink the builder to the part of the screen the keyboard leaves, so the website stays in view.
@@ -326,6 +328,6 @@ export function builderScript(t, ctx) {
   if(vv){vv.addEventListener('resize',fitSoon);box.addEventListener('focusin',function(){setTimeout(fit,350);});box.addEventListener('focusout',function(){setTimeout(fit,150);});}
 
   if('IntersectionObserver' in window){new IntersectionObserver(function(en){if(en[0].isIntersecting&&!seen){seen=true;track();}},{threshold:.3}).observe(box);}else seen=true;
-  load();go(cur,false);
+  load();go(cur,false);if(wasSent)done(true);
 })();</script>`;
 }

@@ -49,7 +49,7 @@ const TRADES = [
     demo: { name: 'Ironline Concrete', url: '/websites/demo/concrete/' },
     // Preview builder in place of the quick taps (Spencer 2026-11-15; concrete first, tree follows once this is dialed in).
     builder: {
-      kick: 'Concrete contractor', tagline: 'Driveways and Patios Built to Last.', color: '#E0701F', eg: 'Smith Concrete',
+      kick: 'Concrete contractor', tagline: 'Driveways and Patios Built to Last.', color: '#BF560E', eg: 'Smith Concrete',
       hero: '/assets/bf/builder/concrete-hero.jpg', other: '/assets/bf/builder/concrete-other.jpg',
       cards: { 'Driveways': '/assets/bf/builder/concrete-driveways.jpg', 'Patios': '/assets/bf/builder/concrete-patios.jpg', 'Sidewalks': '/assets/bf/builder/concrete-sidewalks.jpg', 'Foundations and footings': '/assets/bf/builder/concrete-foundations.jpg', 'Stamped or decorative': '/assets/bf/builder/concrete-stamped.jpg', 'Commercial flatwork': '/assets/bf/builder/concrete-commercial.jpg' },
     },
