@@ -109,7 +109,7 @@ body.bb-lock{overflow:hidden}
 .bs-btn svg{width:13px;height:13px}.bs-btn.o{background:none;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.7)}
 .bs-sec{padding:16px 14px}.bs-sec h4{font:800 1.05rem Archivo,var(--font-head);color:#1c2228;margin:2px 0 9px}
 .bs-sec.tint{background:color-mix(in srgb,var(--b) 9%,#fff)}
-.bs-sec.svc{background:var(--b);transition:background .3s}.bs-sec.svc .k{color:rgba(255,255,255,.86)}.bs-sec.svc h4{color:#fff}
+.bs-sec.svc{background:var(--b);transition:background .3s}.bs-sec.svc .k{color:#fff}.bs-sec.svc h4{color:#fff}
 .bs-sec.svc .bs-card{border-color:rgba(255,255,255,.35)}.bs-sec.svc .bs-card.ph{border-color:rgba(255,255,255,.7);color:#fff;background:none}
 .bs-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .bs-card{border:1px solid #e3e0d7;border-radius:10px;overflow:hidden;background:#fff}
@@ -170,7 +170,7 @@ body.bb-lock{overflow:hidden}
 .bb-pick{text-align:center}.bb-pick a{color:var(--ink);font-weight:600;font-size:.95rem;text-decoration:underline;text-underline-offset:3px;display:inline-block;padding:8px}
 @media (min-width:900px){
   .bb-wrap{width:min(100% - 40px,760px);height:520px}
-  .bb.pop{left:50%;top:50%;transform:translate(-50%,-50%);width:min(1040px,94vw);height:min(700px,92vh);border:2px solid var(--ink);border-radius:22px;display:grid;grid-template-columns:420px minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto}
+  .bb.pop{left:50%;top:50%;transform:translate(-50%,-50%);width:min(1100px,94vw);height:min(940px,94vh);border:2px solid var(--ink);border-radius:22px;display:grid;grid-template-columns:420px minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto}
   .bb.pop .bb-bar .bf-tag--t{display:inline-block}
   .bb.pop~.bb-shade{display:block;position:fixed;inset:0;z-index:590;background:rgba(13,13,13,.72)}
   .bb.pop .bb-bar,.bb.pop .bb-prog{grid-column:1/-1}
@@ -295,21 +295,21 @@ export function builderScript(t, ctx) {
     else if(step==='cities')h+='<input class="bb-in" id="bb-city" aria-label="'+esc(w.q)+'" autocomplete="off" enterkeyhint="done" placeholder="'+esc(w.placeholder)+'" value="'+esc(S.draft)+'"><button type="button" class="bb-add" id="bb-addcity">'+w.add+'</button><div class="bb-mine" id="bb-mine"></div>'+nav('Next');
     else if(step==='color')h+='<div class="bb-sw">'+D.colors.map(function(c){return '<button type="button" data-color="'+c[1]+'" style="background:'+c[1]+'" aria-pressed="'+(S.color===c[1])+'" aria-label="'+c[0]+'"><span>'+c[0]+'</span></button>';}).join('')+'</div>'+nav('Next');
     else if(step==='phone')h+='<input class="bb-in" id="bb-phone" aria-label="'+esc(w.q)+'" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="(402) 555-0123" value="'+esc(fmtPhone(S.phone))+'">'+nav('Next');
-    else{h+='<div class="bb-chips three">'+['Text','Call','Email'].map(function(r){return '<button type="button" class="bb-chip" data-reach="'+r+'" aria-pressed="'+(S.reach.indexOf(r)>-1)+'">'+r+'</button>';}).join('')+'</div>';
+    else{h=(ERR?'<p class="bb-err" id="bb-err" role="alert" style="margin:0 0 10px">'+esc(ERR)+'</p>':'')+h;h+='<div class="bb-chips three">'+['Text','Call','Email'].map(function(r){return '<button type="button" class="bb-chip" data-reach="'+r+'" aria-pressed="'+(S.reach.indexOf(r)>-1)+'">'+r+'</button>';}).join('')+'</div>';
       if(!known)h+='<div class="bb-field"><label for="bb-who">Your name</label><input class="bb-in" id="bb-who" autocomplete="name" value="'+esc(S.who)+'"></div><div class="bb-field"><label for="bb-wphone">Phone</label><input class="bb-in" id="bb-wphone" type="tel" inputmode="tel" autocomplete="tel" value="'+esc(S.wtouch?S.wphone:fmtPhone(S.phone))+'"></div><div class="bb-field"><label for="bb-wemail">Email</label><input class="bb-in" id="bb-wemail" type="email" inputmode="email" autocomplete="email" value="'+esc(S.wemail)+'"></div>';
-      h+=(ERR?'<p class="bb-err" id="bb-err" role="alert">'+esc(ERR)+'</p>':'')+nav(w.btn,true)+'<p class="bb-small">'+w.assure+'</p><p class="bb-consent">By sending this, you agree I can text and email you about your preview. Message and data rates may apply. Reply STOP to opt out. <a href="/privacy-policy/" target="_blank" rel="noopener">Privacy</a> and <a href="/terms/" target="_blank" rel="noopener">Terms</a>.</p>';}
+      h+=nav(w.btn,true)+'<p class="bb-small">'+w.assure+'</p><p class="bb-consent">By sending this, you agree I can text and email you about your preview. Message and data rates may apply. Reply STOP to opt out. <a href="/privacy-policy/" target="_blank" rel="noopener">Privacy</a> and <a href="/terms/" target="_blank" rel="noopener">Terms</a>.</p>';}
     $('bb-step').className='s-'+step;$('bb-step').innerHTML=h;$('bb-q').scrollTop=0;if(step==='cities')paintMine();
   }
   var fired={},seen=false;
   function track(){if(!seen||fired[cur]||sent)return;fired[cur]=1;ga('ft_step',{step:STEPS[cur],n:cur+1});}
-  function go(i,tr){ERR='';cur=Math.max(0,Math.min(STEPS.length-1,i));paintQ();paintSite();focusSite(STEPS[cur]);save();if(tr)track();}
+  function go(i,tr){ERR='';cur=Math.max(0,Math.min(STEPS.length-1,i));paintQ();paintSite();focusSite(STEPS[cur]);save();if(tr)track();if(typeof fit==='function')fit();}
 
   // ----- send -----
   function send(btn){
     if(!known){S.who=norm(($('bb-who')||{}).value||S.who);S.wphone=$('bb-wphone')?$('bb-wphone').value:(S.wtouch?S.wphone:fmtPhone(S.phone));S.wemail=norm(($('bb-wemail')||{}).value||S.wemail);}
     var miss=[];if(!known&&!S.who)miss.push('your name');if(!norm(S.name))miss.push('your business name');if(!known&&!S.wphone.replace(/\\D/g,'')&&!S.wemail)miss.push('a phone or email');
     if(miss.length){ERR='Add '+(miss.length>1?miss.slice(0,-1).join(', ')+' and '+miss[miss.length-1]:miss[0])+' so I know where to send your preview.';
-      if(!norm(S.name))cur=0;paintQ();focusSite(STEPS[cur]);save();btn=null;var f=$('bb-step').querySelector(cur===0?'#bb-name':(!S.who?'#bb-who':'#bb-wphone'));if(f)try{f.focus({preventScroll:true});}catch(x){}var er=$('bb-err');if(er)try{er.scrollIntoView({block:'center',behavior:'instant'});}catch(x){}return;}
+      if(!norm(S.name))cur=0;paintQ();focusSite(STEPS[cur]);save();btn=null;var f=$('bb-step').querySelector(cur===0?'#bb-name':(!S.who?'#bb-who':'#bb-wphone'));if(f)try{f.focus({preventScroll:true});}catch(x){}fit();var er=$('bb-err');if(er&&cur>0)$('bb-q').scrollTop=0;return;}
     btn.disabled=true;save();
     var form=$('bb-form'),v={source:src,business:norm(S.name),tagline:norm(S.tagline),services:S.services.concat(S.showOther&&norm(S.other)?['Other']:[]).join(', '),services_other:norm(S.other),cities:S.cities.join(', '),colors:colorName(),call_number:fmtPhone(S.phone),contact_pref:S.reach.join(', '),name:S.who,phone:known?'':fmtPhone(S.wphone)||S.wphone,email:S.wemail};
     Object.keys(v).forEach(function(k){var i=form.querySelector('[name="'+k+'"]');if(i)i.value=v[k];});
@@ -392,7 +392,7 @@ export function builderScript(t, ctx) {
     box.classList.toggle('kb',t);box.classList.toggle('kbfit',!!fitOk);
     if(t&&vv){box.style.top=Math.round(vv.offsetTop||0)+'px';box.style.height=fitOk?Math.round(h)+'px':'';}else{box.style.height='';box.style.top='';}
     if(t!==was)focusSite(sent?'done':STEPS[cur]);
-    if(t){var a=document.activeElement,q=$('bb-q'),d=a.getBoundingClientRect().bottom-q.getBoundingClientRect().top;if(d>150){var w=a.closest('.bb-field')||a;q.scrollTop+=w.getBoundingClientRect().top-q.getBoundingClientRect().top-12;}}
+    if(t){var a=document.activeElement,q=$('bb-q'),w=a.closest('.bb-field')||a,qt=q.getBoundingClientRect().top,d=a.getBoundingClientRect().bottom-qt,up=w.getBoundingClientRect().top-qt;if($('bb-err')&&!$('bb-err').hidden&&STEPS[cur]==='send')q.scrollTop=0;else if(d>150||up<8)q.scrollTop+=up-12;}
   }
   function fitSoon(){clearTimeout(kt);kt=setTimeout(fit,60);}
   box.addEventListener('focusin',function(e){if(e.target.tagName==='INPUT'){fit();setTimeout(fit,350);setTimeout(fit,700);}});
