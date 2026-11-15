@@ -59,7 +59,7 @@ export const builderCss = `
 .bb-open{position:absolute;inset:0;z-index:5;display:flex;align-items:flex-end;justify-content:center;padding:0 0 22px;border:0;border-radius:20px;background:linear-gradient(180deg,rgba(13,13,13,0) 45%,rgba(13,13,13,.82) 92%);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bb-open span{display:inline-flex;align-items:center;gap:10px;min-height:60px;padding:14px 30px;border-radius:14px;background:var(--acc);color:#0D0D0D;font:700 1.15rem var(--font-head);box-shadow:0 10px 28px rgba(0,0,0,.4)}
 .bb-open span svg{width:20px;height:20px}
-.bb-x{display:none;flex:none;align-items:center;gap:6px;min-height:36px;padding:6px 12px;border:0;border-radius:999px;background:var(--cream);color:#0D0D0D;font:700 .86rem var(--font-head);cursor:pointer;white-space:nowrap}
+.bb-x{display:none;flex:none;align-items:center;gap:6px;min-height:44px;padding:6px 16px;border:0;border-radius:999px;background:var(--cream);color:#0D0D0D;font:700 .86rem var(--font-head);cursor:pointer;white-space:nowrap}
 .bb-shade{display:none}
 /* open: the builder takes the whole screen */
 .bb.pop{position:fixed;left:0;top:0;width:100%;height:100vh;height:100dvh;z-index:600;border:0;border-radius:0}
@@ -201,7 +201,7 @@ export function builderHtml(t, ctx) {
     <input type="hidden" name="form-name" value="website-trial"><input type="hidden" name="form_version" value="${ctx.PROMO.formVersion} (builder)">
     <input type="hidden" name="promo" value="${ctx.PROMO.slug}"><input type="hidden" name="trade" value="${t.slug}"><input type="hidden" name="demo_pick" value="${attr(t.demo.name)}">
     <input name="bot-field">${fields.map(f => `<input type="hidden" name="${f}">`).join('')}</form>`;
-  return `<section class="bb-sec" id="taps"><div class="bb-wrap"><div class="bb" id="bb" inert aria-label="${attr(W.siteLabel)}">
+  return `<section class="bb-sec" id="taps"><div class="bb-wrap"><div class="bb" id="bb" inert role="dialog" aria-modal="true" aria-label="${attr(W.open)}">
   <div class="bb-bar"><span>${ctx.tags}</span><span class="bb-count" id="bb-count" aria-live="polite"></span><button type="button" class="bb-x" id="bb-x">${W.close} <span aria-hidden="true">&times;</span></button></div>
   <div class="bb-prog"><i id="bb-prog"></i></div>
   <div class="bb-pv" id="bb-pv"><span class="bb-pv__lab" id="bb-lab">${W.siteLabel}</span>
@@ -359,7 +359,9 @@ export function builderScript(t, ctx) {
   // Back and Next. If they were typing, the next box is focused right away so the keyboard stays up.
   var typedAt=0;
   function wasTyping(){var a=document.activeElement;return (a&&a.tagName==='INPUT'&&box.contains(a))||Date.now()-typedAt<700;}
-  function step(d){var k=wasTyping();if(STEPS[cur]==='cities')commitCity();if(STEPS[cur]==='services'){commitOther();S.showOther=false;}go(cur+d,d>0);if(k&&['name','tagline','cities','phone'].indexOf(STEPS[cur])>-1){var f=$('bb-step').querySelector('input.bb-in');if(f)try{f.focus({preventScroll:true});var L=f.value.length;f.setSelectionRange(L,L);}catch(x){}}}
+  function step(d){var k=wasTyping();
+    if(d>0&&STEPS[cur]==='name'&&!norm(S.name)){ERR='Add your business name so I know where to send your preview.';paintQ();var nf=$('bb-name');if(nf)try{nf.focus({preventScroll:true});}catch(x){}fit();return;}
+    if(STEPS[cur]==='cities')commitCity();if(STEPS[cur]==='services'){commitOther();S.showOther=false;}go(cur+d,d>0);if(k&&['name','tagline','cities','phone'].indexOf(STEPS[cur])>-1){var f=$('bb-step').querySelector('input.bb-in');if(f)try{f.focus({preventScroll:true});var L=f.value.length;f.setSelectionRange(L,L);}catch(x){}}}
   $('bb-nav').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
     if(b.hasAttribute('data-next')){if(cur===STEPS.length-1){if(STEPS[cur]==='cities')commitCity();send(b);}else step(1);}
     else if(b.hasAttribute('data-back'))step(-1);});
