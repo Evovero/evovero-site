@@ -67,6 +67,7 @@ body.bb-lock{overflow:hidden}
 .bb-bar>span:first-child{display:flex;gap:5px;flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden}
 .bb-bar .bf-tag{font-size:.8rem;padding:5px 7px 4px}
 .bb.pop .bb-bar .bf-tag--t{display:none}
+@media (max-width:380px){.bb-bar .bf-tag--t{display:none}}
 .bb-count{flex:none;font:600 .86rem var(--font-head);white-space:nowrap}
 .bb-prog{flex:none;height:5px;background:#2a2a2c}.bb-prog i{display:block;height:100%;width:0;background:var(--acc);transition:width .3s}
 .bb-pv{flex:0 0 46%;min-height:0;min-width:0;position:relative;background:#cfcbc0;padding:8px 10px 0;transition:flex-basis .35s}
@@ -178,7 +179,7 @@ export function builderHtml(t, ctx) {
     <input type="hidden" name="form-name" value="website-trial"><input type="hidden" name="form_version" value="${ctx.PROMO.formVersion} (builder)">
     <input type="hidden" name="promo" value="${ctx.PROMO.slug}"><input type="hidden" name="trade" value="${t.slug}"><input type="hidden" name="demo_pick" value="${attr(t.demo.name)}">
     <input name="bot-field">${fields.map(f => `<input type="hidden" name="${f}">`).join('')}</form>`;
-  return `<section class="bb-sec" id="taps"><div class="bb-wrap"><div class="bb" id="bb" aria-label="${attr(W.siteLabel)}">
+  return `<section class="bb-sec" id="taps"><div class="bb-wrap"><div class="bb" id="bb" inert aria-label="${attr(W.siteLabel)}">
   <div class="bb-bar"><span>${ctx.tags}</span><span class="bb-count" id="bb-count" aria-live="polite"></span><button type="button" class="bb-x" id="bb-x">${W.close} <span aria-hidden="true">&times;</span></button></div>
   <div class="bb-prog"><i id="bb-prog"></i></div>
   <div class="bb-pv" id="bb-pv"><span class="bb-pv__lab" id="bb-lab">${W.siteLabel}</span>
@@ -288,7 +289,7 @@ export function builderScript(t, ctx) {
     if(!known){S.who=norm(($('bb-who')||{}).value||S.who);S.wphone=$('bb-wphone')?$('bb-wphone').value:(S.wtouch?S.wphone:fmtPhone(S.phone));S.wemail=norm(($('bb-wemail')||{}).value||S.wemail);}
     var miss=[];if(!known&&!S.who)miss.push('your name');if(!norm(S.name))miss.push('your business name');if(!known&&!S.wphone.replace(/\\D/g,'')&&!S.wemail)miss.push('a phone or email');
     if(miss.length){ERR='Add '+(miss.length>1?miss.slice(0,-1).join(', ')+' and '+miss[miss.length-1]:miss[0])+' so I know where to send your preview.';
-      if(!norm(S.name))cur=0;paintQ();focusSite(STEPS[cur]);save();var f=$('bb-step').querySelector(cur===0?'#bb-name':(!S.who?'#bb-who':'#bb-wphone'));if(f)try{f.focus();}catch(x){}return;}
+      if(!norm(S.name))cur=0;paintQ();focusSite(STEPS[cur]);save();var f=$('bb-step').querySelector(cur===0?'#bb-name':(!S.who?'#bb-who':'#bb-wphone'));if(f)try{f.focus({preventScroll:true});}catch(x){}var er=$('bb-err');if(er)try{er.scrollIntoView({block:'center',behavior:'instant'});}catch(x){}return;}
     btn.disabled=true;save();
     var form=$('bb-form'),v={source:src,business:norm(S.name),tagline:norm(S.tagline),services:S.services.concat(S.showOther&&norm(S.other)?['Other']:[]).join(', '),services_other:norm(S.other),cities:S.cities.join(', '),colors:colorName(),call_number:fmtPhone(S.phone),contact_pref:S.reach.join(', '),name:S.who,phone:known?'':fmtPhone(S.wphone)||S.wphone,email:S.wemail};
     Object.keys(v).forEach(function(k){var i=form.querySelector('[name="'+k+'"]');if(i)i.value=v[k];});
@@ -340,16 +341,18 @@ export function builderScript(t, ctx) {
   var pushed=false,vv=window.visualViewport,kt=0,lastFocus=null;
   function pill(){var l=$('bb-openlbl');if(l)l.textContent=sent?W.siteLabel:W.open;}
   function isOpen(){return box.classList.contains('pop');}
-  function open(){if(isOpen())return;lastFocus=document.activeElement;box.classList.add('pop');document.body.classList.add('bb-lock');try{history.pushState({bbOpen:1},'');pushed=true;}catch(e){}
+  function open(){if(isOpen())return;lastFocus=document.activeElement;box.inert=false;box.removeAttribute('inert');box.classList.add('pop');document.body.classList.add('bb-lock');try{history.pushState({bbOpen:1},'');pushed=true;}catch(e){}
     $('bb-q').scrollTop=0;fit();ga('bf_builder_open',{step:sent?'done':STEPS[cur]});seen=true;track();try{$('bb-x').focus({preventScroll:true});}catch(e){}}
-  function close(fromPop){if(!isOpen())return;var a=document.activeElement;if(a&&a.blur)a.blur();box.classList.remove('pop','kb');document.body.classList.remove('bb-lock');box.style.height='';box.style.top='';
+  function close(fromPop){if(!isOpen())return;var a=document.activeElement;if(a&&a.blur)a.blur();box.classList.remove('pop','kb');box.setAttribute('inert','');document.body.classList.remove('bb-lock');box.style.height='';box.style.top='';
     if(pushed&&!fromPop){try{history.back();}catch(e){}}pushed=false;land();setTimeout(land,80);setTimeout(land,300);}
   // After Send the lead lands on the sample site; before that, back on the builder preview.
   function land(){var to=sent?document.getElementById('bf-sample-sec'):document.getElementById('taps');if(to)try{to.scrollIntoView({block:sent?'start':'center',behavior:'instant'});}catch(e){}}
   try{history.scrollRestoration='manual';}catch(e){}
   $('bb-open').addEventListener('click',open);$('bb-x').addEventListener('click',function(){close();});$('bb-backpage').addEventListener('click',function(){close();});$('bb-shade').addEventListener('click',function(){close();});
   window.addEventListener('popstate',function(){close(true);});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&isOpen())close();});
+  document.addEventListener('keydown',function(e){if(!isOpen())return;if(e.key==='Escape'){close();return;}
+    if(e.key!=='Tab')return;var f=[].filter.call(box.querySelectorAll('a[href],button,input,select,textarea'),function(n){return !n.disabled&&n.type!=='hidden'&&n.offsetParent!==null;});if(!f.length)return;
+    var first=f[0],last=f[f.length-1],a=document.activeElement;if(!box.contains(a)){e.preventDefault();first.focus();}else if(e.shiftKey&&a===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&a===last){e.preventDefault();first.focus();}});
   document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href="#taps"]');if(a){e.preventDefault();open();}});
   // Phone keyboard: while open, the builder follows the part of the screen the keyboard leaves, so the website stays in view.
   function fit(){if(!isOpen()||!vv||window.innerWidth>=900){box.style.height='';box.style.top='';return;}
