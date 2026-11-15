@@ -267,9 +267,9 @@ export function builderScript(t, ctx) {
   function hasSvc(v){v=v.toLowerCase();return S.services.concat(S.others).some(function(x){return x.toLowerCase()===v;});}
   // A typed service that is not on the list. Returns it when it was added.
   function commitOther(){var v=norm(S.other);S.other='';if(!v)return null;var p=D.services.filter(function(x){return x.toLowerCase()===v.toLowerCase();})[0];if(p){if(S.services.indexOf(p)<0){S.services.push(p);S.services.sort(function(a,c){return D.services.indexOf(a)-D.services.indexOf(c);});return p;}return null;}if(hasSvc(v))return null;S.others.push(v);return v;}
-  function fullPhone(){var d=String(S.phone).replace(/\\D/g,'');if(d.length===11&&d[0]==='1')d=d.slice(1);return d.length===10;}
+  function fullPhone(){var d=String(S.phone).replace(/\\D/g,'');if(d.length===11&&d[0]==='1')d=d.slice(1);return d.length===10&&d[0]!=='1';}
   function flash(el){if(!el)return;el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit');}
-  function colorName(){for(var i=0;i<D.colors.length;i++)if(D.colors[i][1]===S.color)return D.colors[i][0];return '';}
+  function colorName(){var c=S.color||D.def.color;for(var i=0;i<D.colors.length;i++)if(D.colors[i][1]===c)return D.colors[i][0];return '';}
 
   // ----- the little website -----
   function paintSite(added){
