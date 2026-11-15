@@ -12,6 +12,8 @@
    right there, files go through the /photos uploader) and a small row for reaching Spencer. */
 
 export const WORDS = {
+  open: 'Make it mine',            // the pill on the closed builder (same words as the first screen button)
+  close: 'Back to the page',       // the X in the open builder, and the last button on the done screen
   siteLabel: 'Your website',
   siteLabelEnd: 'Your website. Scroll it.',
   name: { q: "What's your business called?", help: 'It goes at the top of your website.' },
@@ -45,13 +47,26 @@ export const WORDS = {
 export const BUILDER_COLORS = [['Orange', '#BF560E'], ['Red', '#C62828'], ['Blue', '#1F5FBF'], ['Navy', '#1B2A55'], ['Green', '#2C6B3F'], ['Black', '#1c1c1c'], ['Gold', '#9A6F08'], ['Purple', '#6B3FA0']];
 
 export const builderCss = `
-.bb-sec{background:#cfcbc0;scroll-margin-top:0}
-.bb{--bbh:100vh;height:var(--bbh);min-height:540px;max-height:940px;display:flex;flex-direction:column;background:#fff;overflow:hidden;position:relative}
-@supports (height:100svh){.bb{--bbh:100svh}}
+.bb-sec{background:var(--paper2);padding:clamp(28px,6vw,56px) 0;scroll-margin-top:0}
+.bb-wrap{position:relative;width:min(100% - 32px,560px);height:470px;margin:0 auto}
+/* closed: a preview of the builder. Nothing in it works until it is opened full screen. */
+.bb{height:100%;display:flex;flex-direction:column;background:#fff;overflow:hidden;position:relative;border:2px solid var(--ink);border-radius:20px}
+.bb:not(.pop){pointer-events:none}
+.bb-open{position:absolute;inset:0;z-index:5;display:flex;align-items:flex-end;justify-content:center;padding:0 0 22px;border:0;border-radius:20px;background:linear-gradient(180deg,rgba(13,13,13,0) 45%,rgba(13,13,13,.82) 92%);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.bb-open span{display:inline-flex;align-items:center;gap:10px;min-height:60px;padding:14px 30px;border-radius:14px;background:var(--acc);color:#0D0D0D;font:700 1.15rem var(--font-head);box-shadow:0 10px 28px rgba(0,0,0,.4)}
+.bb-open span svg{width:20px;height:20px}
+.bb-x{display:none;flex:none;align-items:center;gap:6px;min-height:36px;padding:6px 12px;border:0;border-radius:999px;background:var(--cream);color:#0D0D0D;font:700 .86rem var(--font-head);cursor:pointer;white-space:nowrap}
+.bb-shade{display:none}
+/* open: the builder takes the whole screen */
+.bb.pop{position:fixed;left:0;top:0;width:100%;height:100vh;height:100dvh;z-index:600;border:0;border-radius:0}
+.bb.pop .bb-x{display:inline-flex}
+.bb.pop~.bb-open{display:none}
+body.bb-lock{overflow:hidden}
 .bb.kb{min-height:0}
 .bb-bar{flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;background:var(--ink);color:var(--cream);min-width:0}
 .bb-bar>span:first-child{display:flex;gap:5px;flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden}
 .bb-bar .bf-tag{font-size:.8rem;padding:5px 7px 4px}
+.bb.pop .bb-bar .bf-tag--t{display:none}
 .bb-count{flex:none;font:600 .86rem var(--font-head);white-space:nowrap}
 .bb-prog{flex:none;height:5px;background:#2a2a2c}.bb-prog i{display:block;height:100%;width:0;background:var(--acc);transition:width .3s}
 .bb-pv{flex:0 0 46%;min-height:0;min-width:0;position:relative;background:#cfcbc0;padding:8px 10px 0;transition:flex-basis .35s}
@@ -139,13 +154,15 @@ export const builderCss = `
 .bb-acts a svg{width:17px;height:17px}
 .bb-pick{text-align:center}.bb-pick a{color:var(--ink);font-weight:600;font-size:.95rem;text-decoration:underline;text-underline-offset:3px;display:inline-block;padding:8px}
 @media (min-width:900px){
-  .bb-sec{padding:44px 20px;background:var(--paper2)}
-  .bb{max-width:1040px;margin:0 auto;height:680px;min-height:0;border-radius:22px;border:2px solid var(--ink);display:grid;grid-template-columns:420px minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr)}
-  .bb-bar,.bb-prog{grid-column:1/-1}
-  .bb-pv{grid-column:1;grid-row:3;flex-basis:auto!important;padding:18px 18px 0}
-  .bb-q{grid-column:2;grid-row:3;border-top:0;border-left:2px solid var(--ink);padding:34px 40px}
-  .bb-q h2{font-size:1.7rem}.bb-help{font-size:1.05rem}
-  .bb-q>div{max-width:520px}
+  .bb-wrap{width:min(100% - 40px,760px);height:520px}
+  .bb.pop{left:50%;top:50%;transform:translate(-50%,-50%);width:min(1040px,94vw);height:min(700px,92vh);border:2px solid var(--ink);border-radius:22px;display:grid;grid-template-columns:420px minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr)}
+  .bb.pop .bb-bar .bf-tag--t{display:inline-block}
+  .bb.pop~.bb-shade{display:block;position:fixed;inset:0;z-index:590;background:rgba(13,13,13,.72)}
+  .bb.pop .bb-bar,.bb.pop .bb-prog{grid-column:1/-1}
+  .bb.pop .bb-pv{grid-column:1;grid-row:3;flex-basis:auto!important;padding:18px 18px 0}
+  .bb.pop .bb-q{grid-column:2;grid-row:3;border-top:0;border-left:2px solid var(--ink);padding:34px 40px}
+  .bb.pop .bb-q h2{font-size:1.7rem}.bb.pop .bb-help{font-size:1.05rem}
+  .bb.pop .bb-q>div{max-width:520px}
 }`;
 
 const ICON_HOME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>';
@@ -161,8 +178,8 @@ export function builderHtml(t, ctx) {
     <input type="hidden" name="form-name" value="website-trial"><input type="hidden" name="form_version" value="${ctx.PROMO.formVersion} (builder)">
     <input type="hidden" name="promo" value="${ctx.PROMO.slug}"><input type="hidden" name="trade" value="${t.slug}"><input type="hidden" name="demo_pick" value="${attr(t.demo.name)}">
     <input name="bot-field">${fields.map(f => `<input type="hidden" name="${f}">`).join('')}</form>`;
-  return `<section class="bb-sec" id="taps"><div class="bb" id="bb">
-  <div class="bb-bar"><span>${ctx.tags}</span><span class="bb-count" id="bb-count" aria-live="polite"></span></div>
+  return `<section class="bb-sec" id="taps"><div class="bb-wrap"><div class="bb" id="bb" aria-label="${attr(W.siteLabel)}">
+  <div class="bb-bar"><span>${ctx.tags}</span><span class="bb-count" id="bb-count" aria-live="polite"></span><button type="button" class="bb-x" id="bb-x">${W.close} <span aria-hidden="true">&times;</span></button></div>
   <div class="bb-prog"><i id="bb-prog"></i></div>
   <div class="bb-pv" id="bb-pv"><span class="bb-pv__lab" id="bb-lab">${W.siteLabel}</span>
     <div class="bs" id="bs" aria-hidden="true" style="--photo:url('${b.hero}')">
@@ -192,10 +209,11 @@ export function builderHtml(t, ctx) {
         <a data-act="Email" href="mailto:${ctx.site.email}">Email</a>
       </div>
       <p class="bb-pick"><a href="${ctx.PROMO.callLink}" target="_blank" rel="noopener">${W.done.pick}</a></p>
+      <button type="button" class="bb-next" id="bb-backpage" style="flex:none;width:100%">${W.close}</button>
     </div>
   </div>
   ${form}
-</div></section>`;
+</div><div class="bb-shade" id="bb-shade"></div><button type="button" class="bb-open" id="bb-open"><span><b id="bb-openlbl" style="font-weight:inherit">${W.open}</b> ${ctx.arrow}</span></button></div></section>`;
 }
 
 export function builderScript(t, ctx) {
@@ -263,9 +281,7 @@ export function builderScript(t, ctx) {
   }
   var fired={},seen=false;
   function track(){if(!seen||fired[cur]||sent)return;fired[cur]=1;ga('ft_step',{step:STEPS[cur],n:cur+1});}
-  function go(i,tr){ERR='';cur=Math.max(0,Math.min(STEPS.length-1,i));paintQ();paintSite();focusSite(STEPS[cur]);save();if(tr){track();align();}}
-  function jump(dy){try{window.scrollTo({top:window.scrollY+dy,behavior:'instant'});}catch(e){window.scrollBy(0,dy);}}
-  function align(){var r=box.getBoundingClientRect();if(window.innerWidth<900&&Math.abs(r.top)>4)jump(r.top);}
+  function go(i,tr){ERR='';cur=Math.max(0,Math.min(STEPS.length-1,i));paintQ();paintSite();focusSite(STEPS[cur]);save();if(tr)track();}
 
   // ----- send -----
   function send(btn){
@@ -282,13 +298,13 @@ export function builderScript(t, ctx) {
       .catch(function(){btn.disabled=false;HTMLFormElement.prototype.submit.call(form);});
   }
   function done(quiet){
-    sent=true;try{localStorage.setItem(KEY,JSON.stringify({q:0,S:S,sent:1}));}catch(e){}
+    sent=true;pill();try{localStorage.setItem(KEY,JSON.stringify({q:0,S:S,sent:1}));}catch(e){}
     $('bb-step').hidden=true;var d=$('bb-done');d.hidden=false;$('bb-count').textContent='';$('bb-prog').style.width='100%';
     var acts=$('bb-acts');S.reach.slice().reverse().forEach(function(r){var a=acts.querySelector('[data-act="'+r+'"]');if(a)acts.insertBefore(a,acts.firstChild);});
     var biz=norm(S.name);if(biz)$('bb-sms').href=D.sms+'?&body='+encodeURIComponent('This is '+biz+'. '+W.done.textBody);
     var up=d.querySelector('.pd');if(up){up.setAttribute('data-noscroll','');var fi=up.querySelector('[data-file]');if(fi)fi.setAttribute('accept','image/*,.heic,.pdf,.svg,.ai,.eps');if(up.pdSetName)up.pdSetName(biz||S.who||'Black Friday lead');var pb=up.querySelector('[data-pick]');if(pb)pb.textContent=W.done.optBtn;}
     [].slice.call(acts.querySelectorAll('a')).forEach(function(a){a.addEventListener('click',function(){ga('bf_contact_click',{kind:a.getAttribute('data-act')});});});
-    paintSite();focusSite('done');$('bb-q').scrollTop=0;if(quiet)return;align();
+    paintSite();focusSite('done');$('bb-q').scrollTop=0;if(quiet)return;
     if(!matchMedia('(prefers-reduced-motion: reduce)').matches){var sc=$('bs-scroll');setTimeout(function(){sc.scrollTop=sc.scrollHeight;},700);setTimeout(function(){sc.scrollTop=0;},3200);}
     try{$('bb-doneh').focus({preventScroll:true});}catch(e){}
   }
@@ -320,14 +336,28 @@ export function builderScript(t, ctx) {
     else if(e.target.id==='bb-who'){$('bb-wphone').focus();}else if(e.target.id==='bb-wphone'){$('bb-wemail').focus();}
     else{var n=$('bb-step').querySelector('[data-next]');if(n)send(n);}});
 
-  // Phone keyboard: shrink the builder to the part of the screen the keyboard leaves, so the website stays in view.
-  var vv=window.visualViewport,kt=0;
-  function fit(){if(!vv||window.innerWidth>=900)return;var a=document.activeElement,typing=a&&a.tagName==='INPUT'&&box.contains(a),kb=typing&&vv.height<window.innerHeight*0.8;
-    box.classList.toggle('kb',!!kb);if(kb){box.style.setProperty('--bbh',Math.round(vv.height)+'px');var r=box.getBoundingClientRect(),off=r.top-(vv.offsetTop||0);if(Math.abs(off)>3)jump(off);}else box.style.removeProperty('--bbh');}
+  // ----- pop out: closed it is only a preview; opened it takes the whole screen. Answers stay saved either way. -----
+  var pushed=false,vv=window.visualViewport,kt=0,lastFocus=null;
+  function pill(){var l=$('bb-openlbl');if(l)l.textContent=sent?W.siteLabel:W.open;}
+  function isOpen(){return box.classList.contains('pop');}
+  function open(){if(isOpen())return;lastFocus=document.activeElement;box.classList.add('pop');document.body.classList.add('bb-lock');try{history.pushState({bbOpen:1},'');pushed=true;}catch(e){}
+    $('bb-q').scrollTop=0;fit();ga('bf_builder_open',{step:sent?'done':STEPS[cur]});seen=true;track();try{$('bb-x').focus({preventScroll:true});}catch(e){}}
+  function close(fromPop){if(!isOpen())return;var a=document.activeElement;if(a&&a.blur)a.blur();box.classList.remove('pop','kb');document.body.classList.remove('bb-lock');box.style.height='';box.style.top='';
+    if(pushed&&!fromPop){try{history.back();}catch(e){}}pushed=false;land();setTimeout(land,80);setTimeout(land,300);}
+  // After Send the lead lands on the sample site; before that, back on the builder preview.
+  function land(){var to=sent?document.getElementById('bf-sample-sec'):document.getElementById('taps');if(to)try{to.scrollIntoView({block:sent?'start':'center',behavior:'instant'});}catch(e){}}
+  try{history.scrollRestoration='manual';}catch(e){}
+  $('bb-open').addEventListener('click',open);$('bb-x').addEventListener('click',function(){close();});$('bb-backpage').addEventListener('click',function(){close();});$('bb-shade').addEventListener('click',function(){close();});
+  window.addEventListener('popstate',function(){close(true);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&isOpen())close();});
+  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href="#taps"]');if(a){e.preventDefault();open();}});
+  // Phone keyboard: while open, the builder follows the part of the screen the keyboard leaves, so the website stays in view.
+  function fit(){if(!isOpen()||!vv||window.innerWidth>=900){box.style.height='';box.style.top='';return;}
+    var a=document.activeElement,typing=a&&a.tagName==='INPUT'&&box.contains(a),kb=typing&&vv.height<window.innerHeight*0.8;
+    box.classList.toggle('kb',!!kb);if(kb){box.style.height=Math.round(vv.height)+'px';box.style.top=Math.round(vv.offsetTop||0)+'px';}else{box.style.height='';box.style.top='';}}
   function fitSoon(){clearTimeout(kt);kt=setTimeout(fit,60);}
-  if(vv){vv.addEventListener('resize',fitSoon);box.addEventListener('focusin',function(){setTimeout(fit,350);});box.addEventListener('focusout',function(){setTimeout(fit,150);});}
+  if(vv){vv.addEventListener('resize',fitSoon);vv.addEventListener('scroll',fitSoon);box.addEventListener('focusin',function(){setTimeout(fit,350);});box.addEventListener('focusout',function(){setTimeout(fit,150);});}
 
-  if('IntersectionObserver' in window){new IntersectionObserver(function(en){if(en[0].isIntersecting&&!seen){seen=true;track();}},{threshold:.3}).observe(box);}else seen=true;
   load();go(cur,false);if(wasSent)done(true);
 })();</script>`;
 }

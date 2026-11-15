@@ -30,6 +30,8 @@ const PROMO = {
   formVersion: '2026-11-15 Black Friday industry page',
   tag: 'Black Friday Deal',
   // Set to { src: '/assets/bf/intro.mp4', poster: '/assets/bf/intro.jpg' } once the video is recorded.
+  // Spencer 11/15: when the video goes in, the first screen headline becomes "A quick word from me on how this works"
+  // (final words go in the build doc first).
   video: null,
   // Spencer's 10 minute call scheduler (Notion: Salesmate Scheduling Links, the untagged link).
   callLink: 'https://nomavis.salesmate.io/meetings/#/nomavis/scheduler/10-minute-call',
@@ -124,9 +126,8 @@ const COPY = {
     ["What if I don't want it?", ["Let it go and you owe nothing. Your preview stays saved. After your time is up, it's my regular price."]],
     ['What happens after November 30?', ['Requests for this deal close November 30. If yours is in by then, you still get your full 7 days at $0 to start, even if they run into December. New requests after November 30 are at my regular price: $1,000 to start, then $100 a month.']],
   ],
-  // 3I (heading from the 11/15 block)
+  // 3I (heading from the 11/15 block). No Google reviews link: nothing on the page leads away (Spencer 11/15).
   proofTitle: "What it's like to work with me",
-  proofLink: 'See my Google reviews',
   // Bottom button and phone sticky button (3J)
   bottomBtn: 'Get my preview',
   // Thank you screen (11/15 block, replaces 3K)
@@ -169,14 +170,15 @@ const css = `
 .bf-hero h1{margin:18px 0 14px;font-family:Anton,Impact,'Arial Narrow',sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(2.7rem,11.5vw,5.6rem);line-height:1.02;letter-spacing:.01em;color:var(--cream)}
 .bf-hero h1 b{font-weight:400;color:var(--acc)}
 .bf-lead{max-width:36ch;color:#ddd8cc;font-size:clamp(1.08rem,2.6vw,1.32rem);line-height:1.5}
-.bf-phone{width:min(300px,100%);margin:0 auto;padding:10px;border-radius:40px;background:#1a1a1c;box-shadow:0 0 0 2px #303034,0 30px 80px rgba(0,0,0,.65)}
-.bf-phone__s{position:relative;overflow:hidden;border-radius:30px;aspect-ratio:390/693;background:#fff}
+.bf-phone{position:relative;width:min(286px,100%);margin:0 auto;padding:34px 10px 10px;border-radius:44px;background:#1a1a1c;box-shadow:0 0 0 2px #303034,0 30px 80px rgba(0,0,0,.65)}
+.bf-phone:before{content:"";position:absolute;left:50%;top:11px;z-index:2;width:26%;height:13px;border-radius:999px;background:#0b0b0c;transform:translateX(-50%)}
+.bf-phone__s{position:relative;overflow:hidden;border-radius:10px 10px 34px 34px;aspect-ratio:390/780;background:#fff}
 .bf-phone__s img{display:block;width:100%;height:auto;will-change:transform}
 .bf-video{display:block;width:100%;border-radius:18px;background:#000}
 @media (max-width:860px){
-  .bf-hero__g{grid-template-columns:minmax(0,1fr);grid-template-areas:"copy" "phone" "cta";gap:18px}
+  .bf-hero__g{grid-template-columns:minmax(0,1fr);grid-template-areas:"copy" "cta" "phone";gap:18px}
   .bf-hero__cta{margin-top:0}.bf-hero__cta .bf-btn{width:100%}
-  .bf-phone{width:min(220px,58vw);padding:7px;border-radius:30px}.bf-phone__s{border-radius:24px;aspect-ratio:390/450}
+  .bf-phone{width:min(212px,56vw);padding:26px 7px 7px;border-radius:34px;margin-top:8px}.bf-phone:before{top:8px;height:10px}.bf-phone__s{border-radius:8px 8px 27px 27px}
 }
 @media (prefers-reduced-motion:reduce){.bf-phone__s img{animation:none!important}}
 /* taps */
@@ -281,7 +283,6 @@ function scrollKeyframes(t) {
 
 export function makeBlackFridayPages({ head, icon, site }) {
   const smsBase = site.phoneHref.replace('tel:', 'sms:');
-  const googleReviews = `https://www.google.com/maps?cid=${site.gbpCid}`;
   const fonts = `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@600;700;800&family=Barlow+Condensed:wght@700&display=swap">`;
   const brand = `<span class="bf-brand"><img src="/assets/evovero-logo-80.webp" alt="" width="26" height="26">EvoVero</span>`;
   const foot = `<footer class="bf-foot"><div class="bf-in">&copy; ${new Date().getFullYear()} EvoVero</div></footer>`;
@@ -420,7 +421,7 @@ export function makeBlackFridayPages({ head, icon, site }) {
   var sb=document.getElementById('bf-sticky'),taps=document.getElementById('taps'),hero=document.querySelector('.bf-hero'),end=document.querySelector('.bf-end'),tk=0;
   if(sb&&taps&&hero){window.addEventListener('scroll',function(){if(tk)return;tk=requestAnimationFrame(function(){tk=0;var r=taps.getBoundingClientRect();sb.classList.toggle('on',hero.getBoundingClientRect().bottom<0&&(r.top>window.innerHeight*0.7||r.bottom<0)&&!(end&&end.getBoundingClientRect().top<window.innerHeight));});},{passive:true});}
 })();</script>`;
-    const ctx = { PROMO, path, site, tags: tags(t).replace(/^<div class="bf-tags">|<\/div>$/g, ''), uploaderHtml: uploader('bb-up', 'blackfriday-builder', { site }) };
+    const ctx = { PROMO, path, site, tags: tags(t).replace(/^<div class="bf-tags">|<\/div>$/g, ''), uploaderHtml: uploader('bb-up', 'blackfriday-builder', { site }), arrow: icon('arrow') };
     const tapsSection = t.builder ? builderHtml(t, ctx) : `<section class="bf-sec bf-taps" id="taps"><div class="bf-in">
   <h2>${COPY.tapsTitle}</h2>
   ${form}
@@ -446,7 +447,7 @@ export function makeBlackFridayPages({ head, icon, site }) {
 
 ${tapsSection}
 
-<section class="bf-sec bf-sec--alt"><div class="bf-in bf-in--wide">
+<section class="bf-sec bf-sec--alt" id="bf-sample-sec"><div class="bf-in bf-in--wide">
   <div class="bf-in" style="padding:0;margin:0"><h2>${t.sampleHeading}</h2>
   <p class="bf-sub">${COPY.sampleLead}</p></div>
   <div class="bf-sample" id="bf-sample">
@@ -469,7 +470,6 @@ ${tapsSection}
 <section class="bf-sec"><div class="bf-in">
   <h2>${COPY.proofTitle}</h2>
   <div class="bf-revs">${['Chris', 'Jesse', 'Yadira'].map(n => reviews.find(r => r.name.startsWith(n))).filter(Boolean).map(r => `<figure class="bf-rev"><span class="st" aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><q>${r.text}</q><figcaption>${r.name}</figcaption></figure>`).join('')}</div>
-  <a class="bf-link" href="${googleReviews}" target="_blank" rel="noopener">${COPY.proofLink} ${icon('arrow')}</a>
 </div></section>
 
 <section class="bf-end"><div class="bf-in"><a class="bf-btn" href="#taps">${COPY.bottomBtn} ${icon('arrow')}</a></div></section>
