@@ -15,20 +15,20 @@ export const WORDS = {
   open: 'Make it mine',            // the pill on the closed builder (same words as the first screen button)
   close: 'Close',                  // the X at the top of the open builder
   closeEnd: 'Close preview builder', // the last button on the done screen
-  add: 'Add',                      // the small button beside a typed service, city or phone number
+  add: 'Add',                      // the small button beside a typed service or city
   otherDone: 'Done',               // closes the box for typing in services that are not on the list
   siteLabel: 'Your website',
   siteLabelEnd: 'Your website. Scroll it.',
   name: { q: "What's your business called?", help: 'It goes at the top of your website.' },
-  tagline: { q: 'Do you have a tagline?', help: "This can change, and it will look different on the real preview I send you. Enter something you'd like to see. It can always change later." },
+  tagline: { q: "What's your slogan?", help: 'Keep this one or type your own. It will look different on the real preview I send you, and it can change later.' },
   services: { q: 'What do you do? Tap all that fit.', help: 'Each one goes in your menu.' },
   cities: { q: 'What cities do you work in?', help: 'Type a city and watch it land on your website.', placeholder: 'Type a city' },
-  color: { q: 'Pick your main color.', help: 'This can always change later. Shades can change. Color combinations can change. Everything can change. We just need a place to start.' },
+  color: { q: 'Pick your main color.', help: 'This is a starting point. I can change any color later.' },
   phone: { q: 'What number should the call button dial?', help: "There's a call button on every page." },
   send: { q: 'Last one. How should I reach you?', help: 'Tap all that work. I finish your preview and send you the link within 48 hours.', btn: 'Send me my preview', assure: "No credit card. Don't like it? You owe nothing." },
   done: {
     h: "You're all set. Your preview is next.",
-    sent: "Your answers are sent. I'll build your first version from them. Want something different? Don't worry about it. We'll fine tune it together once you see it.",
+    sent: "Your answers are sent. I'll build your first version from them. Want something different once you see it? Tell me and I'll change it.",
     lead: "I'll text and email you the link within 48 hours from 402-698-4902.",
     watch: 'Watch for a text from me asking which job you want more of. Your answer goes at the top of your website.',
     optTag: 'Optional',
@@ -157,7 +157,10 @@ body.bb-lock{overflow:hidden}
 .bb-nav{flex:none;display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border-top:2px solid var(--ink);border-bottom:1px solid #e6e3da;min-width:0}.bb-nav[hidden]{display:none}
 .bb-nav .bb-next{min-height:52px}
 .bb-next{flex:1;min-height:58px;border:0;border-radius:14px;background:var(--ink);color:#fff;font:700 1.1rem var(--font-head);cursor:pointer;-webkit-tap-highlight-color:transparent}
-.bb-next.go{background:var(--acc);color:#0D0D0D}.bb-next[disabled]{opacity:.6}
+.bb-next.go{background:var(--acc);color:#0D0D0D}
+@keyframes bb-pulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 0 4px #fff,0 0 0 7px var(--acc),0 0 22px 6px var(--acc)}}
+.bb-next.glow{animation:bb-pulse 1.5s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.bb-next.glow{animation:none;box-shadow:0 0 0 3px #fff,0 0 0 6px var(--acc)}}.bb-next[disabled]{opacity:.6}
 .bb-back{border:0;background:none;color:var(--soft);font:inherit;font-size:.96rem;padding:12px 4px;cursor:pointer}
 .bb-small{margin-top:14px;text-align:center;font-size:.9rem;color:var(--ink);font-weight:600}
 .bb-consent{margin-top:8px;text-align:center;color:var(--soft);font-size:.76rem;line-height:1.4}.bb-consent a{color:var(--soft);text-decoration:underline}
@@ -264,6 +267,7 @@ export function builderScript(t, ctx) {
   function hasSvc(v){v=v.toLowerCase();return S.services.concat(S.others).some(function(x){return x.toLowerCase()===v;});}
   // A typed service that is not on the list. Returns it when it was added.
   function commitOther(){var v=norm(S.other);S.other='';if(!v)return null;var p=D.services.filter(function(x){return x.toLowerCase()===v.toLowerCase();})[0];if(p){if(S.services.indexOf(p)<0){S.services.push(p);S.services.sort(function(a,c){return D.services.indexOf(a)-D.services.indexOf(c);});return p;}return null;}if(hasSvc(v))return null;S.others.push(v);return v;}
+  function fullPhone(){var d=String(S.phone).replace(/\\D/g,'');if(d.length===11&&d[0]==='1')d=d.slice(1);return d.length===10;}
   function flash(el){if(!el)return;el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit');}
   function colorName(){for(var i=0;i<D.colors.length;i++)if(D.colors[i][1]===S.color)return D.colors[i][0];return '';}
 
@@ -294,7 +298,7 @@ export function builderScript(t, ctx) {
   }
 
   // ----- the questions -----
-  function nav(label,go){$('bb-nav').innerHTML=(cur>0?'<button type="button" class="bb-back" data-back>\\u2190 Back</button>':'')+'<button type="button" class="bb-next'+(go?' go':'')+'" data-next>'+label+'</button>';return '';}
+  function nav(label,go,glow){$('bb-nav').innerHTML=(cur>0?'<button type="button" class="bb-back" data-back>\\u2190 Back</button>':'')+'<button type="button" class="bb-next'+(go?' go':'')+(glow?' glow':'')+'" data-next>'+label+'</button>';return '';}
   function paintMine(){var m=$('bb-mine');if(m)m.innerHTML=S.cities.map(function(c,i){return '<button type="button" data-rm="'+i+'" aria-label="Remove '+esc(c)+'">'+esc(c)+' \\u00d7</button>';}).join('');}
   function paintOMine(){var m=$('bb-omine');if(m)m.innerHTML=S.others.map(function(c,i){return '<button type="button" data-orm="'+i+'" aria-label="Remove '+esc(c)+'">'+esc(c)+' \\u00d7</button>';}).join('');}
   function paintQ(){
@@ -305,7 +309,7 @@ export function builderScript(t, ctx) {
     else if(step==='services')h+='<div class="bb-chips">'+D.services.map(function(s){return '<button type="button" class="bb-chip" data-svc="'+esc(s)+'" aria-pressed="'+(S.services.indexOf(s)>-1)+'">'+s+'</button>';}).join('')+(S.showOther?'':S.others.map(function(o,i){return '<button type="button" class="bb-chip" data-otherrm="'+i+'" aria-pressed="true" aria-label="Remove '+esc(o)+'">'+esc(o)+' \\u00d7</button>';}).join(''))+'<button type="button" class="bb-chip" data-other aria-pressed="'+(!!S.showOther)+'">Other</button></div>'+(S.showOther?'<div class="bb-row" style="margin-top:8px"><input class="bb-in" id="bb-other" aria-label="Other" autocomplete="off" enterkeyhint="done" value="'+esc(S.other)+'"><button type="button" class="bb-add" data-addother>'+W.add+'</button><button type="button" class="bb-add bb-donebtn" data-otherdone>'+W.otherDone+'</button></div><div class="bb-mine" id="bb-omine"></div>':'')+nav('Next');
     else if(step==='cities')h+='<div class="bb-row"><input class="bb-in" id="bb-city" aria-label="'+esc(w.q)+'" autocomplete="off" enterkeyhint="done" placeholder="'+esc(w.placeholder)+'" value="'+esc(S.draft)+'"><button type="button" class="bb-add" id="bb-addcity">'+W.add+'</button></div><div class="bb-mine" id="bb-mine"></div>'+nav('Next');
     else if(step==='color')h+='<div class="bb-sw">'+D.colors.map(function(c){return '<button type="button" data-color="'+c[1]+'" style="background:'+c[1]+'" aria-pressed="'+(S.color===c[1])+'" aria-label="'+c[0]+'"><span>'+c[0]+'</span></button>';}).join('')+'</div>'+nav('Next');
-    else if(step==='phone')h+='<div class="bb-row"><input class="bb-in" id="bb-phone" aria-label="'+esc(w.q)+'" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="(402) 555-0123" value="'+esc(fmtPhone(S.phone))+'"><button type="button" class="bb-add" data-addphone>'+W.add+'</button></div>'+nav('Next');
+    else if(step==='phone')h+='<input class="bb-in" id="bb-phone" aria-label="'+esc(w.q)+'" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="(402) 555-0123" value="'+esc(fmtPhone(S.phone))+'">'+nav('Next',fullPhone(),fullPhone());
     else{h=(ERR?'<p class="bb-err" id="bb-err" role="alert" style="margin:0 0 10px">'+esc(ERR)+'</p>':'')+h;h+='<div class="bb-chips three">'+['Text','Call','Email'].map(function(r){return '<button type="button" class="bb-chip" data-reach="'+r+'" aria-pressed="'+(S.reach.indexOf(r)>-1)+'">'+r+'</button>';}).join('')+'</div>';
       if(!known)h+='<div class="bb-field"><label for="bb-who">Your name</label><input class="bb-in" id="bb-who" autocomplete="name" value="'+esc(S.who)+'"></div><div class="bb-field"><label for="bb-wphone">Phone</label><input class="bb-in" id="bb-wphone" type="tel" inputmode="tel" autocomplete="tel" value="'+esc(S.wtouch?S.wphone:fmtPhone(S.phone))+'"></div><div class="bb-field"><label for="bb-wemail">Email</label><input class="bb-in" id="bb-wemail" type="email" inputmode="email" autocomplete="email" value="'+esc(S.wemail)+'"></div>';
       h+=nav(w.btn,true)+'<p class="bb-small">'+w.assure+'</p><p class="bb-consent">By sending this, you agree I can text and email you about your preview. Message and data rates may apply. Reply STOP to opt out. <a href="/privacy-policy/" target="_blank" rel="noopener">Privacy</a> and <a href="/terms/" target="_blank" rel="noopener">Terms</a>.</p>';}
@@ -350,7 +354,6 @@ export function builderScript(t, ctx) {
     if(b.hasAttribute('data-otherrm')){S.others.splice(+b.getAttribute('data-otherrm'),1);paintQ();paintSite();save();return;}
     if(b.hasAttribute('data-orm')){S.others.splice(+b.getAttribute('data-orm'),1);paintOMine();paintSite();save();return;}
     if(b.hasAttribute('data-otherdone')){closeOther();return;}
-    if(b.hasAttribute('data-addphone')){var pi=$('bb-phone');if(pi)pi.blur();fit();focusSite('phone');return;}
     if(b.id==='bb-addcity'){addCity();return;}
     if(b.hasAttribute('data-rm')){S.cities.splice(+b.getAttribute('data-rm'),1);paintMine();paintSite();save();return;}
     if(b.hasAttribute('data-color')){S.color=b.getAttribute('data-color');[].forEach.call($('bb-step').querySelectorAll('[data-color]'),function(x){x.setAttribute('aria-pressed',x===b);});paintSite();flash($('bs-call'));flash($('bs-icon'));flash($('bs-svc'));save();return;}
@@ -375,7 +378,8 @@ export function builderScript(t, ctx) {
     else if(t.id==='bb-tag'){S.tagline=t.value;paintSite();}
     else if(t.id==='bb-other'){S.other=t.value;paintSite();var m=$('bs-menu');m.scrollTop=0;}
     else if(t.id==='bb-city'){S.draft=t.value;paintSite();var mm=$('bs-menu');mm.scrollTop=mm.scrollHeight;}
-    else if(t.id==='bb-phone'){S.phone=t.value;var f=fmtPhone(t.value);if(t.value!==f)t.value=f;paintSite();}
+    else if(t.id==='bb-phone'){var was=fullPhone();S.phone=t.value;var f=fmtPhone(t.value);if(t.value!==f)t.value=f;paintSite();var nx=$('bb-nav').querySelector('[data-next]'),full=fullPhone();if(nx){nx.classList.toggle('go',full);nx.classList.toggle('glow',full);}
+      if(full&&!was){t.blur();fit();focusSite('phone');}}
     else if(t.id==='bb-who')S.who=t.value;else if(t.id==='bb-wphone'){S.wphone=t.value;S.wtouch=true;}else if(t.id==='bb-wemail')S.wemail=t.value;
     save();});
   $('bb-step').addEventListener('keydown',function(e){if(e.key!=='Enter'||e.target.tagName!=='INPUT')return;e.preventDefault();

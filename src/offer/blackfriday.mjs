@@ -45,7 +45,7 @@ const TRADES = [
     tag: 'Concrete Contractors',
     accent: '#FFD21F',
     title: 'Your Concrete Website, Before You Pay | EvoVero',
-    desc: 'See how a website for your concrete business works, answer a few quick taps, and get your own preview within 48 hours. No credit card. Requests close November 30.',
+    desc: 'See how a website for your concrete business works, answer 7 quick questions, and get your own preview within 48 hours. No credit card. Requests close November 30.',
     sampleHeading: "Here's how your concrete website works.",
     services: ['Driveways', 'Patios', 'Sidewalks', 'Foundations and footings', 'Stamped or decorative', 'Commercial flatwork'],
     demo: { name: 'Ironline Concrete', url: '/websites/demo/concrete/' },
@@ -62,10 +62,16 @@ const TRADES = [
     tag: 'Tree Service Owners',
     accent: '#FF5B14',
     title: 'Your Tree Service Website, Before You Pay | EvoVero',
-    desc: 'See how a website for your tree service business works, answer a few quick taps, and get your own preview within 48 hours. No credit card. Requests close November 30.',
+    desc: 'See how a website for your tree service business works, answer 7 quick questions, and get your own preview within 48 hours. No credit card. Requests close November 30.',
     sampleHeading: "Here's how your tree service website works.",
     services: ['Tree removal', 'Trimming and pruning', 'Stump grinding', 'Storm cleanup', 'Lot clearing'],
     demo: { name: 'Highlimb Tree Service', url: '/websites/demo/highlimb-tree-service/' },
+    // Same preview builder as concrete (Spencer 2026-11-15 5:19pm: clone it once concrete was settled).
+    builder: {
+      kick: 'Tree service', tagline: 'Tree Removal Done Safely. Yard Left Clean.', color: '#2C6B3F', eg: 'Smith Tree Service',
+      hero: '/assets/bf/builder/tree-hero.jpg', other: '/assets/bf/builder/tree-other.jpg',
+      cards: { 'Tree removal': '/assets/bf/builder/tree-removal.jpg', 'Trimming and pruning': '/assets/bf/builder/tree-trimming.jpg', 'Stump grinding': '/assets/bf/builder/tree-stump.jpg', 'Storm cleanup': '/assets/bf/builder/tree-storm.jpg', 'Lot clearing': '/assets/bf/builder/tree-clearing.jpg' },
+    },
     scroll: { img: '/assets/bf/tree-scroll.webp', w: 585, h: 5821, stops: [17.574, 41.05, 82.151] },
   },
 ];
@@ -75,7 +81,9 @@ const COPY = {
   // First screen (11/14 build notes, first screen draft)
   h1Form: 'Your preview is <b>being built.</b>',
   h1Other: 'See your website <b>before you pay</b> anything.',
-  lead: 'Make it yours. It takes about a minute, and your answers are how I make it look like your business.',
+  lead: 'Make it yours. It takes about 2 minutes, and your answers are how I make it look like your business.',
+  // Under the first screen button (added 11/15 5:19pm)
+  heroNote: "No card. $0 to start, then $100 a month only when you want it. I'll text and email you the preview within 48 hours.",
   heroBtn: 'Make it mine',
   // Taps (3D, plus the services tap from the 11/14 build notes)
   tapsTitle: 'A few quick taps',
@@ -110,7 +118,7 @@ const COPY = {
   catches: [
     ['No card to start', 'Nothing is charged until you tell me you want the website. Then you tap Get this website on your preview, or I text you a link to pay.'],
     ['You see it first', 'You get 7 days with your preview, starting the day I text and email you the link. Send me every change you want in that time.'],
-    ['Like it or walk away', "Like it? Say yes within your 7 days and it's $0 to start, just $100 a month. No contract, cancel anytime with a text. Don't? Let it go and you owe nothing."],
+    ['Like it or walk away', "Like it? Say yes within your 7 days and it's $0 to start, then $100 a month. No contract, cancel anytime with a text. Don't? Let it go and you owe nothing."],
     ['Why $0 to start?', '$0 to start is my Black Friday price, and it has an end date. My regular price is $1,000 to start, then $100 a month.'],
     ["What's yours", 'Your business name, logo, photos, words and web address (like yourbusiness.com) are yours. The website itself is part of the $100 a month, like any monthly website service. If you stop paying, the website comes down. No contract, and you can cancel anytime.'],
   ],
@@ -119,13 +127,13 @@ const COPY = {
     ['What $100 a month covers', ["The website itself. I keep it online and working, and I make any change you send me by text or email. You never log in or touch any code. Month to month.", "If you want something that needs another company's software, like online booking, that software is on you. I'll help you pick one and set it up."]],
     // Added 11/15 2:46pm (Spencer's angle, kept in line with the "What's yours" card above)
     ["How is it mine if it's not in my account?", ["Your business name, logo, photos, words and web address are yours. I keep the website itself in my account so you don't have to. Running it yourself means a hosting account, a domain account and a card on file with each one. With me you deal with one person and I handle all of it."]],
-    ['How paying works', ["You only pay once you tell me you want the website. You pay through a secure link. Say yes within your 7 days and your first payment is $100, then $100 a month on the same card until you cancel. Cancel anytime with a text and you won't be charged again."]],
+    ['How paying works', ["You only pay once you tell me you want the website. You pay through a secure link. Say yes within your 7 days and there is no startup cost. You pay $100 for your first month, then $100 a month on the same card until you cancel. Cancel anytime with a text and you won't be charged again."]],
     ["How often you'll hear from me", ["While your 7 days run, I'll text, call or email you about once a day, each time with one thing to look at on your preview. If you'd rather I stop, just tell me."]],
     ['Do I need a credit card?', ['No. You see your website first, and you only pay if you want it.']],
     ['How long do I have to decide?', ['7 days, starting the day I text and email you your preview.']],
-    ['What if I want it?', ["Tap Get this website on your preview, or tell me and I'll text you the link. Say yes within your 7 days and it's $0 to start, just $100 a month."]],
+    ['What if I want it?', ["Tap Get this website on your preview, or tell me and I'll text you the link. Say yes within your 7 days and it's $0 to start, then $100 a month."]],
     ['What if I need more time?', ["When your 7 days end, you can add 24 hours yourself, right on the preview. Need longer than that? Tell me the day you can decide. Get this website by the day we agree on and it's still $0 to start. After it, it's my regular price: $1,000 to start, then $100 a month."]],
-    ["What if I don't want it?", ["Let it go and you owe nothing. Your preview stays saved. After your time is up, it's my regular price."]],
+    ["What if I don't want it?", ["Let it go and you owe nothing. Your preview stays saved. If you come back after your time is up, it's my regular price."]],
     ['What happens after November 30?', ['Requests for this deal close November 30. If yours is in by then, you still get your full 7 days at $0 to start, even if they run into December. New requests after November 30 are at my regular price: $1,000 to start, then $100 a month.']],
   ],
   // 3I (heading from the 11/15 block). No Google reviews link: nothing on the page leads away (Spencer 11/15).
@@ -171,6 +179,7 @@ const css = `
 .bf-tag--t{background:var(--acc)}
 .bf-hero h1{margin:18px 0 14px;font-family:Anton,Impact,'Arial Narrow',sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(2.7rem,11.5vw,5.6rem);line-height:1.02;letter-spacing:.01em;color:var(--cream)}
 .bf-hero h1 b{font-weight:400;color:var(--acc)}
+.bf-hero__note{max-width:40ch;margin-top:12px;color:#c9c4b8;font-size:.98rem;line-height:1.45}
 .bf-lead{max-width:36ch;color:#ddd8cc;font-size:clamp(1.08rem,2.6vw,1.32rem);line-height:1.5}
 .bf-phone{position:relative;width:min(286px,100%);margin:0 auto;padding:34px 10px 10px;border-radius:44px;background:#1a1a1c;box-shadow:0 0 0 2px #303034,0 30px 80px rgba(0,0,0,.65)}
 .bf-phone:before{content:"";position:absolute;left:50%;top:11px;z-index:2;width:26%;height:13px;border-radius:999px;background:#0b0b0c;transform:translateX(-50%)}
@@ -219,6 +228,7 @@ const css = `
 .bf-sample__x{flex:none;min-height:44px;padding:8px 16px;border:0;border-radius:999px;background:var(--cream);color:#0D0D0D;font:700 .98rem var(--font-head);cursor:pointer}
 .bf-sample__s{position:relative}
 .bf-sample iframe{display:block;width:100%;height:min(700px,80vh);border:0;background:#fff}
+.bf-sample iframe:not([src]){visibility:hidden}
 .bf-sample__tap{display:none}
 @media (max-width:860px){
   .bf-sample iframe{height:min(64svh,560px);pointer-events:none}
@@ -413,9 +423,11 @@ export function makeBlackFridayPages({ head, icon, site }) {
     [].slice.call(doc.querySelectorAll('a[href^="tel:"],a[href^="mailto:"],a[href^="sms:"]')).forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();});});
     [].slice.call(doc.querySelectorAll('a[target]')).forEach(function(a){a.removeAttribute('target');});
     [].slice.call(doc.querySelectorAll('form')).forEach(function(fm){fm.addEventListener('submit',function(e){e.preventDefault();});});}catch(e){}}
-  if(frame){frame.addEventListener('load',tame);tame();}
+  // Phones: the sample (video and photos, a few MB) loads only when it is tapped. Wider screens load it as it nears the screen.
+  function loadFrame(){if(frame&&!frame.getAttribute('src'))frame.setAttribute('src',frame.getAttribute('data-src'));}
+  if(frame){frame.addEventListener('load',tame);if(!window.matchMedia||!matchMedia('(max-width:860px)').matches)loadFrame();}
   var pushed=false;
-  function openFull(){if(!box||box.classList.contains('full'))return;box.classList.add('full');document.body.classList.add('bf-lock');try{history.pushState({bfFull:1},'');pushed=true;}catch(e){}ga('ft_demo_full',{demo:TRADE});var x=box.querySelector('.bf-sample__x');if(x)x.focus();}
+  function openFull(){if(!box||box.classList.contains('full'))return;loadFrame();box.classList.add('full');document.body.classList.add('bf-lock');try{history.pushState({bfFull:1},'');pushed=true;}catch(e){}ga('ft_demo_full',{demo:TRADE});var x=box.querySelector('.bf-sample__x');if(x)x.focus();}
   function closeFull(fromPop){if(!box||!box.classList.contains('full'))return;box.classList.remove('full');document.body.classList.remove('bf-lock');if(pushed&&!fromPop){try{history.back();}catch(e){}}pushed=false;box.scrollIntoView({block:'center'});}
   if(box){box.querySelector('.bf-sample__tap').addEventListener('click',openFull);box.querySelector('.bf-sample__x').addEventListener('click',function(){closeFull();});
     window.addEventListener('popstate',function(){closeFull(true);});document.addEventListener('keydown',function(e){if(e.key==='Escape')closeFull();});}
@@ -443,7 +455,7 @@ export function makeBlackFridayPages({ head, icon, site }) {
       <p class="bf-lead">${COPY.lead}</p>
     </div>
     <div class="bf-hero__vid">${slot}</div>
-    <div class="bf-hero__cta"><a class="bf-btn" href="#taps">${COPY.heroBtn} ${icon('arrow')}</a></div>
+    <div class="bf-hero__cta"><a class="bf-btn" href="#taps">${COPY.heroBtn} ${icon('arrow')}</a><p class="bf-hero__note">${COPY.heroNote}</p></div>
   </div>
 </div></section>
 
@@ -454,7 +466,7 @@ ${tapsSection}
   <p class="bf-sub">${COPY.sampleLead}</p></div>
   <div class="bf-sample" id="bf-sample">
     <div class="bf-sample__bar"><button type="button" class="bf-sample__x">Close &times;</button></div>
-    <div class="bf-sample__s"><iframe id="bf-frame" title="${attr(t.demo.name)}, a sample website" src="${t.demo.url}" loading="lazy"></iframe><button type="button" class="bf-sample__tap" aria-label="Open the sample website"><span>Tap to look around</span></button></div>
+    <div class="bf-sample__s" style="background:#fff url('${t.scroll.img}') top center/cover no-repeat"><iframe id="bf-frame" title="${attr(t.demo.name)}, a sample website" data-src="${t.demo.url}" loading="lazy"></iframe><button type="button" class="bf-sample__tap" aria-label="Open the sample website"><span>Tap to look around</span></button></div>
   </div>
 </div></section>
 
