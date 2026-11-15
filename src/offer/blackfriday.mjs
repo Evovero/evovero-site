@@ -22,6 +22,8 @@
 
 import { reviews } from '../data/reviews.mjs';
 import { SWATCH } from './viewer.mjs';
+import { builderCss, builderHtml, builderScript } from './bf-builder.mjs';
+import { dropboxCss, uploader, dropboxForm, dropboxScript } from './dropbox.mjs';
 
 const PROMO = {
   slug: 'blackfriday',
@@ -45,6 +47,12 @@ const TRADES = [
     sampleHeading: "Here's how your concrete website works.",
     services: ['Driveways', 'Patios', 'Sidewalks', 'Foundations and footings', 'Stamped or decorative', 'Commercial flatwork'],
     demo: { name: 'Ironline Concrete', url: '/websites/demo/concrete/' },
+    // Preview builder in place of the quick taps (Spencer 2026-11-15; concrete first, tree follows once this is dialed in).
+    builder: {
+      kick: 'Concrete contractor', tagline: 'Driveways and Patios Built to Last.', color: '#E0701F', eg: 'Smith Concrete',
+      hero: '/assets/bf/builder/concrete-hero.jpg', other: '/assets/bf/builder/concrete-other.jpg',
+      cards: { 'Driveways': '/assets/bf/builder/concrete-driveways.jpg', 'Patios': '/assets/bf/builder/concrete-patios.jpg', 'Sidewalks': '/assets/bf/builder/concrete-sidewalks.jpg', 'Foundations and footings': '/assets/bf/builder/concrete-foundations.jpg', 'Stamped or decorative': '/assets/bf/builder/concrete-stamped.jpg', 'Commercial flatwork': '/assets/bf/builder/concrete-commercial.jpg' },
+    },
     scroll: { img: '/assets/bf/concrete-scroll.webp', w: 585, h: 6123, stops: [19.378, 42.896, 83.023] },
   },
   {
@@ -274,7 +282,7 @@ function scrollKeyframes(t) {
 export function makeBlackFridayPages({ head, icon, site }) {
   const smsBase = site.phoneHref.replace('tel:', 'sms:');
   const googleReviews = `https://www.google.com/maps?cid=${site.gbpCid}`;
-  const fonts = `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@700&display=swap">`;
+  const fonts = `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@600;700;800&family=Barlow+Condensed:wght@700&display=swap">`;
   const brand = `<span class="bf-brand"><img src="/assets/evovero-logo-80.webp" alt="" width="26" height="26">EvoVero</span>`;
   const foot = `<footer class="bf-foot"><div class="bf-in">&copy; ${new Date().getFullYear()} EvoVero</div></footer>`;
   const tags = t => `<div class="bf-tags"><span class="bf-tag">${PROMO.tag}</span><span class="bf-tag bf-tag--t">${t.tag}</span></div>`;
@@ -390,6 +398,11 @@ export function makeBlackFridayPages({ head, icon, site }) {
       .then(function(r){if(!r.ok)throw 0;ga('trial_extras',{form_name:'website-trial'});ga('ft_submit',{src:src});try{localStorage.removeItem(KEY);}catch(x){}setTimeout(function(){location.href=done;},300);})
       .catch(function(){btn.disabled=false;HTMLFormElement.prototype.submit.call(form);});
   });
+})();</script>`;
+
+    const shared = `<script>(function(){
+  var TRADE=${JSON.stringify(t.slug)};
+  function ga(n,p){try{p=p||{};p.promo=${JSON.stringify(PROMO.slug)};p.trade=TRADE;if(window.gtag)gtag('event',n,p);}catch(e){}}
   // The sample site: links that lead away are removed, calls and forms inside it do nothing.
   var box=document.getElementById('bf-sample'),frame=document.getElementById('bf-frame');
   function tame(){try{var doc=frame.contentDocument;if(!doc||!doc.head)return;var st=doc.createElement('style');st.textContent='.mb,.callbar{display:none!important}body{padding-bottom:0!important}';doc.head.appendChild(st);
@@ -407,8 +420,14 @@ export function makeBlackFridayPages({ head, icon, site }) {
   var sb=document.getElementById('bf-sticky'),taps=document.getElementById('taps'),hero=document.querySelector('.bf-hero'),end=document.querySelector('.bf-end'),tk=0;
   if(sb&&taps&&hero){window.addEventListener('scroll',function(){if(tk)return;tk=requestAnimationFrame(function(){tk=0;var r=taps.getBoundingClientRect();sb.classList.toggle('on',hero.getBoundingClientRect().bottom<0&&(r.top>window.innerHeight*0.7||r.bottom<0)&&!(end&&end.getBoundingClientRect().top<window.innerHeight));});},{passive:true});}
 })();</script>`;
+    const ctx = { PROMO, path, site, tags: tags(t).replace(/^<div class="bf-tags">|<\/div>$/g, ''), uploaderHtml: uploader('bb-up', 'blackfriday-builder', { site }) };
+    const tapsSection = t.builder ? builderHtml(t, ctx) : `<section class="bf-sec bf-taps" id="taps"><div class="bf-in">
+  <h2>${COPY.tapsTitle}</h2>
+  ${form}
+</div></section>`;
+    const tapsScript = t.builder ? `${dropboxForm}${dropboxScript}${builderScript(t, ctx)}` : script;
 
-    const body = `${fonts}<style>${css}${PROMO.video ? '' : scrollKeyframes(t)}</style>
+    const body = `${fonts}<style>${css}${t.builder ? builderCss + dropboxCss : ''}${PROMO.video ? '' : scrollKeyframes(t)}</style>
 <div class="bf" data-trade="${t.slug}" style="${vars(t)}">
 <main>
 <section class="bf-hero"><div class="bf-in bf-in--wide">
@@ -425,10 +444,7 @@ export function makeBlackFridayPages({ head, icon, site }) {
   </div>
 </div></section>
 
-<section class="bf-sec bf-taps" id="taps"><div class="bf-in">
-  <h2>${COPY.tapsTitle}</h2>
-  ${form}
-</div></section>
+${tapsSection}
 
 <section class="bf-sec bf-sec--alt"><div class="bf-in bf-in--wide">
   <div class="bf-in" style="padding:0;margin:0"><h2>${t.sampleHeading}</h2>
@@ -461,7 +477,8 @@ export function makeBlackFridayPages({ head, icon, site }) {
 ${foot}
 <a class="bf-btn bf-sticky" id="bf-sticky" href="#taps">${COPY.bottomBtn} ${icon('arrow')}</a>
 </div>
-${script}
+${tapsScript}
+${shared}
 <script src="/site.js" defer></script></body></html>`;
 
     return head({ title: t.title, desc: t.desc, path, noindex: true, schema: [], fast: true }) + body;

@@ -497,7 +497,7 @@ export function makeOfferPages({ head, icon, site, demos }) {
       <input type="hidden" name="source" id="t-src">
       <input type="hidden" name="demo_pick" id="t-demo">
       <!-- The Black Friday industry pages post to this same form; these keep its extra fields registered here too. -->
-      <input type="hidden" name="promo"><input type="hidden" name="trade"><input type="hidden" name="services"><input type="hidden" name="services_other">
+      <input type="hidden" name="promo"><input type="hidden" name="trade"><input type="hidden" name="services"><input type="hidden" name="services_other"><input type="hidden" name="tagline"><input type="hidden" name="cities"><input type="hidden" name="call_number">
       <p hidden><label>Skip this<input name="bot-field"></label></p>
       <div class="ft-top"><span class="ft-count" id="ft-count" aria-live="polite"></span><div class="ft-prog"><i id="ft-bar"></i></div></div>
       <p class="ft-note">Your answers are how I make the preview look like yours. Nothing is final.</p>
