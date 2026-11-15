@@ -15,13 +15,18 @@ import veterans from './sites/veterans.mjs';
 import farmfloral from './sites/farmfloral.mjs';
 import towing from './sites/towing.mjs';
 import junkhauling from './sites/junkhauling.mjs';
+import handyman from './sites/handyman.mjs';
+import kitchen from './sites/kitchen.mjs';
+import media from './sites/media.mjs';
+import electrical from './sites/electrical.mjs';
+import treeservice from './sites/treeservice.mjs';
 
-export const demos = [lawn, concrete, coffee, kayak, salon, photographer, photobooth, funeral, church, veterans, farmfloral, towing, junkhauling];
+export const demos = [lawn, concrete, coffee, kayak, salon, photographer, photobooth, funeral, church, veterans, farmfloral, towing, junkhauling, handyman, kitchen, media, electrical, treeservice];
 
 // Viewer order on /free-trial (Spencer 2026-10-25): first five show, the rest sit behind "See more".
 // A slug with no built demo is skipped, so new demos are added here and to the list above.
 export const planned = [];
-export const viewerOrder = ['concrete', 'photo-booth', 'funeral-home', 'church', 'photographer', 'veterans-post', 'lawn-care', 'farm-floral', 'towing', 'junk-hauling', 'coffee-shop', 'hair-salon', 'kayak-rental'];
+export const viewerOrder = ['concrete', 'photo-booth', 'funeral-home', 'church', 'photographer', 'handyman', 'kitchen', 'electrical', 'tree-service', 'media', 'veterans-post', 'lawn-care', 'farm-floral', 'towing', 'junk-hauling', 'coffee-shop', 'hair-salon', 'kayak-rental'];
 
 export function buildDemos(OUT) {
   let n = 0;
