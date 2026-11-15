@@ -137,8 +137,8 @@ body.bb-lock{overflow:hidden}
 .bb-q h2{font:700 1.34rem/1.22 var(--font-head);margin-bottom:4px;letter-spacing:0}
 .bb-help{color:var(--soft);font-size:.96rem;line-height:1.45;margin-bottom:12px}
 .bb.kb .bb-help{display:none}.bb.kb .bb-q h2{font-size:1.1rem;margin-bottom:8px}.bb.kb .bb-q{padding-top:10px}
-.bb-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}.bb-chips.three{grid-template-columns:repeat(3,1fr)}
-.bb-chip{min-height:54px;padding:8px 10px;border:2px solid #cfc9ba;border-radius:12px;background:#fff;font:600 .98rem var(--font-head);line-height:1.2;color:var(--ink);cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent}
+.bb-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.bb-chips.three{grid-template-columns:repeat(3,1fr)}
+.bb-chip{min-height:54px;padding:8px 10px;border:2px solid #cfc9ba;border-radius:12px;background:#fff;font:600 .98rem var(--font-head);line-height:1.2;color:var(--ink);cursor:pointer;text-align:center;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent}
 .bb-chip[aria-pressed=true]{border-color:var(--ink);background:var(--tint);box-shadow:inset 0 0 0 1px var(--ink)}
 .bb-sw{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .bb-sw button{height:58px;border-radius:12px;border:2px solid rgba(0,0,0,.15);cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent}
@@ -150,7 +150,7 @@ body.bb-lock{overflow:hidden}
 .bb-row{display:flex;gap:8px;align-items:stretch}.bb-row .bb-in{flex:1;min-width:0;width:auto}
 .bb-add{flex:none;min-width:78px;padding:0 16px;border:0;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);font:700 1rem var(--font-head);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bb-mine{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.bb-mine:empty{display:none}
-.bb-mine button{border:0;background:var(--tint);box-shadow:inset 0 0 0 1.5px var(--ink);border-radius:999px;padding:8px 12px;font:600 .88rem var(--font-head);color:var(--ink);cursor:pointer}
+.bb-mine button{max-width:100%;overflow-wrap:anywhere;border:0;background:var(--tint);box-shadow:inset 0 0 0 1.5px var(--ink);border-radius:999px;padding:8px 12px;font:600 .88rem var(--font-head);color:var(--ink);cursor:pointer}
 /* Back and Next sit in one bar right under the website, always in view */
 .bb-nav{flex:none;display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border-top:2px solid var(--ink);border-bottom:1px solid #e6e3da;min-width:0}.bb-nav[hidden]{display:none}
 .bb-nav .bb-next{min-height:52px}
