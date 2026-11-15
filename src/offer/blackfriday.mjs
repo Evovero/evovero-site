@@ -117,6 +117,8 @@ const COPY = {
   // 3F, 3G, 3H, then 3J with the two lines reworded in 7 NEW. All tap to open rows under 3E.
   rows: [
     ['What $100 a month covers', ["The website itself. I keep it online and working, and I make any change you send me by text or email. You never log in or touch any code. Month to month.", "If you want something that needs another company's software, like online booking, that software is on you. I'll help you pick one and set it up."]],
+    // Added 11/15 2:46pm (Spencer's angle, kept in line with the "What's yours" card above)
+    ["How is it mine if it's not in my account?", ["Your business name, logo, photos, words and web address are yours. I keep the website itself in my account so you don't have to. Running it yourself means a hosting account, a domain account and a card on file with each one. With me you deal with one person and I handle all of it."]],
     ['How paying works', ["You only pay once you tell me you want the website. You pay through a secure link. Say yes within your 7 days and your first payment is $100, then $100 a month on the same card until you cancel. Cancel anytime with a text and you won't be charged again."]],
     ["How often you'll hear from me", ["While your 7 days run, I'll text, call or email you about once a day, each time with one thing to look at on your preview. If you'd rather I stop, just tell me."]],
     ['Do I need a credit card?', ['No. You see your website first, and you only pay if you want it.']],
@@ -129,7 +131,7 @@ const COPY = {
   // 3I (heading from the 11/15 block). No Google reviews link: nothing on the page leads away (Spencer 11/15).
   proofTitle: "What it's like to work with me",
   // Bottom button and phone sticky button (3J)
-  bottomBtn: 'Get my preview',
+  bottomBtn: 'Make it mine',   // Spencer 11/15 2:46pm: one button wording on the whole page
   // Thank you screen (11/15 block, replaces 3K)
   tyH1: "You're all set. <b>Your preview is next.</b>",
   tyLead: "I'll text and email you the link within 48 hours from 402-698-4902.",
