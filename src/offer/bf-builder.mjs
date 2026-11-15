@@ -366,7 +366,7 @@ export function builderScript(t, ctx) {
   // Add beside the Other box: the typed service becomes its own picked chip, next to the rest.
   function addOther(){var v=commitOther(),o=$('bb-other');if(o)o.value='';paintOMine();paintSite(v);var m=$('bs-menu'),n=m.querySelector('.new');if(n)try{m.scrollTop=Math.max(0,n.offsetTop-60);}catch(x){}if(o)o.focus();save();}
   // Done: keep anything still in the box, close the box, and show every pick together.
-  function closeOther(){var v=commitOther(),o=$('bb-other');if(o)o.blur();S.showOther=false;paintQ();paintSite(v);save();fit();var q=$('bb-q');q.scrollTop=q.scrollHeight;}
+  function closeOther(){var v=commitOther(),o=$('bb-other');if(o)o.blur();S.showOther=false;paintQ();paintSite(v);save();fit();var q=$('bb-q'),dn=function(){if(STEPS[cur]==='services'&&!S.showOther)q.scrollTop=q.scrollHeight;};dn();setTimeout(dn,260);setTimeout(dn,600);}
   function addCity(){var v=commitCity(),i=$('bb-city');i.value='';paintMine();paintSite(v);var m=$('bs-menu'),n=m.querySelector('.new');if(n)m.scrollTop=Math.max(0,n.offsetTop-m.clientHeight+50);i.focus();save();}
   $('bb-step').addEventListener('input',function(e){var t=e.target,er=$('bb-err'),hadErr=er&&!er.hidden;if(er)er.hidden=true;ERR='';if(hadErr)setTimeout(fit,0);
     if(t.id==='bb-name'){S.name=t.value;paintSite();}
