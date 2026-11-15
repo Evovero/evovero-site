@@ -13,18 +13,21 @@
 
 export const WORDS = {
   open: 'Make it mine',            // the pill on the closed builder (same words as the first screen button)
-  close: 'Back to the page',       // the X in the open builder, and the last button on the done screen
+  close: 'Close',                  // the X at the top of the open builder
+  closeEnd: 'Close preview builder', // the last button on the done screen
+  add: 'Add',                      // the small button beside a typed service, city or phone number
   siteLabel: 'Your website',
   siteLabelEnd: 'Your website. Scroll it.',
   name: { q: "What's your business called?", help: 'It goes at the top of your website.' },
   tagline: { q: 'Do you have a tagline?', help: "This can change, and it will look different on the real preview I send you. Enter something you'd like to see. It can always change later." },
   services: { q: 'What do you do? Tap all that fit.', help: 'Each one goes in your menu.' },
-  cities: { q: 'What cities do you work in?', help: 'Type a city and watch it land on your website.', placeholder: 'Type a city', add: '+ Add another city' },
+  cities: { q: 'What cities do you work in?', help: 'Type a city and watch it land on your website.', placeholder: 'Type a city' },
   color: { q: 'Pick your main color.', help: 'This can always change later. Shades can change. Color combinations can change. Everything can change. We just need a place to start.' },
   phone: { q: 'What number should the call button dial?', help: "There's a call button on every page." },
   send: { q: 'Last one. How should I reach you?', help: 'Tap all that work. I finish your preview and send you the link within 48 hours.', btn: 'Send me my preview', assure: "No credit card. Don't like it? You owe nothing." },
   done: {
     h: "You're all set. Your preview is next.",
+    sent: "Your answers are sent. I'll build your first version from them. Want something different? Don't worry about it. We'll fine tune it together once you see it.",
     lead: "I'll text and email you the link within 48 hours from 402-698-4902.",
     watch: 'Watch for a text from me asking which job you want more of. Your answer goes at the top of your website.',
     optTag: 'Optional',
@@ -71,7 +74,7 @@ body.bb-lock{overflow:hidden}
 .bb.kb .bb-nav{padding:6px 12px}.bb.kb .bb-nav .bb-next{min-height:44px}
 .bb.kb .s-send h2,.bb.kb .s-send .bb-chips,.bb.kb .s-services h2,.bb.kb .s-services .bb-chips{display:none}
 .bb.kb .s-send,.bb.kb .s-services{padding-bottom:70vh}
-.bb.kb .bb-in{padding:11px 12px}.bb.kb .bb-add{min-height:42px;margin-top:6px}
+.bb.kb .bb-in{padding:11px 12px}
 .bb-bar{flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;background:var(--ink);color:var(--cream);min-width:0}
 .bb-bar>span:first-child{display:flex;gap:5px;flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden}
 .bb-bar .bf-tag{font-size:.8rem;padding:5px 7px 4px}
@@ -144,7 +147,8 @@ body.bb-lock{overflow:hidden}
 .bb-in{width:100%;padding:14px 14px;border:2px solid #cfc9ba;border-radius:12px;font:inherit;font-size:1.08rem;background:#fff;color:var(--ink)}
 .bb-in:focus{outline:none;border-color:var(--ink)}
 .bb-field{margin-top:10px}.bb-field label{display:block;margin-bottom:5px;font:600 .92rem var(--font-head)}
-.bb-add{width:100%;margin-top:8px;min-height:50px;border:0;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);font:700 .98rem var(--font-head);cursor:pointer}
+.bb-row{display:flex;gap:8px;align-items:stretch}.bb-row .bb-in{flex:1;min-width:0;width:auto}
+.bb-add{flex:none;min-width:78px;padding:0 16px;border:0;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);font:700 1rem var(--font-head);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bb-mine{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.bb-mine:empty{display:none}
 .bb-mine button{border:0;background:var(--tint);box-shadow:inset 0 0 0 1.5px var(--ink);border-radius:999px;padding:8px 12px;font:600 .88rem var(--font-head);color:var(--ink);cursor:pointer}
 /* Back and Next sit in one bar right under the website, always in view */
@@ -217,6 +221,7 @@ export function builderHtml(t, ctx) {
     <div id="bb-step"></div>
     <div class="bb-done" id="bb-done" hidden>
       <h2 tabindex="-1" id="bb-doneh">${W.done.h}</h2>
+      <p>${W.done.sent}</p>
       <p>${W.done.lead.replace(ctx.site.phone, `<span style="white-space:nowrap">${ctx.site.phone}</span>`)}</p>
       <p>${W.done.watch}</p>
       <div class="bb-opt"><span class="t">${W.done.optTag}</span><h3>${W.done.optH}</h3><p>${W.done.optP}</p>${ctx.uploaderHtml}</div>
@@ -227,7 +232,7 @@ export function builderHtml(t, ctx) {
         <a data-act="Email" href="mailto:${ctx.site.email}">Email</a>
       </div>
       <p class="bb-pick"><a href="${ctx.PROMO.callLink}" target="_blank" rel="noopener">${W.done.pick}</a></p>
-      <button type="button" class="bb-next" id="bb-backpage" style="flex:none;width:100%">${W.close}</button>
+      <button type="button" class="bb-next" id="bb-backpage" style="flex:none;width:100%">${W.closeEnd}</button>
     </div>
   </div>
   ${form}
@@ -244,7 +249,7 @@ export function builderScript(t, ctx) {
   function $(id){return document.getElementById(id);}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function ga(n,p){try{p=p||{};p.promo=D.promo;p.trade=D.trade;if(window.gtag)gtag('event',n,p);}catch(e){}}
-  function blank(){return {name:'',tagline:D.def.tagline,services:[],showOther:false,other:'',cities:[],draft:'',color:'',phone:'',reach:[],who:'',wphone:'',wtouch:false,wemail:''};}
+  function blank(){return {name:'',tagline:D.def.tagline,services:[],showOther:false,other:'',otherDone:false,cities:[],draft:'',color:'',phone:'',reach:[],who:'',wphone:'',wtouch:false,wemail:''};}
   var wasSent=false;
   function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.S){S=Object.assign(blank(),d.S);cur=Math.max(0,Math.min(STEPS.length-1,d.q||0));wasSent=!!d.sent;return;}}catch(e){}S=blank();}
   function save(){try{localStorage.setItem(KEY,JSON.stringify({q:cur,S:S}));}catch(e){}}
@@ -291,10 +296,10 @@ export function builderScript(t, ctx) {
     $('bb-count').textContent=(cur+1)+' of '+STEPS.length;$('bb-prog').style.width=((cur+1)/STEPS.length*100)+'%';
     if(step==='name')h+='<input class="bb-in" id="bb-name" aria-label="'+esc(w.q)+'" autocomplete="organization" enterkeyhint="next" placeholder="'+esc(D.eg)+'" value="'+esc(S.name)+'">'+(ERR?'<p class="bb-err" id="bb-err" role="alert">'+esc(ERR)+'</p>':'')+nav('Next');
     else if(step==='tagline')h+='<input class="bb-in" id="bb-tag" aria-label="'+esc(w.q)+'" autocomplete="off" enterkeyhint="next" value="'+esc(S.tagline)+'">'+nav('Next');
-    else if(step==='services')h+='<div class="bb-chips">'+D.services.map(function(s){return '<button type="button" class="bb-chip" data-svc="'+esc(s)+'" aria-pressed="'+(S.services.indexOf(s)>-1)+'">'+s+'</button>';}).join('')+'<button type="button" class="bb-chip" data-other aria-pressed="'+(!!S.showOther)+'">Other</button></div>'+(S.showOther?'<input class="bb-in" id="bb-other" style="margin-top:8px" aria-label="Other" enterkeyhint="next" value="'+esc(S.other)+'">':'')+nav('Next');
-    else if(step==='cities')h+='<input class="bb-in" id="bb-city" aria-label="'+esc(w.q)+'" autocomplete="off" enterkeyhint="done" placeholder="'+esc(w.placeholder)+'" value="'+esc(S.draft)+'"><button type="button" class="bb-add" id="bb-addcity">'+w.add+'</button><div class="bb-mine" id="bb-mine"></div>'+nav('Next');
+    else if(step==='services')h+='<div class="bb-chips">'+D.services.map(function(s){return '<button type="button" class="bb-chip" data-svc="'+esc(s)+'" aria-pressed="'+(S.services.indexOf(s)>-1)+'">'+s+'</button>';}).join('')+(S.otherDone&&norm(S.other)?'<button type="button" class="bb-chip" data-otherrm aria-pressed="true" aria-label="Remove '+esc(norm(S.other))+'">'+esc(norm(S.other))+' \\u00d7</button>':'<button type="button" class="bb-chip" data-other aria-pressed="'+(!!S.showOther)+'">Other</button>')+'</div>'+(S.showOther&&!S.otherDone?'<div class="bb-row" style="margin-top:8px"><input class="bb-in" id="bb-other" aria-label="Other" enterkeyhint="done" value="'+esc(S.other)+'"><button type="button" class="bb-add" data-addother>'+W.add+'</button></div>':'')+nav('Next');
+    else if(step==='cities')h+='<div class="bb-row"><input class="bb-in" id="bb-city" aria-label="'+esc(w.q)+'" autocomplete="off" enterkeyhint="done" placeholder="'+esc(w.placeholder)+'" value="'+esc(S.draft)+'"><button type="button" class="bb-add" id="bb-addcity">'+W.add+'</button></div><div class="bb-mine" id="bb-mine"></div>'+nav('Next');
     else if(step==='color')h+='<div class="bb-sw">'+D.colors.map(function(c){return '<button type="button" data-color="'+c[1]+'" style="background:'+c[1]+'" aria-pressed="'+(S.color===c[1])+'" aria-label="'+c[0]+'"><span>'+c[0]+'</span></button>';}).join('')+'</div>'+nav('Next');
-    else if(step==='phone')h+='<input class="bb-in" id="bb-phone" aria-label="'+esc(w.q)+'" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="(402) 555-0123" value="'+esc(fmtPhone(S.phone))+'">'+nav('Next');
+    else if(step==='phone')h+='<div class="bb-row"><input class="bb-in" id="bb-phone" aria-label="'+esc(w.q)+'" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="(402) 555-0123" value="'+esc(fmtPhone(S.phone))+'"><button type="button" class="bb-add" data-addphone>'+W.add+'</button></div>'+nav('Next');
     else{h=(ERR?'<p class="bb-err" id="bb-err" role="alert" style="margin:0 0 10px">'+esc(ERR)+'</p>':'')+h;h+='<div class="bb-chips three">'+['Text','Call','Email'].map(function(r){return '<button type="button" class="bb-chip" data-reach="'+r+'" aria-pressed="'+(S.reach.indexOf(r)>-1)+'">'+r+'</button>';}).join('')+'</div>';
       if(!known)h+='<div class="bb-field"><label for="bb-who">Your name</label><input class="bb-in" id="bb-who" autocomplete="name" value="'+esc(S.who)+'"></div><div class="bb-field"><label for="bb-wphone">Phone</label><input class="bb-in" id="bb-wphone" type="tel" inputmode="tel" autocomplete="tel" value="'+esc(S.wtouch?S.wphone:fmtPhone(S.phone))+'"></div><div class="bb-field"><label for="bb-wemail">Email</label><input class="bb-in" id="bb-wemail" type="email" inputmode="email" autocomplete="email" value="'+esc(S.wemail)+'"></div>';
       h+=nav(w.btn,true)+'<p class="bb-small">'+w.assure+'</p><p class="bb-consent">By sending this, you agree I can text and email you about your preview. Message and data rates may apply. Reply STOP to opt out. <a href="/privacy-policy/" target="_blank" rel="noopener">Privacy</a> and <a href="/terms/" target="_blank" rel="noopener">Terms</a>.</p>';}
@@ -334,7 +339,10 @@ export function builderScript(t, ctx) {
   $('bb-step').addEventListener('click',function(e){
     var b=e.target.closest('button');if(!b)return;
     if(b.hasAttribute('data-svc')){var s=b.getAttribute('data-svc'),i=S.services.indexOf(s);if(i>-1)S.services.splice(i,1);else{S.services.push(s);S.services.sort(function(a,c){return D.services.indexOf(a)-D.services.indexOf(c);});}b.setAttribute('aria-pressed',i<0);paintSite(i<0?s:null);var n=$('bs-menu').querySelector('.new');if(n)try{$('bs-menu').scrollTop=Math.max(0,n.offsetTop-60);}catch(x){}save();return;}
-    if(b.hasAttribute('data-other')){S.showOther=!S.showOther;if(!S.showOther)S.other='';paintQ();paintSite();var o=$('bb-other');if(o)o.focus();save();return;}
+    if(b.hasAttribute('data-other')){S.showOther=!S.showOther;S.otherDone=false;if(!S.showOther)S.other='';paintQ();paintSite();var o=$('bb-other');if(o)o.focus();save();fit();return;}
+    if(b.hasAttribute('data-addother')){addOther();return;}
+    if(b.hasAttribute('data-otherrm')){S.other='';S.otherDone=false;S.showOther=false;paintQ();paintSite();save();return;}
+    if(b.hasAttribute('data-addphone')){var pi=$('bb-phone');if(pi)pi.blur();fit();focusSite('phone');return;}
     if(b.id==='bb-addcity'){addCity();return;}
     if(b.hasAttribute('data-rm')){S.cities.splice(+b.getAttribute('data-rm'),1);paintMine();paintSite();save();return;}
     if(b.hasAttribute('data-color')){S.color=b.getAttribute('data-color');[].forEach.call($('bb-step').querySelectorAll('[data-color]'),function(x){x.setAttribute('aria-pressed',x===b);});paintSite();flash($('bs-call'));flash($('bs-icon'));flash($('bs-svc'));save();return;}
@@ -343,10 +351,12 @@ export function builderScript(t, ctx) {
   // Back and Next. If they were typing, the next box is focused right away so the keyboard stays up.
   var typedAt=0;
   function wasTyping(){var a=document.activeElement;return (a&&a.tagName==='INPUT'&&box.contains(a))||Date.now()-typedAt<700;}
-  function step(d){var k=wasTyping();if(STEPS[cur]==='cities')commitCity();go(cur+d,d>0);if(k&&['name','tagline','cities','phone'].indexOf(STEPS[cur])>-1){var f=$('bb-step').querySelector('input.bb-in');if(f)try{f.focus({preventScroll:true});var L=f.value.length;f.setSelectionRange(L,L);}catch(x){}}}
+  function step(d){var k=wasTyping();if(STEPS[cur]==='cities')commitCity();if(STEPS[cur]==='services'&&S.showOther){if(norm(S.other))S.otherDone=true;else S.showOther=false;}go(cur+d,d>0);if(k&&['name','tagline','cities','phone'].indexOf(STEPS[cur])>-1){var f=$('bb-step').querySelector('input.bb-in');if(f)try{f.focus({preventScroll:true});var L=f.value.length;f.setSelectionRange(L,L);}catch(x){}}}
   $('bb-nav').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
     if(b.hasAttribute('data-next')){if(cur===STEPS.length-1){if(STEPS[cur]==='cities')commitCity();send(b);}else step(1);}
     else if(b.hasAttribute('data-back'))step(-1);});
+  // Add beside the Other box: the typed service becomes its own picked chip, next to the rest.
+  function addOther(){var v=norm(S.other),o=$('bb-other');if(o)o.blur();if(v){S.other=v;S.otherDone=true;}else{S.other='';S.showOther=false;}paintQ();paintSite(v||null);var n=$('bs-menu').querySelector('.new');if(n)try{$('bs-menu').scrollTop=Math.max(0,n.offsetTop-60);}catch(x){}save();fit();}
   function addCity(){var v=commitCity(),i=$('bb-city');i.value='';paintMine();paintSite(v);var m=$('bs-menu'),n=m.querySelector('.new');if(n)m.scrollTop=Math.max(0,n.offsetTop-m.clientHeight+50);i.focus();save();}
   $('bb-step').addEventListener('input',function(e){var t=e.target,er=$('bb-err'),hadErr=er&&!er.hidden;if(er)er.hidden=true;ERR='';if(hadErr)setTimeout(fit,0);
     if(t.id==='bb-name'){S.name=t.value;paintSite();}
@@ -358,6 +368,7 @@ export function builderScript(t, ctx) {
     save();});
   $('bb-step').addEventListener('keydown',function(e){if(e.key!=='Enter'||e.target.tagName!=='INPUT')return;e.preventDefault();
     if(e.target.id==='bb-city'){if(norm(e.target.value))addCity();else step(1);}
+    else if(e.target.id==='bb-other'){addOther();}
     else if(cur<STEPS.length-1){step(1);}
     else if(e.target.id==='bb-who'){$('bb-wphone').focus();}else if(e.target.id==='bb-wphone'){$('bb-wemail').focus();}
     else{var n=$('bb-nav').querySelector('[data-next]');if(n)send(n);}});
