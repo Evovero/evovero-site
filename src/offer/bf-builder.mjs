@@ -348,7 +348,7 @@ export function builderScript(t, ctx) {
     if(b.hasAttribute('data-next')){if(cur===STEPS.length-1){if(STEPS[cur]==='cities')commitCity();send(b);}else step(1);}
     else if(b.hasAttribute('data-back'))step(-1);});
   function addCity(){var v=commitCity(),i=$('bb-city');i.value='';paintMine();paintSite(v);var m=$('bs-menu'),n=m.querySelector('.new');if(n)m.scrollTop=Math.max(0,n.offsetTop-m.clientHeight+50);i.focus();save();}
-  $('bb-step').addEventListener('input',function(e){var t=e.target,er=$('bb-err');if(er)er.hidden=true;ERR='';
+  $('bb-step').addEventListener('input',function(e){var t=e.target,er=$('bb-err'),hadErr=er&&!er.hidden;if(er)er.hidden=true;ERR='';if(hadErr)setTimeout(fit,0);
     if(t.id==='bb-name'){S.name=t.value;paintSite();}
     else if(t.id==='bb-tag'){S.tagline=t.value;paintSite();}
     else if(t.id==='bb-other'){S.other=t.value;paintSite();var m=$('bs-menu');m.scrollTop=0;}
@@ -392,7 +392,7 @@ export function builderScript(t, ctx) {
     box.classList.toggle('kb',t);box.classList.toggle('kbfit',!!fitOk);
     if(t&&vv){box.style.top=Math.round(vv.offsetTop||0)+'px';box.style.height=fitOk?Math.round(h)+'px':'';}else{box.style.height='';box.style.top='';}
     if(t!==was)focusSite(sent?'done':STEPS[cur]);
-    if(t){var a=document.activeElement,q=$('bb-q'),w=a.closest('.bb-field')||a,qt=q.getBoundingClientRect().top,d=a.getBoundingClientRect().bottom-qt,up=w.getBoundingClientRect().top-qt;if($('bb-err')&&!$('bb-err').hidden&&STEPS[cur]==='send')q.scrollTop=0;else if(d>150||up<8)q.scrollTop+=up-12;}
+    if(t){var a=document.activeElement,q=$('bb-q'),w=a.closest('.bb-field')||a,qt=q.getBoundingClientRect().top,d=a.getBoundingClientRect().bottom-qt,up=w.getBoundingClientRect().top-qt;if($('bb-err')&&!$('bb-err').hidden&&STEPS[cur]==='send'&&a.id==='bb-who')q.scrollTop=0;else if(d>150||up<8)q.scrollTop+=up-12;}
   }
   function fitSoon(){clearTimeout(kt);kt=setTimeout(fit,60);}
   box.addEventListener('focusin',function(e){if(e.target.tagName==='INPUT'){fit();setTimeout(fit,350);setTimeout(fit,700);}});
