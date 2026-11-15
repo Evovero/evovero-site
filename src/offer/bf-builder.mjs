@@ -16,6 +16,7 @@ export const WORDS = {
   close: 'Close',                  // the X at the top of the open builder
   closeEnd: 'Close preview builder', // the last button on the done screen
   add: 'Add',                      // the small button beside a typed service, city or phone number
+  otherDone: 'Done',               // closes the box for typing in services that are not on the list
   siteLabel: 'Your website',
   siteLabelEnd: 'Your website. Scroll it.',
   name: { q: "What's your business called?", help: 'It goes at the top of your website.' },
@@ -150,6 +151,7 @@ body.bb-lock{overflow:hidden}
 .bb-row{display:flex;gap:8px;align-items:stretch}.bb-row .bb-in{flex:1;min-width:0;width:auto}
 .bb-add{flex:none;min-width:78px;padding:0 16px;border:0;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);font:700 1rem var(--font-head);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bb-mine{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.bb-mine:empty{display:none}
+.s-services .bb-row .bb-add{min-width:64px;padding:0 12px}.bb-donebtn{background:var(--ink);color:#fff;box-shadow:none}
 .bb-mine button{max-width:100%;overflow-wrap:anywhere;border:0;background:var(--tint);box-shadow:inset 0 0 0 1.5px var(--ink);border-radius:999px;padding:8px 12px;font:600 .88rem var(--font-head);color:var(--ink);cursor:pointer}
 /* Back and Next sit in one bar right under the website, always in view */
 .bb-nav{flex:none;display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border-top:2px solid var(--ink);border-bottom:1px solid #e6e3da;min-width:0}.bb-nav[hidden]{display:none}
@@ -249,16 +251,19 @@ export function builderScript(t, ctx) {
   function $(id){return document.getElementById(id);}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function ga(n,p){try{p=p||{};p.promo=D.promo;p.trade=D.trade;if(window.gtag)gtag('event',n,p);}catch(e){}}
-  function blank(){return {name:'',tagline:D.def.tagline,services:[],showOther:false,other:'',otherDone:false,cities:[],draft:'',color:'',phone:'',reach:[],who:'',wphone:'',wtouch:false,wemail:''};}
+  function blank(){return {name:'',tagline:D.def.tagline,services:[],showOther:false,other:'',others:[],cities:[],draft:'',color:'',phone:'',reach:[],who:'',wphone:'',wtouch:false,wemail:''};}
   var wasSent=false;
-  function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.S){S=Object.assign(blank(),d.S);cur=Math.max(0,Math.min(STEPS.length-1,d.q||0));wasSent=!!d.sent;return;}}catch(e){}S=blank();}
+  function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.S){S=Object.assign(blank(),d.S);if(!Array.isArray(S.others))S.others=[];if(S.otherDone&&norm(S.other)){S.others.push(norm(S.other));S.other='';S.showOther=false;}delete S.otherDone;cur=Math.max(0,Math.min(STEPS.length-1,d.q||0));wasSent=!!d.sent;return;}}catch(e){}S=blank();}
   function save(){try{localStorage.setItem(KEY,JSON.stringify({q:cur,S:S}));}catch(e){}}
   function norm(v){return String(v).trim().replace(/\\s+/g,' ');}
   function allCities(){var c=S.cities.slice(),d=norm(S.draft);if(d&&c.map(function(x){return x.toLowerCase();}).indexOf(d.toLowerCase())<0)c.push(d);return c;}
   function commitCity(){var v=norm(S.draft);S.draft='';if(v&&S.cities.map(function(c){return c.toLowerCase();}).indexOf(v.toLowerCase())<0){S.cities.push(v);return v;}return null;}
   function fmtPhone(v){var d=String(v).replace(/\\D/g,'');if(d.length===11&&d[0]==='1')d=d.slice(1);d=d.slice(0,10);if(!d)return '';if(d.length<4)return '('+d;if(d.length<7)return '('+d.slice(0,3)+') '+d.slice(3);return '('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6);}
   function cityLine(){var c=allCities();if(!c.length)return '';if(c.length===1)return 'Serving '+c[0]+'.';return 'Serving '+c.slice(0,-1).join(', ')+' and '+c[c.length-1]+'.';}
-  function svcList(){var s=S.services.slice();if(norm(S.other))s.push(norm(S.other));return s;}
+  function svcList(){var s=S.services.concat(S.others),d=norm(S.other);if(d&&!hasSvc(d))s.push(d);return s;}
+  function hasSvc(v){v=v.toLowerCase();return S.services.concat(S.others).some(function(x){return x.toLowerCase()===v;});}
+  // A typed service that is not on the list. Returns it when it was added.
+  function commitOther(){var v=norm(S.other);S.other='';if(!v)return null;var p=D.services.filter(function(x){return x.toLowerCase()===v.toLowerCase();})[0];if(p){if(S.services.indexOf(p)<0){S.services.push(p);S.services.sort(function(a,c){return D.services.indexOf(a)-D.services.indexOf(c);});return p;}return null;}if(hasSvc(v))return null;S.others.push(v);return v;}
   function flash(el){if(!el)return;el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit');}
   function colorName(){for(var i=0;i<D.colors.length;i++)if(D.colors[i][1]===S.color)return D.colors[i][0];return '';}
 
@@ -291,19 +296,20 @@ export function builderScript(t, ctx) {
   // ----- the questions -----
   function nav(label,go){$('bb-nav').innerHTML=(cur>0?'<button type="button" class="bb-back" data-back>\\u2190 Back</button>':'')+'<button type="button" class="bb-next'+(go?' go':'')+'" data-next>'+label+'</button>';return '';}
   function paintMine(){var m=$('bb-mine');if(m)m.innerHTML=S.cities.map(function(c,i){return '<button type="button" data-rm="'+i+'" aria-label="Remove '+esc(c)+'">'+esc(c)+' \\u00d7</button>';}).join('');}
+  function paintOMine(){var m=$('bb-omine');if(m)m.innerHTML=S.others.map(function(c,i){return '<button type="button" data-orm="'+i+'" aria-label="Remove '+esc(c)+'">'+esc(c)+' \\u00d7</button>';}).join('');}
   function paintQ(){
     var step=STEPS[cur],w=W[step],h='<h2>'+w.q+'</h2><p class="bb-help">'+w.help+'</p>';
     $('bb-count').textContent=(cur+1)+' of '+STEPS.length;$('bb-prog').style.width=((cur+1)/STEPS.length*100)+'%';
     if(step==='name')h+='<input class="bb-in" id="bb-name" aria-label="'+esc(w.q)+'" autocomplete="organization" enterkeyhint="next" placeholder="'+esc(D.eg)+'" value="'+esc(S.name)+'">'+(ERR?'<p class="bb-err" id="bb-err" role="alert">'+esc(ERR)+'</p>':'')+nav('Next');
     else if(step==='tagline')h+='<input class="bb-in" id="bb-tag" aria-label="'+esc(w.q)+'" autocomplete="off" enterkeyhint="next" value="'+esc(S.tagline)+'">'+nav('Next');
-    else if(step==='services')h+='<div class="bb-chips">'+D.services.map(function(s){return '<button type="button" class="bb-chip" data-svc="'+esc(s)+'" aria-pressed="'+(S.services.indexOf(s)>-1)+'">'+s+'</button>';}).join('')+(S.otherDone&&norm(S.other)?'<button type="button" class="bb-chip" data-otherrm aria-pressed="true" aria-label="Remove '+esc(norm(S.other))+'">'+esc(norm(S.other))+' \\u00d7</button>':'<button type="button" class="bb-chip" data-other aria-pressed="'+(!!S.showOther)+'">Other</button>')+'</div>'+(S.showOther&&!S.otherDone?'<div class="bb-row" style="margin-top:8px"><input class="bb-in" id="bb-other" aria-label="Other" enterkeyhint="done" value="'+esc(S.other)+'"><button type="button" class="bb-add" data-addother>'+W.add+'</button></div>':'')+nav('Next');
+    else if(step==='services')h+='<div class="bb-chips">'+D.services.map(function(s){return '<button type="button" class="bb-chip" data-svc="'+esc(s)+'" aria-pressed="'+(S.services.indexOf(s)>-1)+'">'+s+'</button>';}).join('')+(S.showOther?'':S.others.map(function(o,i){return '<button type="button" class="bb-chip" data-otherrm="'+i+'" aria-pressed="true" aria-label="Remove '+esc(o)+'">'+esc(o)+' \\u00d7</button>';}).join(''))+'<button type="button" class="bb-chip" data-other aria-pressed="'+(!!S.showOther)+'">Other</button></div>'+(S.showOther?'<div class="bb-row" style="margin-top:8px"><input class="bb-in" id="bb-other" aria-label="Other" autocomplete="off" enterkeyhint="done" value="'+esc(S.other)+'"><button type="button" class="bb-add" data-addother>'+W.add+'</button><button type="button" class="bb-add bb-donebtn" data-otherdone>'+W.otherDone+'</button></div><div class="bb-mine" id="bb-omine"></div>':'')+nav('Next');
     else if(step==='cities')h+='<div class="bb-row"><input class="bb-in" id="bb-city" aria-label="'+esc(w.q)+'" autocomplete="off" enterkeyhint="done" placeholder="'+esc(w.placeholder)+'" value="'+esc(S.draft)+'"><button type="button" class="bb-add" id="bb-addcity">'+W.add+'</button></div><div class="bb-mine" id="bb-mine"></div>'+nav('Next');
     else if(step==='color')h+='<div class="bb-sw">'+D.colors.map(function(c){return '<button type="button" data-color="'+c[1]+'" style="background:'+c[1]+'" aria-pressed="'+(S.color===c[1])+'" aria-label="'+c[0]+'"><span>'+c[0]+'</span></button>';}).join('')+'</div>'+nav('Next');
     else if(step==='phone')h+='<div class="bb-row"><input class="bb-in" id="bb-phone" aria-label="'+esc(w.q)+'" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="(402) 555-0123" value="'+esc(fmtPhone(S.phone))+'"><button type="button" class="bb-add" data-addphone>'+W.add+'</button></div>'+nav('Next');
     else{h=(ERR?'<p class="bb-err" id="bb-err" role="alert" style="margin:0 0 10px">'+esc(ERR)+'</p>':'')+h;h+='<div class="bb-chips three">'+['Text','Call','Email'].map(function(r){return '<button type="button" class="bb-chip" data-reach="'+r+'" aria-pressed="'+(S.reach.indexOf(r)>-1)+'">'+r+'</button>';}).join('')+'</div>';
       if(!known)h+='<div class="bb-field"><label for="bb-who">Your name</label><input class="bb-in" id="bb-who" autocomplete="name" value="'+esc(S.who)+'"></div><div class="bb-field"><label for="bb-wphone">Phone</label><input class="bb-in" id="bb-wphone" type="tel" inputmode="tel" autocomplete="tel" value="'+esc(S.wtouch?S.wphone:fmtPhone(S.phone))+'"></div><div class="bb-field"><label for="bb-wemail">Email</label><input class="bb-in" id="bb-wemail" type="email" inputmode="email" autocomplete="email" value="'+esc(S.wemail)+'"></div>';
       h+=nav(w.btn,true)+'<p class="bb-small">'+w.assure+'</p><p class="bb-consent">By sending this, you agree I can text and email you about your preview. Message and data rates may apply. Reply STOP to opt out. <a href="/privacy-policy/" target="_blank" rel="noopener">Privacy</a> and <a href="/terms/" target="_blank" rel="noopener">Terms</a>.</p>';}
-    $('bb-step').className='s-'+step;$('bb-step').innerHTML=h;$('bb-q').scrollTop=0;if(step==='cities')paintMine();
+    $('bb-step').className='s-'+step;$('bb-step').innerHTML=h;$('bb-q').scrollTop=0;if(step==='cities')paintMine();if(step==='services')paintOMine();
   }
   var fired={},seen=false;
   function track(){if(!seen||fired[cur]||sent)return;fired[cur]=1;ga('ft_step',{step:STEPS[cur],n:cur+1});}
@@ -316,7 +322,7 @@ export function builderScript(t, ctx) {
     if(miss.length){ERR='Add '+(miss.length>1?miss.slice(0,-1).join(', ')+' and '+miss[miss.length-1]:miss[0])+' so I know where to send your preview.';
       if(!norm(S.name))cur=0;paintQ();focusSite(STEPS[cur]);save();btn=null;var f=$('bb-step').querySelector(cur===0?'#bb-name':(!S.who?'#bb-who':'#bb-wphone'));if(f)try{f.focus({preventScroll:true});}catch(x){}fit();var er=$('bb-err');if(er&&cur>0)$('bb-q').scrollTop=0;return;}
     btn.disabled=true;save();
-    var form=$('bb-form'),v={source:src,business:norm(S.name),tagline:norm(S.tagline),services:S.services.concat(S.showOther&&norm(S.other)?['Other']:[]).join(', '),services_other:norm(S.other),cities:S.cities.join(', '),colors:colorName(),call_number:fmtPhone(S.phone),contact_pref:S.reach.join(', '),name:S.who,phone:known?'':fmtPhone(S.wphone)||S.wphone,email:S.wemail};
+    var form=$('bb-form'),v={source:src,business:norm(S.name),tagline:norm(S.tagline),services:S.services.concat(S.others.length?['Other']:[]).join(', '),services_other:S.others.join(', '),cities:S.cities.join(', '),colors:colorName(),call_number:fmtPhone(S.phone),contact_pref:S.reach.join(', '),name:S.who,phone:known?'':fmtPhone(S.wphone)||S.wphone,email:S.wemail};
     Object.keys(v).forEach(function(k){var i=form.querySelector('[name="'+k+'"]');if(i)i.value=v[k];});
     try{localStorage.setItem('bf_who',JSON.stringify({business:v.business,pick:S.reach[0]||'',trade:D.trade}));}catch(x){}
     fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)).toString()})
@@ -339,9 +345,11 @@ export function builderScript(t, ctx) {
   $('bb-step').addEventListener('click',function(e){
     var b=e.target.closest('button');if(!b)return;
     if(b.hasAttribute('data-svc')){var s=b.getAttribute('data-svc'),i=S.services.indexOf(s);if(i>-1)S.services.splice(i,1);else{S.services.push(s);S.services.sort(function(a,c){return D.services.indexOf(a)-D.services.indexOf(c);});}b.setAttribute('aria-pressed',i<0);paintSite(i<0?s:null);var n=$('bs-menu').querySelector('.new');if(n)try{$('bs-menu').scrollTop=Math.max(0,n.offsetTop-60);}catch(x){}save();return;}
-    if(b.hasAttribute('data-other')){S.showOther=!S.showOther;S.otherDone=false;if(!S.showOther)S.other='';paintQ();paintSite();var o=$('bb-other');if(o)o.focus();save();fit();return;}
+    if(b.hasAttribute('data-other')){if(S.showOther){closeOther();}else{S.showOther=true;paintQ();paintSite();var o=$('bb-other');if(o)o.focus();save();fit();}return;}
     if(b.hasAttribute('data-addother')){addOther();return;}
-    if(b.hasAttribute('data-otherrm')){S.other='';S.otherDone=false;S.showOther=false;paintQ();paintSite();save();return;}
+    if(b.hasAttribute('data-otherrm')){S.others.splice(+b.getAttribute('data-otherrm'),1);paintQ();paintSite();save();return;}
+    if(b.hasAttribute('data-orm')){S.others.splice(+b.getAttribute('data-orm'),1);paintOMine();paintSite();save();return;}
+    if(b.hasAttribute('data-otherdone')){closeOther();return;}
     if(b.hasAttribute('data-addphone')){var pi=$('bb-phone');if(pi)pi.blur();fit();focusSite('phone');return;}
     if(b.id==='bb-addcity'){addCity();return;}
     if(b.hasAttribute('data-rm')){S.cities.splice(+b.getAttribute('data-rm'),1);paintMine();paintSite();save();return;}
@@ -351,12 +359,14 @@ export function builderScript(t, ctx) {
   // Back and Next. If they were typing, the next box is focused right away so the keyboard stays up.
   var typedAt=0;
   function wasTyping(){var a=document.activeElement;return (a&&a.tagName==='INPUT'&&box.contains(a))||Date.now()-typedAt<700;}
-  function step(d){var k=wasTyping();if(STEPS[cur]==='cities')commitCity();if(STEPS[cur]==='services'&&S.showOther){if(norm(S.other))S.otherDone=true;else S.showOther=false;}go(cur+d,d>0);if(k&&['name','tagline','cities','phone'].indexOf(STEPS[cur])>-1){var f=$('bb-step').querySelector('input.bb-in');if(f)try{f.focus({preventScroll:true});var L=f.value.length;f.setSelectionRange(L,L);}catch(x){}}}
+  function step(d){var k=wasTyping();if(STEPS[cur]==='cities')commitCity();if(STEPS[cur]==='services'){commitOther();S.showOther=false;}go(cur+d,d>0);if(k&&['name','tagline','cities','phone'].indexOf(STEPS[cur])>-1){var f=$('bb-step').querySelector('input.bb-in');if(f)try{f.focus({preventScroll:true});var L=f.value.length;f.setSelectionRange(L,L);}catch(x){}}}
   $('bb-nav').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
     if(b.hasAttribute('data-next')){if(cur===STEPS.length-1){if(STEPS[cur]==='cities')commitCity();send(b);}else step(1);}
     else if(b.hasAttribute('data-back'))step(-1);});
   // Add beside the Other box: the typed service becomes its own picked chip, next to the rest.
-  function addOther(){var v=norm(S.other),o=$('bb-other');if(o)o.blur();if(v){S.other=v;S.otherDone=true;}else{S.other='';S.showOther=false;}paintQ();paintSite(v||null);var n=$('bs-menu').querySelector('.new');if(n)try{$('bs-menu').scrollTop=Math.max(0,n.offsetTop-60);}catch(x){}save();fit();}
+  function addOther(){var v=commitOther(),o=$('bb-other');if(o)o.value='';paintOMine();paintSite(v);var m=$('bs-menu'),n=m.querySelector('.new');if(n)try{m.scrollTop=Math.max(0,n.offsetTop-60);}catch(x){}if(o)o.focus();save();}
+  // Done: keep anything still in the box, close the box, and show every pick together.
+  function closeOther(){var v=commitOther(),o=$('bb-other');if(o)o.blur();S.showOther=false;paintQ();paintSite(v);save();fit();var q=$('bb-q');q.scrollTop=q.scrollHeight;}
   function addCity(){var v=commitCity(),i=$('bb-city');i.value='';paintMine();paintSite(v);var m=$('bs-menu'),n=m.querySelector('.new');if(n)m.scrollTop=Math.max(0,n.offsetTop-m.clientHeight+50);i.focus();save();}
   $('bb-step').addEventListener('input',function(e){var t=e.target,er=$('bb-err'),hadErr=er&&!er.hidden;if(er)er.hidden=true;ERR='';if(hadErr)setTimeout(fit,0);
     if(t.id==='bb-name'){S.name=t.value;paintSite();}
@@ -368,7 +378,7 @@ export function builderScript(t, ctx) {
     save();});
   $('bb-step').addEventListener('keydown',function(e){if(e.key!=='Enter'||e.target.tagName!=='INPUT')return;e.preventDefault();
     if(e.target.id==='bb-city'){if(norm(e.target.value))addCity();else step(1);}
-    else if(e.target.id==='bb-other'){addOther();}
+    else if(e.target.id==='bb-other'){if(norm(e.target.value))addOther();else closeOther();}
     else if(cur<STEPS.length-1){step(1);}
     else if(e.target.id==='bb-who'){$('bb-wphone').focus();}else if(e.target.id==='bb-wphone'){$('bb-wemail').focus();}
     else{var n=$('bb-nav').querySelector('[data-next]');if(n)send(n);}});
