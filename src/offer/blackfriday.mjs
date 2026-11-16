@@ -69,7 +69,7 @@ const TRADES = [
     sampleHeading: "Here's how your tree service website works.",
     services: ['Tree removal', 'Trimming and pruning', 'Stump grinding', 'Storm cleanup', 'Lot clearing'],
     demo: { name: 'Highlimb Tree Service', url: '/websites/demo/highlimb-tree-service/' },
-    // Spencer's walkthrough video for this trade (YouTube, unlisted). ratio is the starting shape; the page corrects it from YouTube when it can.
+    // Spencer's walkthrough video for this trade (YouTube, unlisted). ratio is the real shape of the video file.
     video: { yt: 'hM8rvribV3o', ratio: '1080/1188', loop: '/assets/bf/video/tree-loop.mp4', poster: '/assets/bf/video/tree-poster.jpg' },
     // Same preview builder as concrete (Spencer 2026-11-15 5:19pm: clone it once concrete was settled).
     builder: {
@@ -465,8 +465,8 @@ export function makeBlackFridayPages({ head, icon, site }) {
   var vid=document.getElementById('bf-vid'),vf=document.getElementById('bf-vid-f'),vb=document.getElementById('bf-vid-b');
   if(vid&&vf&&vb){var yt=vid.getAttribute('data-yt');
     vb.addEventListener('click',function(){var f=document.createElement('iframe');f.title=vb.getAttribute('aria-label').replace('Play video: ','');f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;f.src='https://www.youtube-nocookie.com/embed/'+yt+'?autoplay=1&playsinline=1&rel=0&modestbranding=1';vf.innerHTML='';vf.appendChild(f);try{f.focus({preventScroll:true});}catch(e){}try{if(window.gtag)gtag('event','bf_video_play',{promo:'${PROMO.slug}',trade:'${t.slug}'});}catch(e){}});
-    // Shape: ask YouTube for the video's real width and height and fit the frame to it (a wide video uses the full column).
-    try{fetch('https://www.youtube.com/oembed?format=json&url='+encodeURIComponent('https://www.youtube.com/watch?v='+yt)).then(function(r){return r.ok?r.json():null;}).then(function(j){if(j&&j.width>0&&j.height>0){vf.style.aspectRatio=j.width+' / '+j.height;vid.classList.toggle('wide',j.width>j.height);}}).catch(function(){});}catch(e){}}
+    // The frame shape comes from the real video file (set per trade). YouTube's oEmbed only reports generic sizes, so it is not asked.
+    try{var lv=vb.querySelector('video');if(lv&&window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches){lv.removeAttribute('autoplay');lv.pause();}}catch(e){}}
   // Phones: the sample (video and photos, a few MB) loads only when it is tapped. Wider screens load it as it nears the screen.
   function loadFrame(){if(frame&&!frame.getAttribute('src'))frame.setAttribute('src',frame.getAttribute('data-src'));}
   if(frame){frame.addEventListener('load',tame);if(!window.matchMedia||!matchMedia('(max-width:860px)').matches)loadFrame();}
