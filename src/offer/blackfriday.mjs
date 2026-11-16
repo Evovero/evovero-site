@@ -51,7 +51,8 @@ const TRADES = [
     demo: { name: 'Ironline Concrete', url: '/websites/demo/concrete/' },
     // Preview builder in place of the quick taps (Spencer 2026-11-15; concrete first, tree follows once this is dialed in).
     // Spencer's walkthrough video for this trade (YouTube, unlisted).
-    video: { yt: 'fGb0Ivt09_w', ratio: '9/16' },
+    // loop: the first 10 seconds, silent, cut from his final MP4; it plays on load in place of a still. Tapping starts the full video with sound.
+    video: { yt: 'fGb0Ivt09_w', ratio: '1080/1188', loop: '/assets/bf/video/concrete-loop.mp4', poster: '/assets/bf/video/concrete-poster.jpg' },
     builder: {
       kick: 'Concrete contractor', tagline: 'Driveways and Patios Built to Last.', color: '#BF560E', eg: 'Smith Concrete',
       hero: '/assets/bf/builder/concrete-hero.jpg', other: '/assets/bf/builder/concrete-other.jpg',
@@ -69,7 +70,7 @@ const TRADES = [
     services: ['Tree removal', 'Trimming and pruning', 'Stump grinding', 'Storm cleanup', 'Lot clearing'],
     demo: { name: 'Highlimb Tree Service', url: '/websites/demo/highlimb-tree-service/' },
     // Spencer's walkthrough video for this trade (YouTube, unlisted). ratio is the starting shape; the page corrects it from YouTube when it can.
-    video: { yt: 'hM8rvribV3o', ratio: '9/16' },
+    video: { yt: 'hM8rvribV3o', ratio: '1080/1188', loop: '/assets/bf/video/tree-loop.mp4', poster: '/assets/bf/video/tree-poster.jpg' },
     // Same preview builder as concrete (Spencer 2026-11-15 5:19pm: clone it once concrete was settled).
     builder: {
       kick: 'Tree service', tagline: 'Tree Removal Done Safely. Yard Left Clean.', color: '#2C6B3F', eg: 'Smith Tree Service',
@@ -216,13 +217,13 @@ const css = `
 .bf-vid__p{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 6px rgba(13,13,13,.35),0 10px 30px rgba(0,0,0,.5);animation:bf-ring 1.8s ease-out infinite}
 @media (prefers-reduced-motion:reduce){.bf-vid__p{animation:none}}
 /* Desktop with a video: the video comes first (left) and gets the bigger column, so it reads as the place to start. */
-@media (min-width:861px){.bf-hero__g--vid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);grid-template-areas:"phone copy" "phone cta"}.bf-hero__g--vid .bf-vid{width:min(380px,100%)}.bf-hero__g--vid .bf-vid.wide{width:100%}.bf-hero__g--vid .bf-vid__k{font-size:2.1rem}}
+@media (min-width:861px){.bf-hero__g--vid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);grid-template-areas:"phone copy" "phone cta"}.bf-hero__g--vid .bf-vid{width:min(470px,100%)}.bf-hero__g--vid .bf-vid.wide{width:100%}.bf-hero__g--vid .bf-vid__k{font-size:2.1rem}}
 .bf-vid__p:after{content:"";position:absolute;left:30px;top:22px;border-style:solid;border-width:16px 0 16px 26px;border-color:transparent transparent transparent #0D0D0D}
 .bf-vid__f iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 @media (max-width:860px){
   .bf-hero__g{grid-template-columns:minmax(0,1fr);grid-template-areas:"copy" "cta" "phone";gap:18px}
   .bf-hero__cta{margin-top:0}.bf-hero__cta .bf-btn{width:100%}
-  .bf-vid{width:min(300px,78vw);margin-top:8px}.bf-vid.wide{width:100%}
+  .bf-vid{width:min(360px,100%);margin-top:8px}.bf-vid.wide{width:100%}
   .bf-phone{width:min(212px,56vw);padding:26px 7px 7px;border-radius:34px;margin-top:8px}.bf-phone:before{top:8px;height:10px}.bf-phone__s{border-radius:8px 8px 27px 27px}
 }
 @media (prefers-reduced-motion:reduce){.bf-phone__s img{animation:none!important}}
@@ -341,7 +342,7 @@ export function makeBlackFridayPages({ head, icon, site }) {
   function landing(t) {
     const path = `/${PROMO.slug}/${t.slug}`;
     const slot = t.video
-      ? `<div class="bf-vid" id="bf-vid" data-yt="${t.video.yt}"><p class="bf-vid__k">${COPY.videoKick}</p><div class="bf-vid__f" id="bf-vid-f" style="aspect-ratio:${t.video.ratio}"><button type="button" class="bf-vid__b" id="bf-vid-b" aria-label="Play video: ${attr(COPY.videoKick)}">${t.video.loop ? `<video src="${t.video.loop}" poster="https://i.ytimg.com/vi/${t.video.yt}/hqdefault.jpg" muted autoplay loop playsinline preload="auto" disablepictureinpicture></video>` : `<img src="https://i.ytimg.com/vi/${t.video.yt}/hqdefault.jpg" alt="" decoding="async" onerror="this.onerror=null;this.src='${t.scroll.img}';this.style.objectPosition='top'">`}<span class="bf-vid__p" aria-hidden="true"></span></button></div></div>`
+      ? `<div class="bf-vid" id="bf-vid" data-yt="${t.video.yt}"><p class="bf-vid__k">${COPY.videoKick}</p><div class="bf-vid__f" id="bf-vid-f" style="aspect-ratio:${t.video.ratio}"><button type="button" class="bf-vid__b" id="bf-vid-b" aria-label="Play video: ${attr(COPY.videoKick)}">${t.video.loop ? `<video src="${t.video.loop}" poster="${t.video.poster}" muted autoplay loop playsinline preload="auto" disablepictureinpicture tabindex="-1"></video>` : `<img src="https://i.ytimg.com/vi/${t.video.yt}/hqdefault.jpg" alt="" decoding="async" onerror="this.onerror=null;this.src='${t.scroll.img}';this.style.objectPosition='top'">`}<span class="bf-vid__p" aria-hidden="true"></span></button></div></div>`
       : PROMO.video
       ? `<video class="bf-video" controls playsinline preload="metadata"${PROMO.video.poster ? ` poster="${PROMO.video.poster}"` : ''} src="${PROMO.video.src}"></video>`
       : `<div class="bf-phone" aria-hidden="true"><div class="bf-phone__s"><img src="${t.scroll.img}" width="${t.scroll.w}" height="${t.scroll.h}" alt="" decoding="async" fetchpriority="high"></div></div>`;
