@@ -16,7 +16,7 @@ export const WORDS = {
   close: 'Close',                  // the X at the top of the open builder
   closeEnd: 'Close preview builder', // the last button on the done screen
   add: 'Add',                      // the small button beside a typed service or city
-  sentBtn: 'Your answers are sent',  // after Send, the first screen and bottom buttons read this (they still open the done screen); the sticky button goes away
+  sentBtn: "You're all set",  // Spencer 11/16: was "Your answers are sent"; matches the done screen heading  // after Send, the first screen and bottom buttons read this (they still open the done screen); the sticky button goes away
   otherDone: 'Done',               // closes the box for typing in services that are not on the list
   siteLabel: 'Your website',
   siteLabelEnd: 'Your website. Scroll it.',
@@ -259,6 +259,8 @@ export function builderScript(t, ctx) {
     try{if(window.fbq){if(n==='bf_builder_open')fbq('track','ViewContent',{content_name:'Preview builder',content_category:D.trade});else if(n==='ft_submit')fbq('track','CompleteRegistration',{content_name:'Preview builder',content_category:D.trade,status:p.src});}}catch(e){}}
   function blank(){return {name:'',tagline:D.def.tagline,services:[],showOther:false,other:'',others:[],cities:[],draft:'',color:'',phone:'',reach:[],who:'',wphone:'',wtouch:false,wemail:''};}
   var wasSent=false;
+  // Testing aid: add ?reset=1 to the address to clear this device's saved answers and start over.
+  try{if(new URLSearchParams(location.search).get('reset')==='1')localStorage.removeItem(KEY);}catch(e){}
   function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.S){S=Object.assign(blank(),d.S);if(!Array.isArray(S.others))S.others=[];if(S.otherDone&&norm(S.other)){S.others.push(norm(S.other));S.other='';S.showOther=false;}delete S.otherDone;cur=Math.max(0,Math.min(STEPS.length-1,d.q||0));wasSent=!!d.sent;return;}}catch(e){}S=blank();}
   function save(){try{localStorage.setItem(KEY,JSON.stringify({q:cur,S:S}));}catch(e){}}
   function norm(v){return String(v).trim().replace(/\\s+/g,' ');}

@@ -99,7 +99,7 @@ const COPY = {
   h1Other: 'See your website <b>before you pay</b> anything.',
   lead: 'Make it yours. It takes about 2 minutes, and your answers are how I make it look like your business.',
   // Small line above the video on the first screen (Spencer 11/15; the headline stays as it is)
-  videoKick: 'A quick word from me on how this works',
+  videoKick: 'Watch this first',   // Spencer 11/16 9:03am (was "A quick word from me on how this works")
   // Under the first screen button (added 11/15 5:19pm)
   heroNote: "No card. $0 to start, then $100 a month only when you want it. I'll text and email you the preview within 48 hours.",
   heroBtn: 'Make it mine',
@@ -206,12 +206,17 @@ const css = `
 .bf-video{display:block;width:100%;border-radius:18px;background:#000}
 /* Walkthrough video: a still with a play button; the YouTube player loads only when it is tapped. */
 .bf-vid{width:min(320px,100%);margin:0 auto}.bf-vid.wide{width:100%}
-.bf-vid__k{margin:0 0 10px;text-align:center;text-wrap:balance;color:var(--cream);font:700 1rem var(--font-head)}
+.bf-vid__k{margin:0 0 12px;text-align:center;text-wrap:balance;color:var(--acc);font:400 1.7rem/1 Anton,Impact,'Arial Narrow',sans-serif;letter-spacing:.03em;text-transform:uppercase}
+.bf-vid__k:after{content:"";display:block;width:0;height:0;margin:8px auto 0;border-style:solid;border-width:9px 8px 0 8px;border-color:var(--acc) transparent transparent transparent}
 .bf-vid__f{position:relative;overflow:hidden;border-radius:22px;background:#000;box-shadow:0 0 0 2px #303034,0 30px 80px rgba(0,0,0,.65)}
 .bf-vid__b{position:absolute;inset:0;display:block;width:100%;height:100%;padding:0;border:0;background:#000;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bf-vid__b:focus-visible{outline:3px solid var(--acc);outline-offset:-3px}
-.bf-vid__b img{display:block;width:100%;height:100%;object-fit:cover}
-.bf-vid__p{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 6px rgba(13,13,13,.35),0 10px 30px rgba(0,0,0,.5)}
+.bf-vid__b img,.bf-vid__b video{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none}
+@keyframes bf-ring{0%{box-shadow:0 0 0 6px rgba(13,13,13,.35),0 0 0 0 var(--acc)}70%,100%{box-shadow:0 0 0 6px rgba(13,13,13,.35),0 0 0 26px transparent}}
+.bf-vid__p{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 6px rgba(13,13,13,.35),0 10px 30px rgba(0,0,0,.5);animation:bf-ring 1.8s ease-out infinite}
+@media (prefers-reduced-motion:reduce){.bf-vid__p{animation:none}}
+/* Desktop with a video: the video comes first (left) and gets the bigger column, so it reads as the place to start. */
+@media (min-width:861px){.bf-hero__g--vid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);grid-template-areas:"phone copy" "phone cta"}.bf-hero__g--vid .bf-vid{width:min(380px,100%)}.bf-hero__g--vid .bf-vid.wide{width:100%}.bf-hero__g--vid .bf-vid__k{font-size:2.1rem}}
 .bf-vid__p:after{content:"";position:absolute;left:30px;top:22px;border-style:solid;border-width:16px 0 16px 26px;border-color:transparent transparent transparent #0D0D0D}
 .bf-vid__f iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 @media (max-width:860px){
@@ -336,7 +341,7 @@ export function makeBlackFridayPages({ head, icon, site }) {
   function landing(t) {
     const path = `/${PROMO.slug}/${t.slug}`;
     const slot = t.video
-      ? `<div class="bf-vid" id="bf-vid" data-yt="${t.video.yt}"><p class="bf-vid__k">${COPY.videoKick}</p><div class="bf-vid__f" id="bf-vid-f" style="aspect-ratio:${t.video.ratio}"><button type="button" class="bf-vid__b" id="bf-vid-b" aria-label="Play video: ${attr(COPY.videoKick)}"><img src="https://i.ytimg.com/vi/${t.video.yt}/hqdefault.jpg" alt="" decoding="async" onerror="this.onerror=null;this.src='${t.scroll.img}';this.style.objectPosition='top'"><span class="bf-vid__p" aria-hidden="true"></span></button></div></div>`
+      ? `<div class="bf-vid" id="bf-vid" data-yt="${t.video.yt}"><p class="bf-vid__k">${COPY.videoKick}</p><div class="bf-vid__f" id="bf-vid-f" style="aspect-ratio:${t.video.ratio}"><button type="button" class="bf-vid__b" id="bf-vid-b" aria-label="Play video: ${attr(COPY.videoKick)}">${t.video.loop ? `<video src="${t.video.loop}" poster="https://i.ytimg.com/vi/${t.video.yt}/hqdefault.jpg" muted autoplay loop playsinline preload="auto" disablepictureinpicture></video>` : `<img src="https://i.ytimg.com/vi/${t.video.yt}/hqdefault.jpg" alt="" decoding="async" onerror="this.onerror=null;this.src='${t.scroll.img}';this.style.objectPosition='top'">`}<span class="bf-vid__p" aria-hidden="true"></span></button></div></div>`
       : PROMO.video
       ? `<video class="bf-video" controls playsinline preload="metadata"${PROMO.video.poster ? ` poster="${PROMO.video.poster}"` : ''} src="${PROMO.video.src}"></video>`
       : `<div class="bf-phone" aria-hidden="true"><div class="bf-phone__s"><img src="${t.scroll.img}" width="${t.scroll.w}" height="${t.scroll.h}" alt="" decoding="async" fetchpriority="high"></div></div>`;
@@ -485,7 +490,7 @@ export function makeBlackFridayPages({ head, icon, site }) {
 <main>
 <section class="bf-hero"><div class="bf-in bf-in--wide">
   ${brand}
-  <div class="bf-hero__g">
+  <div class="bf-hero__g${t.video ? ' bf-hero__g--vid' : ''}">
     <div class="bf-hero__copy">
       ${tags(t)}
       <h1 id="bf-h1">${COPY.h1Form}</h1>
