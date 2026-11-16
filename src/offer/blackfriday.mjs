@@ -76,6 +76,9 @@ const TRADES = [
   },
 ];
 
+/* Review cards show first name and city only (Spencer 11/15 6:02pm): no last names, no business names. */
+const REVIEW_CITY = { Chris: 'Omaha', Jesse: 'Omaha', Yadira: 'Des Moines' };
+
 /* Build doc words shared by both trades. <b> marks the words that take the trade's accent color. */
 const COPY = {
   // First screen (11/14 build notes, first screen draft)
@@ -265,6 +268,7 @@ body.bf-lock{overflow:hidden}
 .bf-end{padding:clamp(40px,7vw,72px) 0;background:var(--ink);text-align:center}.bf-end .bf-btn{width:min(420px,100%)}
 .bf-foot{padding:22px 0 calc(22px + env(safe-area-inset-bottom));background:var(--ink);color:#8d897f;text-align:center;font-size:.9rem}
 .bf-sticky{display:none}
+body.bb-sent .bf-sticky{display:none!important}
 @media (max-width:860px){
   .bf-sticky{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:90;transform:translateY(160%);transition:transform .3s;box-shadow:0 0 0 2px #0D0D0D,0 14px 34px rgba(0,0,0,.4)}
   .bf-sticky.on{transform:none}
@@ -455,7 +459,7 @@ export function makeBlackFridayPages({ head, icon, site }) {
       <p class="bf-lead">${COPY.lead}</p>
     </div>
     <div class="bf-hero__vid">${slot}</div>
-    <div class="bf-hero__cta"><a class="bf-btn" href="#taps">${COPY.heroBtn} ${icon('arrow')}</a><p class="bf-hero__note">${COPY.heroNote}</p></div>
+    <div class="bf-hero__cta"><a class="bf-btn" href="#taps"><span data-cta>${COPY.heroBtn}</span> ${icon('arrow')}</a><p class="bf-hero__note">${COPY.heroNote}</p></div>
   </div>
 </div></section>
 
@@ -483,10 +487,10 @@ ${tapsSection}
 
 <section class="bf-sec"><div class="bf-in">
   <h2>${COPY.proofTitle}</h2>
-  <div class="bf-revs">${['Chris', 'Jesse', 'Yadira'].map(n => reviews.find(r => r.name.startsWith(n))).filter(Boolean).map(r => `<figure class="bf-rev"><span class="st" aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><q>${r.text}</q><figcaption>${r.name}</figcaption></figure>`).join('')}</div>
+  <div class="bf-revs">${['Chris', 'Jesse', 'Yadira'].map(n => reviews.find(r => r.name.startsWith(n))).filter(Boolean).map(r => `<figure class="bf-rev"><span class="st" aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><q>${r.text}</q><figcaption>${r.name.split(' ')[0]}, ${REVIEW_CITY[r.name.split(' ')[0]]}</figcaption></figure>`).join('')}</div>
 </div></section>
 
-<section class="bf-end"><div class="bf-in"><a class="bf-btn" href="#taps">${COPY.bottomBtn} ${icon('arrow')}</a></div></section>
+<section class="bf-end"><div class="bf-in"><a class="bf-btn" href="#taps"><span data-cta>${COPY.bottomBtn}</span> ${icon('arrow')}</a></div></section>
 </main>
 ${foot}
 <a class="bf-btn bf-sticky" id="bf-sticky" href="#taps">${COPY.bottomBtn} ${icon('arrow')}</a>

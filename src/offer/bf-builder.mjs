@@ -16,6 +16,7 @@ export const WORDS = {
   close: 'Close',                  // the X at the top of the open builder
   closeEnd: 'Close preview builder', // the last button on the done screen
   add: 'Add',                      // the small button beside a typed service or city
+  sentBtn: 'Your answers are sent',  // after Send, the first screen and bottom buttons read this (they still open the done screen); the sticky button goes away
   otherDone: 'Done',               // closes the box for typing in services that are not on the list
   siteLabel: 'Your website',
   siteLabelEnd: 'Your website. Scroll it.',
@@ -391,7 +392,7 @@ export function builderScript(t, ctx) {
 
   // ----- pop out: closed it is only a preview; opened it takes the whole screen. Answers stay saved either way. -----
   var pushed=false,vv=window.visualViewport,kt=0,lastFocus=null;
-  function pill(){var l=$('bb-openlbl');if(l)l.textContent=sent?W.siteLabel:W.open;}
+  function pill(){var l=$('bb-openlbl');if(l)l.textContent=sent?W.siteLabel:W.open;if(sent){document.body.classList.add('bb-sent');[].forEach.call(document.querySelectorAll('[data-cta]'),function(c){c.textContent=W.sentBtn;});}}
   function isOpen(){return box.classList.contains('pop');}
   function open(){if(isOpen())return;lastFocus=document.activeElement;box.inert=false;box.removeAttribute('inert');box.classList.add('pop');document.body.classList.add('bb-lock');try{history.pushState({bbOpen:1},'');pushed=true;}catch(e){}
     $('bb-q').scrollTop=0;base=vv?vv.height:window.innerHeight;fit();ga('bf_builder_open',{step:sent?'done':STEPS[cur]});seen=true;track();try{$('bb-x').focus({preventScroll:true});}catch(e){}}
