@@ -76,6 +76,15 @@ const TRADES = [
   },
 ];
 
+/* Meta pixel, EvoVero dataset 741292718688037 (Spencer 2026-11-15 10:00pm). Landing pages only.
+   It runs only on evovero.com, so Deploy Preview and local test visits are not counted.
+   Events: PageView on load; ViewContent when the builder opens; CompleteRegistration when the builder is sent
+   (not "Lead": the Instant Form already produces the Lead). The two builder events are fired in bf-builder.mjs. */
+const META_PIXEL = '741292718688037';
+const metaPixel = (t) => `<script>(function(){if(!/(^|\\.)evovero\\.com$/.test(location.hostname))return;
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','${META_PIXEL}');fbq('track','PageView',{content_name:'Black Friday ${t.slug}'});})();</script>`;
+
 /* Review cards show first name and city only (Spencer 11/15 6:02pm): no last names, no business names. */
 const REVIEW_CITY = { Chris: 'Omaha', Jesse: 'Omaha', Yadira: 'Des Moines' };
 
@@ -446,7 +455,7 @@ export function makeBlackFridayPages({ head, icon, site }) {
 </div></section>`;
     const tapsScript = t.builder ? `${dropboxForm}${dropboxScript}${builderScript(t, ctx)}` : script;
 
-    const body = `${fonts}<style>${css}${t.builder ? builderCss + dropboxCss : ''}${PROMO.video ? '' : scrollKeyframes(t)}</style>
+    const body = `${fonts}${metaPixel(t)}<style>${css}${t.builder ? builderCss + dropboxCss : ''}${PROMO.video ? '' : scrollKeyframes(t)}</style>
 <div class="bf" data-trade="${t.slug}" style="${vars(t)}">
 <main>
 <section class="bf-hero"><div class="bf-in bf-in--wide">

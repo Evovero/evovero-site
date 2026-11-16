@@ -254,7 +254,9 @@ export function builderScript(t, ctx) {
   var STEPS=['name','tagline','services','cities','color','phone','send'],S,cur=0,sent=false,ERR='';
   function $(id){return document.getElementById(id);}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  function ga(n,p){try{p=p||{};p.promo=D.promo;p.trade=D.trade;if(window.gtag)gtag('event',n,p);}catch(e){}}
+  function ga(n,p){try{p=p||{};p.promo=D.promo;p.trade=D.trade;if(window.gtag)gtag('event',n,p);}catch(e){}
+    // Meta pixel (present on evovero.com only): builder opened, builder sent.
+    try{if(window.fbq){if(n==='bf_builder_open')fbq('track','ViewContent',{content_name:'Preview builder',content_category:D.trade});else if(n==='ft_submit')fbq('track','CompleteRegistration',{content_name:'Preview builder',content_category:D.trade,status:p.src});}}catch(e){}}
   function blank(){return {name:'',tagline:D.def.tagline,services:[],showOther:false,other:'',others:[],cities:[],draft:'',color:'',phone:'',reach:[],who:'',wphone:'',wtouch:false,wemail:''};}
   var wasSent=false;
   function load(){try{var d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.S){S=Object.assign(blank(),d.S);if(!Array.isArray(S.others))S.others=[];if(S.otherDone&&norm(S.other)){S.others.push(norm(S.other));S.other='';S.showOther=false;}delete S.otherDone;cur=Math.max(0,Math.min(STEPS.length-1,d.q||0));wasSent=!!d.sent;return;}}catch(e){}S=blank();}
