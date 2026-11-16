@@ -50,6 +50,8 @@ const TRADES = [
     services: ['Driveways', 'Patios', 'Sidewalks', 'Foundations and footings', 'Stamped or decorative', 'Commercial flatwork'],
     demo: { name: 'Ironline Concrete', url: '/websites/demo/concrete/' },
     // Preview builder in place of the quick taps (Spencer 2026-11-15; concrete first, tree follows once this is dialed in).
+    // Spencer's walkthrough video for this trade (YouTube, unlisted).
+    video: { yt: 'fGb0Ivt09_w', ratio: '9/16' },
     builder: {
       kick: 'Concrete contractor', tagline: 'Driveways and Patios Built to Last.', color: '#BF560E', eg: 'Smith Concrete',
       hero: '/assets/bf/builder/concrete-hero.jpg', other: '/assets/bf/builder/concrete-other.jpg',
@@ -66,6 +68,8 @@ const TRADES = [
     sampleHeading: "Here's how your tree service website works.",
     services: ['Tree removal', 'Trimming and pruning', 'Stump grinding', 'Storm cleanup', 'Lot clearing'],
     demo: { name: 'Highlimb Tree Service', url: '/websites/demo/highlimb-tree-service/' },
+    // Spencer's walkthrough video for this trade (YouTube, unlisted). ratio is the starting shape; the page corrects it from YouTube when it can.
+    video: { yt: 'hM8rvribV3o', ratio: '9/16' },
     // Same preview builder as concrete (Spencer 2026-11-15 5:19pm: clone it once concrete was settled).
     builder: {
       kick: 'Tree service', tagline: 'Tree Removal Done Safely. Yard Left Clean.', color: '#2C6B3F', eg: 'Smith Tree Service',
@@ -94,6 +98,8 @@ const COPY = {
   h1Form: 'Your preview is <b>being built.</b>',
   h1Other: 'See your website <b>before you pay</b> anything.',
   lead: 'Make it yours. It takes about 2 minutes, and your answers are how I make it look like your business.',
+  // Small line above the video on the first screen (Spencer 11/15; the headline stays as it is)
+  videoKick: 'A quick word from me on how this works',
   // Under the first screen button (added 11/15 5:19pm)
   heroNote: "No card. $0 to start, then $100 a month only when you want it. I'll text and email you the preview within 48 hours.",
   heroBtn: 'Make it mine',
@@ -198,9 +204,19 @@ const css = `
 .bf-phone__s{position:relative;overflow:hidden;border-radius:10px 10px 34px 34px;aspect-ratio:390/780;background:#fff}
 .bf-phone__s img{display:block;width:100%;height:auto;will-change:transform}
 .bf-video{display:block;width:100%;border-radius:18px;background:#000}
+/* Walkthrough video: a still with a play button; the YouTube player loads only when it is tapped. */
+.bf-vid{width:min(320px,100%);margin:0 auto}.bf-vid.wide{width:100%}
+.bf-vid__k{margin:0 0 10px;text-align:center;color:var(--cream);font:700 1rem var(--font-head)}
+.bf-vid__f{position:relative;overflow:hidden;border-radius:22px;background:#000;box-shadow:0 0 0 2px #303034,0 30px 80px rgba(0,0,0,.65)}
+.bf-vid__b{position:absolute;inset:0;display:block;width:100%;height:100%;padding:0;border:0;background:#000;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.bf-vid__b img{display:block;width:100%;height:100%;object-fit:cover}
+.bf-vid__p{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 6px rgba(13,13,13,.35),0 10px 30px rgba(0,0,0,.5)}
+.bf-vid__p:after{content:"";position:absolute;left:30px;top:22px;border-style:solid;border-width:16px 0 16px 26px;border-color:transparent transparent transparent #0D0D0D}
+.bf-vid__f iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 @media (max-width:860px){
   .bf-hero__g{grid-template-columns:minmax(0,1fr);grid-template-areas:"copy" "cta" "phone";gap:18px}
   .bf-hero__cta{margin-top:0}.bf-hero__cta .bf-btn{width:100%}
+  .bf-vid{width:min(300px,78vw);margin-top:8px}.bf-vid.wide{width:100%}
   .bf-phone{width:min(212px,56vw);padding:26px 7px 7px;border-radius:34px;margin-top:8px}.bf-phone:before{top:8px;height:10px}.bf-phone__s{border-radius:8px 8px 27px 27px}
 }
 @media (prefers-reduced-motion:reduce){.bf-phone__s img{animation:none!important}}
@@ -318,7 +334,9 @@ export function makeBlackFridayPages({ head, icon, site }) {
   /* ---------------- landing page ---------------- */
   function landing(t) {
     const path = `/${PROMO.slug}/${t.slug}`;
-    const slot = PROMO.video
+    const slot = t.video
+      ? `<div class="bf-vid" id="bf-vid" data-yt="${t.video.yt}"><p class="bf-vid__k">${COPY.videoKick}</p><div class="bf-vid__f" id="bf-vid-f" style="aspect-ratio:${t.video.ratio}"><button type="button" class="bf-vid__b" id="bf-vid-b" aria-label="Play video: ${attr(COPY.videoKick)}"><img src="https://i.ytimg.com/vi/${t.video.yt}/hqdefault.jpg" alt="" decoding="async" onerror="this.onerror=null;this.src='${t.scroll.img}';this.style.objectPosition='top'"><span class="bf-vid__p" aria-hidden="true"></span></button></div></div>`
+      : PROMO.video
       ? `<video class="bf-video" controls playsinline preload="metadata"${PROMO.video.poster ? ` poster="${PROMO.video.poster}"` : ''} src="${PROMO.video.src}"></video>`
       : `<div class="bf-phone" aria-hidden="true"><div class="bf-phone__s"><img src="${t.scroll.img}" width="${t.scroll.w}" height="${t.scroll.h}" alt="" decoding="async" fetchpriority="high"></div></div>`;
 
@@ -436,6 +454,12 @@ export function makeBlackFridayPages({ head, icon, site }) {
     [].slice.call(doc.querySelectorAll('a[href^="tel:"],a[href^="mailto:"],a[href^="sms:"]')).forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();});});
     [].slice.call(doc.querySelectorAll('a[target]')).forEach(function(a){a.removeAttribute('target');});
     [].slice.call(doc.querySelectorAll('form')).forEach(function(fm){fm.addEventListener('submit',function(e){e.preventDefault();});});}catch(e){}}
+  // Walkthrough video. Nothing from YouTube but the still loads until play is tapped.
+  var vid=document.getElementById('bf-vid'),vf=document.getElementById('bf-vid-f'),vb=document.getElementById('bf-vid-b');
+  if(vid&&vf&&vb){var yt=vid.getAttribute('data-yt');
+    vb.addEventListener('click',function(){var f=document.createElement('iframe');f.title=vb.getAttribute('aria-label').replace('Play video: ','');f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;f.src='https://www.youtube-nocookie.com/embed/'+yt+'?autoplay=1&playsinline=1&rel=0&modestbranding=1';vf.innerHTML='';vf.appendChild(f);try{if(window.gtag)gtag('event','bf_video_play',{promo:'${PROMO.slug}',trade:'${t.slug}'});}catch(e){}});
+    // Shape: ask YouTube for the video's real width and height and fit the frame to it (a wide video uses the full column).
+    try{fetch('https://www.youtube.com/oembed?format=json&url='+encodeURIComponent('https://www.youtube.com/watch?v='+yt)).then(function(r){return r.ok?r.json():null;}).then(function(j){if(j&&j.width>0&&j.height>0){vf.style.aspectRatio=j.width+' / '+j.height;vid.classList.toggle('wide',j.width>j.height);}}).catch(function(){});}catch(e){}}
   // Phones: the sample (video and photos, a few MB) loads only when it is tapped. Wider screens load it as it nears the screen.
   function loadFrame(){if(frame&&!frame.getAttribute('src'))frame.setAttribute('src',frame.getAttribute('data-src'));}
   if(frame){frame.addEventListener('load',tame);if(!window.matchMedia||!matchMedia('(max-width:860px)').matches)loadFrame();}
@@ -455,7 +479,7 @@ export function makeBlackFridayPages({ head, icon, site }) {
 </div></section>`;
     const tapsScript = t.builder ? `${dropboxForm}${dropboxScript}${builderScript(t, ctx)}` : script;
 
-    const body = `${fonts}${metaPixel(t)}<style>${css}${t.builder ? builderCss + dropboxCss : ''}${PROMO.video ? '' : scrollKeyframes(t)}</style>
+    const body = `${fonts}${metaPixel(t)}<style>${css}${t.builder ? builderCss + dropboxCss : ''}${PROMO.video || t.video ? '' : scrollKeyframes(t)}</style>
 <div class="bf" data-trade="${t.slug}" style="${vars(t)}">
 <main>
 <section class="bf-hero"><div class="bf-in bf-in--wide">
