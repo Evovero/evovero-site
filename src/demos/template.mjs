@@ -35,6 +35,11 @@ const ICONS = {
   cross: '<path d="M12 3v18M7 8h10"/>',
   flower: '<circle cx="12" cy="9" r="2.5"/><path d="M12 6.5a3 3 0 1 1 2.6 4.5M9.4 11a3 3 0 1 1 2.6-4.5M12 11.5V21M12 17c-2 0-4-1-5-3M12 15c2 0 4-1 5-3"/>',
   dove: '<path d="M3 14c4 0 6-2 8-6 1 3 3 5 7 5l3-2-1 4c-2 3-5 5-9 5H5z"/><path d="M11 8c0-2 1-4 3-5"/>',
+  wrench: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/>',
+  bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>',
+  tree: '<path d="M12 22v-6"/><path d="M12 2 5 11h3l-4 5h16l-4-5h3L12 2Z"/>',
+  video: '<rect x="3" y="6" width="13" height="12" rx="3"/><path d="m16 10 5-3v10l-5-3z"/>',
+  counter: '<path d="M3 10h18M4 10v10h16V10M9 14h6M7 10V5a2 2 0 0 1 4 0"/>',
   sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/>',
 };
 const ic = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k] || ICONS.spark}</svg>`;
@@ -81,9 +86,13 @@ h1{font-size:clamp(2.3rem,5.6vw,4.4rem)}h2{font-size:clamp(1.8rem,3.6vw,2.8rem)}
 .hd.solid .tg,.hd.light .tg{background:var(--bg2);color:var(--ink)}
 .tg span,.tg span::before,.tg span::after{display:block;width:20px;height:2px;background:currentColor;border-radius:2px;position:relative;transition:transform .25s}
 .tg span::before,.tg span::after{content:"";position:absolute;left:0}.tg span::before{top:-6px}.tg span::after{top:6px}
+/* sample banner (d.sampleBanner): sits above the page; the fixed header starts under it and slides up as it scrolls away */
+.sb{height:31px;display:flex;align-items:center;justify-content:center;background:#fde9d2;color:#3a2a1a;font-size:.82rem;font-weight:600;text-align:center;padding:0 12px;white-space:nowrap}
+.hd.has-sb{top:var(--sbo,31px)}
 /* hero */
 .hero{position:relative;min-height:min(92vh,860px);display:flex;align-items:flex-end;color:#fff;overflow:hidden;padding:140px 0 clamp(56px,8vw,96px)}
 .hero__img{position:absolute;inset:0;background-size:cover;background-position:center;animation:kb 18s ease-out both}
+.hero__vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s ease}.hero__vid.on{opacity:1}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.25) 55%,rgba(0,0,0,0) 80%),linear-gradient(180deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,.1) 40%,rgba(0,0,0,.7) 100%)}
 .hero .w{position:relative;z-index:1}
 .hero h1{max-width:860px;margin:14px 0 18px;text-shadow:0 2px 30px rgba(0,0,0,.25)}
@@ -152,6 +161,7 @@ h1{font-size:clamp(2.3rem,5.6vw,4.4rem)}h2{font-size:clamp(1.8rem,3.6vw,2.8rem)}
 .cta .hero__cta{justify-content:center}
 /* contact */
 .ct{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(28px,5vw,64px);align-items:start}
+.ct--form{grid-template-columns:1fr;max-width:720px;margin:0 auto}
 .ct__info{display:grid;gap:14px}
 .ct__row{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px}
 .ct__row i{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--bg2);color:var(--k)}.ct__row i svg{width:22px;height:22px}
@@ -195,16 +205,25 @@ const JS = `(function(){
 var hd=document.querySelector('.hd'),solid=hd&&hd.classList.contains('light');
 function s(){if(!hd||solid)return;hd.classList.toggle('solid',window.scrollY>40);}
 window.addEventListener('scroll',s,{passive:true});s();
+var sb=document.querySelector('.sb');if(sb&&hd){var so=function(){hd.style.setProperty('--sbo',Math.max(0,31-window.scrollY)+'px');};window.addEventListener('scroll',so,{passive:true});so();}
 var t=document.querySelector('.tg');if(t)t.addEventListener('click',function(){hd.classList.toggle('open');});
 var els=document.querySelectorAll('.rv,.rv-img');
 if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches){els.forEach(function(e){e.classList.add('in')});}
 else{var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -6% 0px'});els.forEach(function(e){io.observe(e)});}
+document.querySelectorAll('video.hero__vid').forEach(function(v){
+  var c=navigator.connection;if(matchMedia('(prefers-reduced-motion: reduce)').matches||(c&&c.saveData))return;
+  var tall=matchMedia('(max-width: 700px), (orientation: portrait) and (max-width: 1024px)').matches;
+  v.muted=true;v.addEventListener('playing',function(){v.classList.add('on');});
+  v.src=tall?v.getAttribute('data-t'):v.getAttribute('data-w');var p=v.play();if(p&&p.catch)p.catch(function(){});
+});
 document.querySelectorAll('form[data-demo]').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();var b=f.querySelector('button');if(b)b.textContent='This is a demo form, nothing was sent';});});
 })();`;
 
 /* ---------------- section renderers ---------------- */
 const S = {
-  hero: (d, s) => `<section class="hero"><div class="hero__img" style="background-image:url('${photo(s.image, 2000)}')" role="img" aria-label="${esc(s.alt)}"></div><div class="w">
+  // Optional looping video hero: s.video = { wide, tall } (muted, autoplay, loop, playsinline).
+  // Wide loads on desktop, tall on phones. The photo stays underneath as the poster and the fallback.
+  hero: (d, s) => `<section class="hero"><div class="hero__img" style="background-image:url('${photo(s.image, 2000)}')" role="img" aria-label="${esc(s.alt)}"></div>${s.video ? `<video class="hero__vid" muted autoplay loop playsinline preload="none" poster="${photo(s.image, 2000)}" data-w="${s.video.wide}" data-t="${s.video.tall}" aria-hidden="true"></video>` : ''}<div class="w">
     ${s.kicker ? `<span class="kick rv">${s.kicker}</span>` : ''}
     <h1 class="rv" data-d="1">${s.h1}</h1><p class="rv" data-d="2">${s.sub}</p>
     <div class="hero__cta rv" data-d="3">${ctaButtons(d, s.cta, true)}</div>
@@ -237,13 +256,14 @@ const S = {
   cta: (d, s) => `<section class="sec"><div class="w"><div class="cta rv"><div class="hero__img" style="background-image:url('${photo(s.image, 1800)}')"></div>
     <h2>${s.title}</h2><p>${s.text}</p><div class="hero__cta">${ctaButtons(d, s.cta, true)}</div></div></div></section>`,
 
-  contact: (d, s) => wrapSec(s, `<div class="ct">
-      <div class="ct__info rv">
+  // s.formOnly: just the form, no info column (used for the quote form under a home hero).
+  contact: (d, s) => wrapSec(s, `<div class="ct${s.formOnly ? ' ct--form' : ''}">
+      ${s.formOnly ? '' : `<div class="ct__info rv">
         <div class="ct__row"><i>${ic('phone')}</i><div><b>Call or text</b><span>${d.phone}</span></div></div>
         <div class="ct__row"><i>${ic('mail')}</i><div><b>Email</b><span>${d.email}</span></div></div>
         <div class="ct__row"><i>${ic('pin')}</i><div><b>${d.addressLabel || 'Service area'}</b><span>${d.area}</span></div></div>
         <div class="ct__row"><i>${ic('clock')}</i><div style="flex:1"><b>Hours</b><table class="hours">${d.hours.map(h => `<tr><td>${h[0]}</td><td>${h[1]}</td></tr>`).join('')}</table></div></div>
-      </div>
+      </div>`}
       <form class="fm rv" data-d="1" data-demo><h3>${s.formTitle || 'Get a free quote'}</h3>
         <div class="two"><div><label>Name</label><input placeholder="Your name"></div><div><label>Phone</label><input placeholder="Best number"></div></div>
         ${s.select ? `<label>${s.select.label}</label><select>${s.select.options.map(o => `<option>${o}</option>`).join('')}</select>` : ''}
@@ -279,7 +299,7 @@ function shell(d, pg, body) {
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=${d.fonts.url}&display=swap">
 <link rel="preconnect" href="https://images.unsplash.com">
 <style>${css(d)}</style></head><body>
-<header class="hd${heroFirst ? '' : ' light'}"><div class="w">
+${d.sampleBanner ? '<div class="sb">Sample website. The business is made up.</div>' : ''}<header class="hd${heroFirst ? '' : ' light'}${d.sampleBanner ? ' has-sb' : ''}"><div class="w">
   <a class="logo" href="${link(d, '')}"><i>${ic(d.icon)}</i>${d.name}</a>
   <nav class="nv">${navLinks}</nav>
   <a class="btn btn--p" href="${link(d, d.primaryCta.href)}">${d.primaryCta.label}</a>

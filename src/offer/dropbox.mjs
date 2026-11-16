@@ -72,7 +72,7 @@ export const dropboxScript = `<script>(function(){
         zone=root.querySelector('[data-zone]'),q=root.querySelector('[data-q]'),done=root.querySelector('[data-done]');
     if(pre&&!nm.value)nm.value=pre.replace(/[-_]+/g,' ').replace(/\\b\\w/g,function(c){return c.toUpperCase();});
     var batch=[],pending=0,total=0,ok=0,pb=root.querySelector('[data-pick]');
-    function see(el){try{el.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){el.scrollIntoView();}}
+    function see(el){if(root.hasAttribute('data-noscroll'))return;try{el.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){el.scrollIntoView();}}
     function label(){pb.textContent=pending?('Uploading '+(total-pending+1>total?total:total-pending+1)+' of '+total+'...'):(ok?'Add more photos':'Choose photos');}
     function pick(){if(!nm.value.trim()){err.classList.add('on');nm.focus();return;}err.classList.remove('on');fi.click();}
     pb.addEventListener('click',pick);
