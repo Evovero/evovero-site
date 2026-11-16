@@ -206,9 +206,10 @@ const css = `
 .bf-video{display:block;width:100%;border-radius:18px;background:#000}
 /* Walkthrough video: a still with a play button; the YouTube player loads only when it is tapped. */
 .bf-vid{width:min(320px,100%);margin:0 auto}.bf-vid.wide{width:100%}
-.bf-vid__k{margin:0 0 10px;text-align:center;color:var(--cream);font:700 1rem var(--font-head)}
+.bf-vid__k{margin:0 0 10px;text-align:center;text-wrap:balance;color:var(--cream);font:700 1rem var(--font-head)}
 .bf-vid__f{position:relative;overflow:hidden;border-radius:22px;background:#000;box-shadow:0 0 0 2px #303034,0 30px 80px rgba(0,0,0,.65)}
 .bf-vid__b{position:absolute;inset:0;display:block;width:100%;height:100%;padding:0;border:0;background:#000;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.bf-vid__b:focus-visible{outline:3px solid var(--acc);outline-offset:-3px}
 .bf-vid__b img{display:block;width:100%;height:100%;object-fit:cover}
 .bf-vid__p{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 6px rgba(13,13,13,.35),0 10px 30px rgba(0,0,0,.5)}
 .bf-vid__p:after{content:"";position:absolute;left:30px;top:22px;border-style:solid;border-width:16px 0 16px 26px;border-color:transparent transparent transparent #0D0D0D}
@@ -457,7 +458,7 @@ export function makeBlackFridayPages({ head, icon, site }) {
   // Walkthrough video. Nothing from YouTube but the still loads until play is tapped.
   var vid=document.getElementById('bf-vid'),vf=document.getElementById('bf-vid-f'),vb=document.getElementById('bf-vid-b');
   if(vid&&vf&&vb){var yt=vid.getAttribute('data-yt');
-    vb.addEventListener('click',function(){var f=document.createElement('iframe');f.title=vb.getAttribute('aria-label').replace('Play video: ','');f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;f.src='https://www.youtube-nocookie.com/embed/'+yt+'?autoplay=1&playsinline=1&rel=0&modestbranding=1';vf.innerHTML='';vf.appendChild(f);try{if(window.gtag)gtag('event','bf_video_play',{promo:'${PROMO.slug}',trade:'${t.slug}'});}catch(e){}});
+    vb.addEventListener('click',function(){var f=document.createElement('iframe');f.title=vb.getAttribute('aria-label').replace('Play video: ','');f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';f.allowFullscreen=true;f.src='https://www.youtube-nocookie.com/embed/'+yt+'?autoplay=1&playsinline=1&rel=0&modestbranding=1';vf.innerHTML='';vf.appendChild(f);try{f.focus({preventScroll:true});}catch(e){}try{if(window.gtag)gtag('event','bf_video_play',{promo:'${PROMO.slug}',trade:'${t.slug}'});}catch(e){}});
     // Shape: ask YouTube for the video's real width and height and fit the frame to it (a wide video uses the full column).
     try{fetch('https://www.youtube.com/oembed?format=json&url='+encodeURIComponent('https://www.youtube.com/watch?v='+yt)).then(function(r){return r.ok?r.json():null;}).then(function(j){if(j&&j.width>0&&j.height>0){vf.style.aspectRatio=j.width+' / '+j.height;vid.classList.toggle('wide',j.width>j.height);}}).catch(function(){});}catch(e){}}
   // Phones: the sample (video and photos, a few MB) loads only when it is tapped. Wider screens load it as it nears the screen.
