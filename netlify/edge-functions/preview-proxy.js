@@ -35,7 +35,10 @@ export default async (req) => {
   const target = `https://${name}--new-website-preview.netlify.app/${rest}${url.search}`;
   let r;
   try {
-    r = await upstreamFetch(target, { method: req.method, headers: { 'user-agent': req.headers.get('user-agent') || '' }, redirect: 'manual' });
+    // Range and If-Range pass through so iPhone Safari gets the 206 byte ranges it needs to play the hero video.
+    const fwd = { 'user-agent': req.headers.get('user-agent') || '' };
+    for (const k of ['range', 'if-range', 'if-none-match', 'if-modified-since']) { const v = req.headers.get(k); if (v) fwd[k] = v; }
+    r = await upstreamFetch(target, { method: req.method, headers: fwd, redirect: 'manual' });
   } catch {
     return new Response('Preview is not reachable right now. Try again in a minute.', { status: 502, headers: { 'content-type': 'text/plain', 'cache-control': 'no-store' } });
   }
@@ -52,8 +55,9 @@ export default async (req) => {
   // Pages are never cached (the countdown and the end card must be current); fonts, images and video can be.
   const html = (h.get('content-type') || '').includes('text/html');
   h.set('cache-control', html ? 'no-store' : 'public, max-age=3600');
-  h.delete('content-encoding');
-  h.delete('content-length');
+  // fetch already decoded a compressed body, so its encoding and length no longer apply. An uncompressed answer
+  // (video, images, any 206 range) keeps its Content-Length and Content-Range, which Safari needs for video.
+  if (h.get('content-encoding')) { h.delete('content-encoding'); h.delete('content-length'); }
   // A branch that does not exist (or was deleted) shows a plain not found, not Netlify's page.
   if (r.status === 404) return notFound();
   return new Response(req.method === 'HEAD' ? null : r.body, { status: r.status, headers: h });
