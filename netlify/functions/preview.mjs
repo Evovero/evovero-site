@@ -1,0 +1,142 @@
+// Preview state for W100 previews (Black Friday 2026 on): Extend preview and the first opened alert.
+// Called by every preview page, whether it is viewed at evovero.com/preview/<name>/ or at
+// <name>--new-website-preview.netlify.app. One small record per preview in Netlify Blobs:
+//   open/<name>  first real open (not Spencer with ?owner=1, not a bot). Written once; emails Spencer once.
+//   ext/<name>   the one 24 hour extension. Written once, so a preview can only be extended one time.
+// Emails go to Spencer only, as a Netlify Forms submission on evovero.com (form "preview-alert", registered in
+// public/preview-forms/index.html), so they arrive like every other evovero.com form email. No Zapier.
+// Nothing ever goes to a lead. If the post fails the state is still saved; the alert is just skipped and logged.
+//
+// GET  /api/preview?slug=<name>                -> { extended_until: ISO | null, used: bool }
+// POST /api/preview { action: "open",   slug } -> { ok, first }
+// POST /api/preview { action: "extend", slug } -> { ok, extended_until, used: true, already }
+import { getStore } from '@netlify/blobs';
+
+export const config = { path: '/api/preview' };
+
+const EXT_MS = 24 * 60 * 60 * 1000;
+const SLUG = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/;
+// Automated browsers (audit tools, screenshot runners, link unfurlers) must never use up the one first opened email.
+// "bot" only as its own word or in a "Somethingbot/1.0" token, so Cubot phones still count as people.
+const BOT = /(?:^|[^a-z])bot\b|[a-z]bot\/\d|crawl|spider|slurp|headless|lighthouse|pagespeed|gtmetrix|pingdom|uptime|preview|inspectiontool|facebookexternalhit|whatsapp|telegrambot|slack|discord|skype|embedly|curl|wget|python|node-fetch|axios|go-http|java\/|okhttp|puppeteer|playwright|selenium|phantom/i;
+const ALLOWED = [/^https:\/\/(www\.)?evovero\.com$/, /^https:\/\/[a-z0-9-]+--new-website-preview\.netlify\.app$/, /^https:\/\/[a-z0-9-]+--evovero\.netlify\.app$/];
+
+let storeFactory = () => getStore({ name: 'preview-state', consistency: 'strong' });
+let hookFetch = (...a) => fetch(...a);
+let existsFetch = (...a) => fetch(...a);
+// Test seam only: lets the sandbox swap in a memory store and a fake hook.
+export const __test = { setStore: (f) => { storeFactory = f; }, setFetch: (f) => { hookFetch = f; }, allowOrigin: (re) => { ALLOWED.push(re); }, setExists: (f) => { existsFetch = f; } };
+
+// A record is only ever created for a preview branch that really exists, so a script cannot fill the store or Spencer's inbox.
+async function previewExists(slug) {
+  try {
+    const r = await existsFetch(`https://${slug}--new-website-preview.netlify.app/`, { method: 'HEAD', redirect: 'manual', signal: AbortSignal.timeout(3000) });
+    return r.status >= 200 && r.status < 400;
+  } catch { return false; }
+}
+
+const originOk = (o) => !o || ALLOWED.some((re) => re.test(o));
+
+function headers(origin) {
+  const h = { 'content-type': 'application/json', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' };
+  if (origin && originOk(origin)) {
+    h['access-control-allow-origin'] = origin;
+    h['access-control-allow-methods'] = 'GET, POST, OPTIONS';
+    h['access-control-allow-headers'] = 'content-type';
+    h.vary = 'Origin';
+  }
+  return h;
+}
+
+const json = (body, status, origin) => new Response(JSON.stringify(body), { status, headers: headers(origin) });
+
+async function alert(event, slug, extra = {}) {
+  const site = (globalThis.Netlify?.env?.get?.('URL')) || process.env.URL || 'https://evovero.com';
+  const link = `https://evovero.com/preview/${slug}/?owner=1`;
+  const subject = event === 'extend' ? `Preview extended 24 hours: ${slug}` : `Preview opened for the first time: ${slug}`;
+  const body = new URLSearchParams({ 'form-name': 'preview-alert', subject, preview: slug, event, link, at: new Date().toISOString(), extended_until: extra.extended_until || '' });
+  try {
+    const r = await hookFetch(`${site}/preview-forms/`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+      signal: AbortSignal.timeout(2500),  // a slow form post never makes a saved extension look failed
+    });
+    if (!r.ok) console.log(`preview alert form post returned ${r.status}: ${event} ${slug}`);
+    return r.ok;
+  } catch (err) {
+    console.log(`preview alert form post failed: ${event} ${slug}: ${err && err.message}`);
+    return false;
+  }
+}
+
+function status(rec) {
+  return { extended_until: rec && rec.until ? rec.until : null, used: !!rec };
+}
+
+export default async (req) => {
+  const origin = req.headers.get('origin');
+  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: headers(origin) });
+  if (!originOk(origin)) return json({ error: 'origin' }, 403, null);
+
+  const store = storeFactory();
+
+  if (req.method === 'GET') {
+    const slug = new URL(req.url).searchParams.get('slug') || '';
+    if (!SLUG.test(slug)) return json({ error: 'slug' }, 400, origin);
+    try {
+      return json(status(await store.get(`ext/${slug}`, { type: 'json' })), 200, origin);
+    } catch (err) {
+      console.log(`preview state read failed: ${slug}: ${err && err.message}`);
+      return json({ error: 'store' }, 503, origin);
+    }
+  }
+
+  if (req.method !== 'POST') return json({ error: 'method' }, 405, origin);
+  if (!origin) return json({ error: 'origin' }, 403, null);  // browsers always send Origin on POST
+
+  let body;
+  try { const raw = await req.text(); body = raw.length > 2048 ? null : JSON.parse(raw); } catch { body = null; }
+  if (!body || typeof body !== 'object') return json({ error: 'body' }, 400, origin);
+  const slug = typeof body.slug === 'string' ? body.slug : '';
+  if (!SLUG.test(slug)) return json({ error: 'slug' }, 400, origin);
+  const ua = req.headers.get('user-agent') || '';
+
+  if (body.action === 'open') {
+    if (!ua || BOT.test(ua)) return json({ ok: true, first: false, ignored: true }, 200, origin);
+    try {
+      if (await store.get(`open/${slug}`, { type: 'json' })) return json({ ok: true, first: false }, 200, origin);
+      if (!(await previewExists(slug))) return json({ error: 'unknown preview' }, 404, origin);
+      const w = await store.setJSON(`open/${slug}`, { at: new Date().toISOString() }, { onlyIfNew: true });
+      if (w.modified) await alert('first_open', slug);
+      return json({ ok: true, first: !!w.modified }, 200, origin);
+    } catch (err) {
+      console.log(`preview open write failed: ${slug}: ${err && err.message}`);
+      return json({ error: 'store' }, 503, origin);
+    }
+  }
+
+  if (body.action === 'extend') {
+    if (!ua || BOT.test(ua)) return json({ error: 'automated' }, 403, origin);
+    const now = Date.now();
+    const rec = { at: new Date(now).toISOString(), until: new Date(now + EXT_MS).toISOString() };
+    try {
+      const cur0 = await store.get(`ext/${slug}`, { type: 'json' });
+      if (cur0) return json({ ok: false, already: true, ...status(cur0) }, 409, origin);
+      if (!(await previewExists(slug))) return json({ error: 'unknown preview' }, 404, origin);
+      const w = await store.setJSON(`ext/${slug}`, rec, { onlyIfNew: true });
+      if (!w.modified) {
+        // Already used once: report what is stored, never overwrite it.
+        const cur = await store.get(`ext/${slug}`, { type: 'json' });
+        return json({ ok: false, already: true, ...status(cur) }, 409, origin);
+      }
+      await alert('extend', slug, { extended_until: rec.until });
+      return json({ ok: true, already: false, ...status(rec) }, 200, origin);
+    } catch (err) {
+      console.log(`preview extend write failed: ${slug}: ${err && err.message}`);
+      return json({ error: 'store' }, 503, origin);
+    }
+  }
+
+  return json({ error: 'action' }, 400, origin);
+};
