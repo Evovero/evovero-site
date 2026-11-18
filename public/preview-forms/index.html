@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<title>EvoVero</title>
+</head>
+<body>
+<!-- Registers the W100 preview forms with Netlify Forms (2026-11-17). Nothing here is shown to anyone.
+     preview-alert:    Extend taps and first opens, posted by netlify/functions/preview.mjs. Emails Spencer only.
+     preview-estimate: the estimate form on a W100 preview (evovero.com/preview/<name>/), labeled with the business name.
+     preview-contact:  the contact form on a W100 preview. -->
+<form name="preview-alert" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input name="bot-field"><input name="subject"><input name="preview"><input name="event"><input name="link"><input name="at"><input name="extended_until">
+</form>
+<form name="preview-estimate" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input name="bot-field"><input name="subject"><input name="business"><input name="page"><input name="name"><input name="phone"><input name="email"><input name="contact"><textarea name="message"></textarea>
+</form>
+<form name="preview-contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input name="bot-field"><input name="subject"><input name="business"><input name="page"><input name="name"><input name="phone"><input name="email"><input name="contact"><textarea name="message"></textarea>
+</form>
+</body>
+</html>
